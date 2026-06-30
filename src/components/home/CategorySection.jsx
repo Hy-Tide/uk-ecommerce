@@ -25,12 +25,12 @@ const CategorySection = () => {
         </div>
         
         {/* Carousel / Grid */}
-        <div className="flex overflow-x-auto pb-6 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide gap-4 snap-x">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-9 gap-4">
           {categories.map((category) => (
             <Link 
               key={category.id} 
               to={ROUTES.SHOP_CATEGORY.replace(':category', category.slug)}
-              className={`snap-start min-w-[140px] flex flex-col items-center justify-center p-6 rounded-[20px] transition-all duration-300 shadow-sm border border-slate-100 ${category.active ? 'bg-[#379c6b] text-white shadow-green-900/20 shadow-xl' : 'bg-white hover:border-primary/30 group'}`}
+              className={`flex flex-col items-center justify-center p-6 rounded-[20px] transition-all duration-300 shadow-sm border border-slate-100 ${category.active ? 'bg-[#379c6b] text-white shadow-green-900/20 shadow-xl' : 'bg-white hover:border-primary/30 group'}`}
             >
               <div className={`w-[70px] h-[70px] rounded-full flex items-center justify-center text-3xl mb-4 ${category.active ? 'bg-white/20' : 'bg-slate-50 group-hover:bg-[#fcfbf9]'}`}>
                 {category.active ? (

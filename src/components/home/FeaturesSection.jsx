@@ -14,7 +14,7 @@ const FeaturesSection = () => {
       icon: <FiShield size={24} className="text-orange-500" />,
       bg: 'bg-orange-50',
       title: '100% Authentic',
-      desc: 'Genuine brands'
+      desc: 'Genuine Indian brands'
     },
     {
       icon: <FiLock size={24} className="text-yellow-600" />,

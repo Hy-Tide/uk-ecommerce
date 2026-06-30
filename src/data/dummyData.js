@@ -1,13 +1,13 @@
 export const categories = [
   { id: 1, name: 'Spices & Masala', slug: 'spices', count: '840 products', icon: '🌶️', image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=150&q=80', active: true },
-  { id: 2, name: 'Rice & Grains', slug: 'rice', count: '210 products', icon: '🌾', image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=150&q=80' },
-  { id: 3, name: 'Dal & Pulses', slug: 'dal', count: '180 products', icon: '🍲', image: 'https://images.unsplash.com/photo-1515543904379-3d7570073dfb?w=150&q=80' },
-  { id: 4, name: 'Flour & Atta', slug: 'flour', count: '95 products', icon: '🥖', image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=150&q=80' },
-  { id: 5, name: 'Pickles & Achar', slug: 'pickles', count: '145 products', icon: '🥭', image: 'https://images.unsplash.com/photo-1627308595229-7830f5c9c66e?w=150&q=80' },
-  { id: 6, name: 'Sweets & Mithai', slug: 'sweets', count: '230 products', icon: '🍬', image: 'https://images.unsplash.com/photo-1605658823194-e354924b1049?w=150&q=80' },
-  { id: 7, name: 'Snacks & Namkeen', slug: 'snacks', count: '320 products', icon: '🥨', image: 'https://images.unsplash.com/photo-1621852004158-f3bc188ace2d?w=150&q=80' },
-  { id: 8, name: 'Drinks & Chai', slug: 'drinks', count: '120 products', icon: '☕', image: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=150&q=80' },
-  { id: 9, name: 'Personal Care', slug: 'personal-care', count: '165 products', icon: '🧴', image: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=150&q=80' },
+  { id: 2, name: 'Rice & Grains', slug: 'rice', count: '210 products', icon: '🌾', image: '/images/cat-rice.png' },
+  { id: 3, name: 'Dal & Pulses', slug: 'dal', count: '180 products', icon: '🍲', image: '/images/cat-dal.png' },
+  { id: 4, name: 'Flour & Atta', slug: 'flour', count: '95 products', icon: '🥖', image: '/images/cat-flour.png' },
+  { id: 5, name: 'Pickles & Achar', slug: 'pickles', count: '145 products', icon: '🥭', image: '/images/cat-pickles.png' },
+  { id: 6, name: 'Sweets & Mithai', slug: 'sweets', count: '230 products', icon: '🍬', image: '/images/cat-sweets.png' },
+  { id: 7, name: 'Snacks & Namkeen', slug: 'snacks', count: '320 products', icon: '🥨', image: '/images/cat-snacks.png' },
+  { id: 8, name: 'Drinks & Chai', slug: 'drinks', count: '120 products', icon: '☕', image: '/images/cat-drinks.png' },
+  { id: 9, name: 'Personal Care', slug: 'personal-care', count: '165 products', icon: '🧴', image: '/images/cat-personal.png' },
 ];
 
 export const products = [
@@ -23,7 +23,7 @@ export const products = [
     badge: { text: '-20%', type: 'discount' },
     rating: 5,
     reviews: 284,
-    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400&q=80',
+    image: '/images/prod-garam-masala.png',
     category: 'spices'
   },
   {
@@ -38,7 +38,7 @@ export const products = [
     badge: { text: 'New', type: 'new' },
     rating: 4.5,
     reviews: 512,
-    image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400&q=80',
+    image: '/images/prod-basmati-rice.png',
     category: 'rice'
   },
   {
@@ -53,7 +53,7 @@ export const products = [
     badge: { text: 'Hot', type: 'hot' },
     rating: 5,
     reviews: 198,
-    image: 'https://images.unsplash.com/photo-1605658823194-e354924b1049?w=400&q=80',
+    image: '/images/prod-gulab-jamun.png',
     category: 'sweets'
   },
   {
@@ -68,7 +68,7 @@ export const products = [
     badge: null,
     rating: 5,
     reviews: 743,
-    image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&q=80',
+    image: '/images/prod-wheat-atta.png',
     category: 'flour'
   },
   {
@@ -83,7 +83,7 @@ export const products = [
     badge: { text: '-15%', type: 'discount' },
     rating: 4.5,
     reviews: 327,
-    image: 'https://images.unsplash.com/photo-1621852004158-f3bc188ace2d?w=400&q=80',
+    image: '/images/prod-aloo-bhujia.png',
     category: 'snacks'
   }
 ];
@@ -110,7 +110,7 @@ export const newArrivals = [
     badge: { text: 'New', type: 'new' },
     rating: 4,
     reviews: 42,
-    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=400&auto=format&fit=crop',
+    image: '/images/chana-masala-mix.jpg',
     category: 'spices'
   },
   {
@@ -125,7 +125,7 @@ export const newArrivals = [
     badge: { text: 'New', type: 'new' },
     rating: 5,
     reviews: 87,
-    image: 'https://images.unsplash.com/photo-1605658823194-e354924b1049?q=80&w=400&auto=format&fit=crop',
+    image: '/images/Rasagulla-syrup.jpg',
     category: 'sweets'
   },
   {
@@ -140,7 +140,7 @@ export const newArrivals = [
     badge: { text: 'New', type: 'new' },
     rating: 4.5,
     reviews: 219,
-    image: 'https://images.unsplash.com/photo-1587049352847-4d4b1ed7355e?q=80&w=400&auto=format&fit=crop',
+    image: '/images/chyawan.jpg',
     category: 'health'
   },
   {
@@ -155,7 +155,7 @@ export const newArrivals = [
     badge: { text: 'New', type: 'new' },
     rating: 4,
     reviews: 155,
-    image: 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?q=80&w=400&auto=format&fit=crop',
+    image: '/images/pure-cow-ghee.jpg',
     category: 'pantry'
   }
 ];

@@ -12,7 +12,7 @@ const PromoBanners = () => {
           {/* Card 1: Festival Special */}
           <div className="relative rounded-2xl overflow-hidden min-h-[220px] group flex flex-col justify-end p-6">
             <img 
-              src="https://images.unsplash.com/photo-1605658823194-e354924b1049?q=80&w=600&auto=format&fit=crop" 
+              src="/images/promo-sweets.png" 
               alt="Diwali Sweets" 
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
@@ -30,7 +30,7 @@ const PromoBanners = () => {
           {/* Card 2: Best Deal */}
           <div className="relative rounded-2xl overflow-hidden min-h-[220px] group flex flex-col justify-end p-6">
             <img 
-              src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=600&auto=format&fit=crop" 
+              src="/images/promo-spices.png" 
               alt="Spices" 
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
@@ -48,7 +48,7 @@ const PromoBanners = () => {
           {/* Card 3: New Arrivals */}
           <div className="relative rounded-2xl overflow-hidden min-h-[220px] group flex flex-col justify-end p-6">
             <img 
-              src="https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?q=80&w=600&auto=format&fit=crop" 
+              src="/images/promo-veg.png" 
               alt="Organic Greens" 
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />

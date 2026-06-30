@@ -8,10 +8,10 @@ const Footer = () => {
   return (
     <footer className="bg-[#0b0c10] pt-20 pb-8 text-slate-300 relative">
       <div className="container">
-        
+
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16">
-          
+
           {/* Column 1: Brand & Social */}
           <div className="lg:col-span-1">
             <Link to={ROUTES.HOME} className="flex items-center gap-3 mb-6">
@@ -27,7 +27,7 @@ const Footer = () => {
               </div>
             </Link>
             <p className="text-sm text-slate-400 mb-8 leading-relaxed">
-              The UK's most trusted online grocery store. Bringing the authentic taste of the world to your doorstep since 2015. Over 50,000 happy families served.
+              The UK's most trusted online Indian grocery store. Bringing the authentic taste of the India to your doorstep since 2015. Over 50,000 happy families served.
             </p>
             <div className="flex items-center gap-3">
               <a href="#" className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-[#379c6b] hover:border-[#379c6b] hover:text-white transition-colors">
@@ -91,12 +91,12 @@ const Footer = () => {
               Get exclusive deals, new arrivals and recipes delivered to your inbox.
             </p>
             <form className="flex flex-col gap-3 mb-6">
-              <input 
-                type="email" 
-                placeholder="Your email address..." 
+              <input
+                type="email"
+                placeholder="Your email address..."
                 className="w-full bg-[#1a1d24] border border-white/10 text-white placeholder:text-slate-500 px-4 py-3 rounded-lg outline-none focus:border-[#379c6b] transition-colors text-sm"
               />
-              <button 
+              <button
                 type="submit"
                 className="w-full bg-[#379c6b] hover:bg-[#2e8259] text-white font-bold px-4 py-3 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm shadow-lg shadow-green-900/20"
               >
@@ -115,7 +115,7 @@ const Footer = () => {
           <p className="text-xs text-slate-500">
             &copy; 2025 UK Groceries Ltd. All rights reserved. Registered in England & Wales.
           </p>
-          
+
           <div className="flex items-center gap-4">
             <span className="text-xs text-slate-500">We accept:</span>
             <div className="flex items-center gap-2">
@@ -135,8 +135,8 @@ const Footer = () => {
         <div className="bg-white text-dark text-xs font-bold px-3 py-2 rounded-full shadow-lg border border-slate-100 mr-3 opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all pointer-events-none">
           Chat with us on WhatsApp
         </div>
-        <a 
-          href="#" 
+        <a
+          href="#"
           className="w-14 h-14 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-full flex items-center justify-center shadow-2xl transition-transform hover:scale-110"
         >
           <FaWhatsapp size={28} />
