@@ -218,3 +218,300 @@ export const testimonials = [
     avatar: 'https://i.pravatar.cc/150?img=5'
   }
 ];
+
+export const shopDropdownData = [
+  {
+    id: 1,
+    name: 'Atta & Flour',
+    slug: 'atta-flour',
+    product: {
+      id: 101,
+      name: 'Aashirvaad Whole Wheat Atta 10kg',
+      image: '/images/prod-wheat-atta.png',
+      price: 15.99
+    }
+  },
+  {
+    id: 2,
+    name: 'Rice & Grains',
+    slug: 'rice-grains',
+    product: {
+      id: 102,
+      name: 'India Gate Basmati Rice 5kg',
+      image: '/images/prod-basmati-rice.png',
+      price: 18.50
+    }
+  },
+  {
+    id: 3,
+    name: 'Spices & Masalas',
+    slug: 'spices-masalas',
+    product: {
+      id: 103,
+      name: 'MDH Garam Masala 100g',
+      image: '/images/prod-garam-masala.png',
+      price: 3.49
+    }
+  }
+];
+
+import aashirvaad from '../assets/images/Ashirvaad.jpg';
+import multigrain from '../assets/images/Aashirvaad-Multigrain.jpg';
+import indiaGate from '../assets/images/IndiaGateChakki.jpg';
+import pillsbury from '../assets/images/PillsBuryChakki.jpg';
+import nagaBesan from '../assets/images/NagaBEsan.jpg';
+import heeraGram from '../assets/images/HeeraGramFlour.jpg';
+import shankarMaida from '../assets/images/ShankarMaida.jpg';
+import riceFlour from '../assets/images/RiceFlour.jpg';
+import cornFlour from '../assets/images/CornFlour.jpg';
+import ragiFlour from '../assets/images/RagiFlour.jpg';
+
+export const shopProducts = [
+  {
+    id: 201,
+    brand: 'AASHIRVAAD',
+    name: 'Aashirvaad Whole Wheat Atta 10kg',
+    slug: 'aashirvaad-whole-wheat-10kg',
+    weight: '10kg',
+    price: 12.00,
+    oldPrice: 13.50,
+    discountAmount: 'Save £1.5',
+    badge: { text: '-11%', type: 'discount' },
+    rating: 5,
+    reviews: 843,
+    image: aashirvaad,
+    category: 'flour'
+  },
+  {
+    id: 202,
+    brand: 'AASHIRVAAD',
+    name: 'Aashirvaad Multigrain Atta 5kg',
+    slug: 'aashirvaad-multigrain-5kg',
+    weight: '5kg',
+    price: 8.49,
+    oldPrice: 9.99,
+    discountAmount: 'Save £1.50',
+    badge: { text: 'New', type: 'new' },
+    rating: 4.5,
+    reviews: 412,
+    image: multigrain,
+    category: 'flour'
+  },
+  {
+    id: 203,
+    brand: 'INDIA GATE',
+    name: 'India Gate Chakki Atta 5kg',
+    slug: 'india-gate-chakki-5kg',
+    weight: '5kg',
+    price: 7.99,
+    oldPrice: 8.49,
+    discountAmount: 'Save 50p',
+    badge: null,
+    rating: 4,
+    reviews: 215,
+    image: indiaGate,
+    category: 'flour'
+  },
+  {
+    id: 204,
+    brand: 'PILLSBURY',
+    name: 'Pillsbury Chakki Atta 10kg',
+    slug: 'pillsbury-chakki-10kg',
+    weight: '10kg',
+    price: 13.49,
+    oldPrice: 14.49,
+    discountAmount: 'Save £1',
+    badge: { text: 'Hot', type: 'hot' },
+    rating: 4.5,
+    reviews: 620,
+    image: pillsbury,
+    category: 'flour'
+  },
+  {
+    id: 205,
+    brand: 'NAGA',
+    name: 'Naga Besan Flour',
+    slug: 'naga-besan',
+    weight: '1kg',
+    price: 2.49,
+    oldPrice: 2.99,
+    discountAmount: 'Save 50p',
+    badge: { text: '-15%', type: 'discount' },
+    rating: 4.5,
+    reviews: 132,
+    image: nagaBesan,
+    category: 'flour'
+  },
+  {
+    id: 206,
+    brand: 'HEERA',
+    name: 'Heera Gram Flour',
+    slug: 'heera-gram-flour',
+    weight: '2kg',
+    price: 3.89,
+    oldPrice: null,
+    discountAmount: null,
+    badge: null,
+    rating: 4,
+    reviews: 89,
+    image: heeraGram,
+    category: 'flour'
+  },
+  {
+    id: 207,
+    brand: 'SHANKAR',
+    name: 'Shankar Maida',
+    slug: 'shankar-maida',
+    weight: '1.5kg',
+    price: 1.99,
+    oldPrice: 2.49,
+    discountAmount: 'Save 50p',
+    badge: { text: 'Offer', type: 'discount' },
+    rating: 4,
+    reviews: 145,
+    image: shankarMaida,
+    category: 'flour'
+  },
+  {
+    id: 208,
+    brand: 'PATANJALI',
+    name: 'Rice Flour',
+    slug: 'patanjali-rice-flour',
+    weight: '1kg',
+    price: 2.29,
+    oldPrice: 2.69,
+    discountAmount: 'Save 40p',
+    badge: { text: '-10%', type: 'discount' },
+    rating: 4.5,
+    reviews: 210,
+    image: riceFlour,
+    category: 'flour'
+  },
+  {
+    id: 209,
+    brand: 'HEERA',
+    name: 'Corn Flour',
+    slug: 'heera-corn-flour',
+    weight: '500g',
+    price: 1.79,
+    oldPrice: 2.00,
+    discountAmount: 'Save 21p',
+    badge: { text: 'Sale', type: 'discount' },
+    rating: 4,
+    reviews: 75,
+    image: cornFlour,
+    category: 'flour'
+  },
+  {
+    id: 210,
+    brand: 'ORGANIC TATTVA',
+    name: 'Ragi Flour',
+    slug: 'organic-tattva-ragi-flour',
+    weight: '1kg',
+    price: 3.59,
+    oldPrice: 4.00,
+    discountAmount: 'Save 41p',
+    badge: { text: 'New', type: 'new' },
+    rating: 5,
+    reviews: 180,
+    image: ragiFlour,
+    category: 'flour'
+  }
+];
+
+export const shopFilters = {
+  brands: [
+    { name: 'Aashirvaad', count: 12 },
+    { name: 'India Gate', count: 5 },
+    { name: 'Pillsbury', count: 8 },
+    { name: 'Naga', count: 4 },
+    { name: 'Everest', count: 9 },
+    { name: 'Patanjali', count: 6 },
+    { name: 'Fortune', count: 7 }
+  ],
+  weights: [
+    { name: '10kg', count: 14 },
+    { name: '5kg', count: 21 },
+    { name: '1kg', count: 45 },
+    { name: '500g', count: 30 }
+  ],
+  categories: [
+    'Atta Flour', 'All Purpose', 'Gram Flour', 'Rice Flour', 'Millet', 'Corn Flour'
+  ]
+};
+
+export const subCategories = [
+  'Aashirvaad', 'Naga', 'Everest', 'Pillsbury', 'Patanjali', 'Fortune', 'Sujata', 'Heera', 'East End'
+];
+
+export const detailedProduct = {
+  id: 'pd-1',
+  brand: 'AASHIRVAAD',
+  name: 'Aashirvaad Whole Wheat Atta 10kg',
+  price: 14.99,
+  oldPrice: 16.99,
+  savings: 'You Save £2.00',
+  discountBadge: '-15% OFF',
+  rating: 4.8,
+  reviewsCount: 115,
+  soldCount: '70+ sold in last 24 hrs',
+  description: 'Bringing pure goodness and nutrition to your family. Aashirvaad Whole Wheat Atta is carefully crafted using a 4-step advantage process to retain its natural dietary fiber. Sourced from the finest wheat fields.',
+  stockCount: 14,
+  highlights: [
+    '100% Whole Wheat', '0% Maida', 'Rich in Fiber', 'No Added Preservatives', 'Soft Rotis', 'Vacuum Packed'
+  ],
+  features: [
+    'Uses 100% pure whole wheat without any maida mix to ensure healthy meals for your family.',
+    'Carefully milled using a traditional chakki process to retain dietary fiber and natural nutrients.',
+    'Absorbs more water resulting in softer, fluffier rotis that stay fresh longer.',
+    'Rich in essential nutrients, promoting better digestion and overall well-being.',
+    'Sourced from the finest quality golden amber wheat grains from premium farms.'
+  ]
+};
+
+export const frequentlyBought = [
+  { id: 'fb-1', name: 'Aashirvaad Whole Wheat Atta 10kg', price: 14.99, image: aashirvaad },
+  { id: 'fb-2', name: 'Amul Cow Ghee 500ml', price: 6.99, image: aashirvaad },
+  { id: 'fb-3', name: 'Toor Dal 1kg', price: 2.30, image: aashirvaad }
+];
+
+export const productReviewsData = {
+  summary: {
+    average: 4.8,
+    total: 115,
+    distribution: { 5: 85, 4: 15, 3: 10, 2: 2, 1: 3 }
+  },
+  reviews: [
+    {
+      id: 1,
+      name: 'Priya S.',
+      date: 'Verified purchase • 1 month ago',
+      rating: 5,
+      content: 'Very soft rotis and tastes great! Arrived quickly and in perfect condition. Will definitely buy again from this store.',
+      avatar: 'https://i.pravatar.cc/150?img=5'
+    },
+    {
+      id: 2,
+      name: 'Rahul K.',
+      date: 'Verified purchase • 2 weeks ago',
+      rating: 5,
+      content: 'Perfect quality. Have been using Aashirvaad for years and it never disappoints. Good price point too.',
+      avatar: 'https://i.pravatar.cc/150?img=11'
+    }
+  ]
+};
+
+export const productFAQs = [
+  {
+    question: 'How long does shipping take to the UK mainland?',
+    answer: 'Standard shipping generally takes 2-3 business days. Next day delivery options are available at checkout for orders placed before 2 PM.'
+  },
+  {
+    question: 'Is this product vacuum packed to stay fresh during shipping?',
+    answer: 'Yes! All our premium flours are securely vacuum packed to preserve freshness and ensure zero moisture enters during transit.'
+  },
+  {
+    question: 'Do you offer bulk discounts for restaurants or caterers?',
+    answer: 'Yes, we offer special rates for bulk orders. Please contact our wholesale team via the contact form for more details and pricing sheets.'
+  }
+];

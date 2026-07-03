@@ -6,6 +6,7 @@ import { ROUTES } from '../../utils/constants';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useAuth } from '../../context/AuthContext';
+import { shopDropdownData } from '../../data/dummyData';
 
 const Header = () => {
   const { cartItems, cartTotal } = useCart();
@@ -22,11 +23,10 @@ const Header = () => {
   return (
     <header className="bg-white py-4 md:py-5 border-b border-slate-100">
       <div className="container flex items-center justify-between gap-4 md:gap-8">
-        
+
         {/* Logo */}
         <Link to={ROUTES.HOME} className="flex items-center gap-3 flex-shrink-0">
           <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white p-2">
-            {/* Custom Leaf/Organic Icon to replace Lakshmi logo */}
             <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
               <path d="M17.5 2a9.5 9.5 0 00-7.85 14.8l-4.5 4.5a1.5 1.5 0 002.1 2.1l4.5-4.5A9.5 9.5 0 1017.5 2zm0 16A6.5 6.5 0 1124 11.5 6.51 6.51 0 0117.5 18z" />
               <path d="M16 8a1.5 1.5 0 101.5 1.5A1.5 1.5 0 0016 8z" />
@@ -40,23 +40,44 @@ const Header = () => {
 
         {/* Search Bar */}
         <div className="hidden lg:flex flex-grow max-w-2xl mx-8">
-          <form onSubmit={handleSearch} className="flex w-full rounded-full border border-slate-200 overflow-hidden focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
-            <div className="flex items-center bg-slate-50 px-4 border-r border-slate-200 text-sm font-medium text-slate-600 cursor-pointer min-w-[140px] justify-between">
-              <span>All Categories</span>
-              <FiChevronDown />
+          <form onSubmit={handleSearch} className="flex w-full rounded-full border border-slate-200 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all bg-white relative">
+            
+            {/* Categories Dropdown */}
+            <div className="group relative">
+              <div className="flex h-full items-center bg-slate-50 px-4 border-r border-slate-200 text-sm font-medium text-slate-600 cursor-pointer min-w-[160px] justify-between rounded-l-full">
+                <span>All Categories</span>
+                <FiChevronDown className="transition-transform group-hover:rotate-180" />
+              </div>
+              
+              <div className="absolute top-full left-0 w-80 bg-white border border-slate-100 shadow-xl rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 mt-2">
+                <div className="p-4">
+                  <h3 className="font-bold text-dark mb-3 text-sm border-b pb-2">Top Categories</h3>
+                  <div className="flex flex-col gap-2">
+                    {shopDropdownData.map(cat => (
+                      <Link key={cat.id} to={`${ROUTES.SHOP}?category=${cat.slug}`} className="flex items-center gap-3 group/item hover:bg-slate-50 p-2 rounded-lg transition-colors">
+                        <img src={cat.product.image} alt={cat.product.name} className="w-12 h-12 object-cover rounded-md border border-slate-200 bg-white" />
+                        <div className="flex flex-col">
+                          <span className="font-bold text-dark group-hover/item:text-primary transition-colors">{cat.name}</span>
+                          <span className="text-xs text-slate-500 font-medium">{cat.product.name} - £{cat.product.price}</span>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
             <div className="flex-grow flex items-center bg-[#fcfbf9]">
               <FiSearch className="text-slate-400 ml-4" />
-              <input 
-                type="text" 
+              <input
+                type="text"
                 name="search"
-                placeholder="Search for groceries, spices, brands..." 
+                placeholder="Search for groceries, spices, brands..."
                 className="w-full px-3 py-3 outline-none bg-transparent text-sm"
               />
             </div>
-            <button 
-              type="submit" 
-              className="bg-primary hover:bg-primary-dark text-white font-bold text-sm px-8 transition-colors flex items-center gap-2"
+            <button
+              type="submit"
+              className="bg-primary hover:bg-primary-dark text-white font-bold text-sm px-8 transition-colors flex items-center gap-2 rounded-r-full"
             >
               Search
             </button>
@@ -65,7 +86,7 @@ const Header = () => {
 
         {/* Action Icons */}
         <div className="flex items-center gap-6 md:gap-8">
-          
+
           <Link to={user ? ROUTES.ACCOUNT : ROUTES.LOGIN} className="hidden md:flex items-center gap-2 hover:text-primary transition-colors">
             <div className="w-10 h-10 rounded-full border-2 border-slate-100 flex items-center justify-center text-dark">
               <FiUser size={20} />
