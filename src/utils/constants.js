@@ -23,4 +23,7 @@ export const ROUTES = {
   PROFILE: '/profile',
   ADDRESSES: '/addresses',
   SEARCH: '/search',
+  CHANGE_PASSWORD: '/change-password',
+  NOTIFICATIONS: '/notifications',
+  SUPPORT: '/support',
 };
