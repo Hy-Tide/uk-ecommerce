@@ -1,133 +1,160 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { FiSearch, FiCheckCircle, FiPackage, FiTruck, FiMapPin, FiSmile } from 'react-icons/fi';
+import AccountPageHeader from '../components/account/AccountPageHeader';
 
 const TrackOrder = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div>
-        <h1 className="text-2xl font-bold text-dark">Track Order</h1>
-        <p className="text-slate-500 text-sm mt-1">Track the status of your recent shipments.</p>
-      </div>
+    <div className="bg-[#fcfbf9] min-h-screen pb-20">
+      <AccountPageHeader title="Track Your Order" />
 
-      {/* Search Order Form */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sm:p-8">
-        <form className="flex flex-col md:flex-row gap-4">
-          <div className="flex-1">
-            <label className="block text-sm font-bold text-slate-700 mb-2">Order ID</label>
-            <input 
-              type="text" 
-              placeholder="e.g. UK-123456"
-              className="w-full px-5 py-3 rounded-xl border border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm"
-              defaultValue="UK-294182"
-            />
-          </div>
-          <div className="flex-1">
-            <label className="block text-sm font-bold text-slate-700 mb-2">Email Address</label>
-            <input 
-              type="email" 
-              placeholder="you@example.com"
-              className="w-full px-5 py-3 rounded-xl border border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm"
-              defaultValue="deepika@example.com"
-            />
-          </div>
-          <div className="flex items-end">
-            <button 
-              type="button" 
-              className="w-full md:w-auto px-8 py-3 bg-primary hover:bg-primary-dark text-white font-bold rounded-xl transition-colors flex items-center justify-center gap-2 h-[46px]"
-            >
-              <FiSearch className="w-5 h-5" />
-              Track
-            </button>
-          </div>
-        </form>
-      </div>
+      <div className="container px-4 lg:px-8 max-w-4xl mx-auto">
+        <div className="space-y-8">
+          
+          {/* Search Order Form */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="bg-white rounded-[24px] border border-slate-100 shadow-sm p-8"
+          >
+            <h2 className="text-xl font-bold text-slate-800 mb-6">Find your shipment</h2>
+            <form className="flex flex-col md:flex-row gap-5">
+              <div className="flex-1">
+                <label className="block text-sm font-bold text-slate-700 mb-2">Order ID</label>
+                <input 
+                  type="text" 
+                  placeholder="e.g. ORD-2026-..."
+                  className="w-full bg-[#FAFAF8] border border-slate-200 rounded-xl px-4 py-3.5 outline-none focus:border-[#2E8B57] focus:ring-4 focus:ring-[#2E8B57]/10 transition-all font-medium text-slate-700"
+                  defaultValue="ORD-2026-8924"
+                />
+              </div>
+              <div className="flex-1">
+                <label className="block text-sm font-bold text-slate-700 mb-2">Email Address</label>
+                <input 
+                  type="email" 
+                  placeholder="you@example.com"
+                  className="w-full bg-[#FAFAF8] border border-slate-200 rounded-xl px-4 py-3.5 outline-none focus:border-[#2E8B57] focus:ring-4 focus:ring-[#2E8B57]/10 transition-all font-medium text-slate-700"
+                  defaultValue="deepika@example.com"
+                />
+              </div>
+              <div className="flex items-end">
+                <button 
+                  type="button" 
+                  className="w-full md:w-auto bg-[#2E8B57] hover:bg-[#236b43] text-white font-bold py-3.5 px-8 rounded-xl transition-colors shadow-sm shadow-[#2E8B57]/20 flex items-center justify-center gap-2 h-[52px]"
+                >
+                  <FiSearch size={18} />
+                  Track
+                </button>
+              </div>
+            </form>
+          </motion.div>
 
-      {/* Tracking Results Card */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sm:p-8">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-slate-100">
-          <div>
-            <h3 className="font-bold text-xl text-dark">Order: UK-294182</h3>
-            <p className="text-slate-500 text-sm mt-1">Expected Delivery: <span className="font-bold text-primary">Oct 15, 2024</span></p>
-          </div>
-          <span className="bg-blue-50 border border-blue-100 text-blue-700 font-bold px-4 py-2 rounded-lg text-sm">
-            Out for delivery
-          </span>
-        </div>
+          {/* Tracking Results Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="bg-white rounded-[24px] border border-slate-100 shadow-sm overflow-hidden"
+          >
+            <div className="p-8 border-b border-slate-100 bg-[#FAFAF8] flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <p className="text-slate-500 font-bold uppercase tracking-wider text-[10px] mb-1">Tracking Number</p>
+                <h3 className="font-bold text-xl text-slate-800">#ORD-2026-8924</h3>
+              </div>
+              <div className="text-left md:text-right">
+                <p className="text-slate-500 font-bold uppercase tracking-wider text-[10px] mb-1">Expected Delivery</p>
+                <p className="font-bold text-lg text-[#FF8A00]">Tomorrow by 14:00</p>
+              </div>
+              <div className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-bold border text-[#FF8A00] bg-orange-50 border-orange-100 w-fit">
+                <span className="w-2 h-2 rounded-full bg-current"></span>
+                Out for delivery
+              </div>
+            </div>
 
-        {/* Horizontal Timeline */}
-        <div className="relative">
-          <div className="hidden sm:block absolute top-1/2 left-0 right-0 h-1 bg-slate-100 -translate-y-1/2 z-0 rounded-full"></div>
-          {/* Progress bar */}
-          <div className="hidden sm:block absolute top-1/2 left-0 h-1 bg-primary -translate-y-1/2 z-0 rounded-full" style={{ width: '75%' }}></div>
+            {/* Horizontal Timeline (Desktop) & Vertical (Mobile) */}
+            <div className="p-8 lg:p-12">
+              <div className="relative">
+                
+                {/* Connecting Lines */}
+                <div className="absolute top-1/2 left-6 right-6 h-1 bg-slate-100 -translate-y-1/2 z-0 rounded-full hidden sm:block"></div>
+                <div className="absolute top-1/2 left-6 h-1 bg-[#2E8B57] -translate-y-1/2 z-0 rounded-full hidden sm:block transition-all duration-1000" style={{ width: '75%' }}></div>
+                
+                <div className="absolute top-6 bottom-6 left-6 w-1 bg-slate-100 z-0 rounded-full sm:hidden"></div>
+                <div className="absolute top-6 left-6 w-1 bg-[#2E8B57] z-0 rounded-full sm:hidden transition-all duration-1000" style={{ height: '75%' }}></div>
 
-          <div className="flex flex-col sm:flex-row justify-between relative z-10 gap-6 sm:gap-0">
+                <div className="flex flex-col sm:flex-row justify-between relative z-10 gap-8 sm:gap-0">
+                  
+                  {/* Step 1 */}
+                  <div className="flex flex-row sm:flex-col items-center gap-4 sm:gap-3">
+                    <div className="w-12 h-12 rounded-full bg-[#2E8B57] text-white flex items-center justify-center shadow-sm shrink-0">
+                      <FiCheckCircle size={20} />
+                    </div>
+                    <div className="sm:text-center mt-1">
+                      <h4 className="font-bold text-slate-800 text-sm">Confirmed</h4>
+                      <p className="text-xs text-slate-500 mt-0.5">12 Jul, 14:30</p>
+                    </div>
+                  </div>
+
+                  {/* Step 2 */}
+                  <div className="flex flex-row sm:flex-col items-center gap-4 sm:gap-3">
+                    <div className="w-12 h-12 rounded-full bg-[#2E8B57] text-white flex items-center justify-center shadow-sm shrink-0">
+                      <FiPackage size={20} />
+                    </div>
+                    <div className="sm:text-center mt-1">
+                      <h4 className="font-bold text-slate-800 text-sm">Packed</h4>
+                      <p className="text-xs text-slate-500 mt-0.5">13 Jul, 09:15</p>
+                    </div>
+                  </div>
+
+                  {/* Step 3 */}
+                  <div className="flex flex-row sm:flex-col items-center gap-4 sm:gap-3">
+                    <div className="w-12 h-12 rounded-full bg-[#2E8B57] text-white flex items-center justify-center shadow-sm shrink-0">
+                      <FiTruck size={20} />
+                    </div>
+                    <div className="sm:text-center mt-1">
+                      <h4 className="font-bold text-slate-800 text-sm">Dispatched</h4>
+                      <p className="text-xs text-slate-500 mt-0.5">13 Jul, 14:00</p>
+                    </div>
+                  </div>
+
+                  {/* Step 4 (Current) */}
+                  <div className="flex flex-row sm:flex-col items-center gap-4 sm:gap-3">
+                    <div className="w-12 h-12 rounded-full bg-[#FF8A00] text-white flex items-center justify-center shadow-sm shadow-[#FF8A00]/20 ring-4 ring-[#FF8A00]/20 shrink-0">
+                      <FiMapPin size={20} />
+                    </div>
+                    <div className="sm:text-center mt-1">
+                      <h4 className="font-bold text-slate-800 text-sm">Out for Delivery</h4>
+                      <p className="text-xs text-slate-500 mt-0.5">Today, 08:00</p>
+                    </div>
+                  </div>
+
+                  {/* Step 5 (Pending) */}
+                  <div className="flex flex-row sm:flex-col items-center gap-4 sm:gap-3 opacity-40 grayscale">
+                    <div className="w-12 h-12 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center shrink-0">
+                      <FiSmile size={20} />
+                    </div>
+                    <div className="sm:text-center mt-1">
+                      <h4 className="font-bold text-slate-800 text-sm">Delivered</h4>
+                      <p className="text-xs text-slate-500 mt-0.5">Pending</p>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
             
-            {/* Step 1 */}
-            <div className="flex flex-row sm:flex-col items-center gap-4 sm:gap-2">
-              <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center border-4 border-white shadow-sm shrink-0">
-                <FiCheckCircle className="w-4 h-4" />
-              </div>
-              <div className="sm:text-center">
-                <h4 className="font-bold text-dark text-sm">Confirmed</h4>
-                <p className="text-xs text-slate-500 mt-1">Oct 12, 10:24 AM</p>
-              </div>
+            <div className="p-6 bg-emerald-50/50 border-t border-slate-100 flex items-center justify-center">
+              <p className="text-sm font-medium text-slate-700 flex items-center gap-2">
+                <FiMapPin className="text-[#2E8B57]" /> Your package is currently out for delivery in <strong className="text-slate-900">Wembley, London</strong>.
+              </p>
             </div>
+          </motion.div>
 
-            {/* Step 2 */}
-            <div className="flex flex-row sm:flex-col items-center gap-4 sm:gap-2">
-              <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center border-4 border-white shadow-sm shrink-0">
-                <FiPackage className="w-4 h-4" />
-              </div>
-              <div className="sm:text-center">
-                <h4 className="font-bold text-dark text-sm">Packed</h4>
-                <p className="text-xs text-slate-500 mt-1">Oct 13, 09:15 AM</p>
-              </div>
-            </div>
-
-            {/* Step 3 */}
-            <div className="flex flex-row sm:flex-col items-center gap-4 sm:gap-2">
-              <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center border-4 border-white shadow-sm shrink-0">
-                <FiTruck className="w-4 h-4" />
-              </div>
-              <div className="sm:text-center">
-                <h4 className="font-bold text-dark text-sm">Dispatched</h4>
-                <p className="text-xs text-slate-500 mt-1">Oct 14, 02:30 PM</p>
-              </div>
-            </div>
-
-            {/* Step 4 */}
-            <div className="flex flex-row sm:flex-col items-center gap-4 sm:gap-2">
-              <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center border-4 border-white shadow-sm shrink-0">
-                <FiMapPin className="w-4 h-4" />
-              </div>
-              <div className="sm:text-center">
-                <h4 className="font-bold text-dark text-sm">Out for Delivery</h4>
-                <p className="text-xs text-slate-500 mt-1">Oct 15, 08:30 AM</p>
-              </div>
-            </div>
-
-            {/* Step 5 */}
-            <div className="flex flex-row sm:flex-col items-center gap-4 sm:gap-2">
-              <div className="w-10 h-10 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center border-4 border-white shadow-sm shrink-0">
-                <FiSmile className="w-4 h-4" />
-              </div>
-              <div className="sm:text-center">
-                <h4 className="font-bold text-slate-400 text-sm">Delivered</h4>
-                <p className="text-xs text-slate-400 mt-1">Pending</p>
-              </div>
-            </div>
-            
-          </div>
-        </div>
-
-        <div className="mt-12 bg-slate-50 border border-slate-100 rounded-xl p-4 flex items-start gap-3">
-          <div className="text-primary mt-1">
-            <FiTruck className="w-5 h-5" />
-          </div>
-          <div>
-            <h4 className="font-bold text-dark text-sm mb-1">Driver is nearby</h4>
-            <p className="text-slate-600 text-sm">Your driver <span className="font-bold">Rahul</span> is currently 3 stops away. Ensure someone is available at the delivery address.</p>
-          </div>
         </div>
       </div>
     </div>

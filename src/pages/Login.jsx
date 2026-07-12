@@ -4,13 +4,17 @@ import { FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 import { FcGoogle } from 'react-icons/fc';
 import { ROUTES } from '../utils/constants';
 
+import { useAuth } from '../context/AuthContext';
+
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleLogin = (e) => {
     e.preventDefault();
-    navigate(ROUTES.ACCOUNT);
+    login({ name: 'Deepika Venkatesan', email: 'deepika@example.com' });
+    navigate(ROUTES.PROFILE);
   };
 
   return (

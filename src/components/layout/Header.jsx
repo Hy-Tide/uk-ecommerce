@@ -7,6 +7,7 @@ import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useAuth } from '../../context/AuthContext';
 import { shopDropdownData } from '../../data/dummyData';
+import UserDropdown from './UserDropdown';
 
 const Header = () => {
   const { cartItems, cartTotal } = useCart();
@@ -41,14 +42,14 @@ const Header = () => {
         {/* Search Bar */}
         <div className="hidden lg:flex flex-grow max-w-2xl mx-8">
           <form onSubmit={handleSearch} className="flex w-full rounded-full border border-slate-200 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all bg-white relative">
-            
+
             {/* Categories Dropdown */}
             <div className="group relative">
               <div className="flex h-full items-center bg-slate-50 px-4 border-r border-slate-200 text-sm font-medium text-slate-600 cursor-pointer min-w-[160px] justify-between rounded-l-full">
                 <span>All Categories</span>
                 <FiChevronDown className="transition-transform group-hover:rotate-180" />
               </div>
-              
+
               <div className="absolute top-full left-0 w-80 bg-white border border-slate-100 shadow-xl rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 mt-2">
                 <div className="p-4">
                   <h3 className="font-bold text-dark mb-3 text-sm border-b pb-2">Top Categories</h3>
@@ -86,17 +87,6 @@ const Header = () => {
 
         {/* Action Icons */}
         <div className="flex items-center gap-6 md:gap-8">
-
-          <Link to={user ? ROUTES.ACCOUNT : ROUTES.LOGIN} className="hidden md:flex items-center gap-2 hover:text-primary transition-colors">
-            <div className="w-10 h-10 rounded-full border-2 border-slate-100 flex items-center justify-center text-dark">
-              <FiUser size={20} />
-            </div>
-            <div className="flex flex-col leading-none">
-              <span className="text-[10px] text-slate-400 font-medium">Hello, Sign in</span>
-              <span className="text-sm font-bold text-dark">My Account</span>
-            </div>
-          </Link>
-
           <Link to={ROUTES.WISHLIST} className="hidden md:flex items-center gap-2 hover:text-primary transition-colors">
             <div className="relative text-dark">
               <FiHeart size={24} />
@@ -114,6 +104,19 @@ const Header = () => {
             </div>
             <span className="font-bold border-l border-white/20 pl-3">£{cartTotal.toFixed(2)}</span>
           </Link>
+          {user ? (
+            <UserDropdown />
+          ) : (
+            <Link to={ROUTES.LOGIN} className="hidden md:flex items-center gap-2 hover:text-primary transition-colors">
+              <div className="w-10 h-10 rounded-full border-2 border-slate-100 flex items-center justify-center text-dark">
+                <FiUser size={20} />
+              </div>
+              <div className="flex flex-col leading-none">
+                <span className="text-[10px] text-slate-400 font-medium">Hello, Sign in</span>
+                <span className="text-sm font-bold text-dark">My Account</span>
+              </div>
+            </Link>
+          )}
 
         </div>
       </div>

@@ -1,11 +1,12 @@
 import React, { createContext, useContext, useState } from 'react';
+import { products } from '../data/dummyData';
 
 const WishlistContext = createContext();
 
 export const useWishlist = () => useContext(WishlistContext);
 
 export const WishlistProvider = ({ children }) => {
-  const [wishlistItems, setWishlistItems] = useState([]);
+  const [wishlistItems, setWishlistItems] = useState([products[0], products[2]]);
 
   const toggleWishlist = (product) => {
     setWishlistItems(prev => {

@@ -1,124 +1,105 @@
-import React, { useState } from 'react';
-import { FiPackage, FiDollarSign, FiTag, FiClock, FiCheck } from 'react-icons/fi';
+import React, { useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { FiBox, FiTag, FiGift, FiHeart, FiMoreVertical } from 'react-icons/fi';
+import AccountPageHeader from '../components/account/AccountPageHeader';
 
-const initialNotifications = [
+const dummyNotifications = [
   {
     id: 1,
     title: 'Order Delivered',
-    message: 'Your order #UK-294182 has been delivered successfully. Enjoy your fresh groceries!',
+    message: 'Your order #ORD-2026-8924 has been successfully delivered. Enjoy your groceries!',
     time: '2 hours ago',
-    icon: <FiPackage className="w-5 h-5 text-green-500" />,
-    bg: 'bg-green-100 border-green-200',
-    unread: true
+    type: 'order',
+    isUnread: true,
   },
   {
     id: 2,
-    title: 'Payment Successful',
-    message: 'We have received your payment of £45.99 for order #UK-294182.',
-    time: 'Yesterday',
-    icon: <FiDollarSign className="w-5 h-5 text-blue-500" />,
-    bg: 'bg-blue-100 border-blue-200',
-    unread: true
+    title: 'New Offer on Spices',
+    message: 'Get 20% off on all whole spices this weekend. Use code SPICE20 at checkout.',
+    time: '1 day ago',
+    type: 'offer',
+    isUnread: true,
   },
   {
     id: 3,
-    title: 'New Offers Available!',
-    message: 'Get 20% off on all organic fruits this weekend. Use code FRESH20.',
-    time: '2 days ago',
-    icon: <FiTag className="w-5 h-5 text-orange-500" />,
-    bg: 'bg-orange-100 border-orange-200',
-    unread: false
+    title: 'Cashback Earned',
+    message: 'You have earned £5.00 cashback from your last order. It has been added to your Rewards wallet.',
+    time: '3 days ago',
+    type: 'reward',
+    isUnread: false,
   },
   {
     id: 4,
-    title: 'Delivery Delay',
-    message: 'Sorry! Due to heavy rain, your delivery might be delayed by 30 mins.',
-    time: 'Oct 12, 2024',
-    icon: <FiClock className="w-5 h-5 text-red-500" />,
-    bg: 'bg-red-100 border-red-200',
-    unread: false
-  }
+    title: 'Wishlist Item Back in Stock',
+    message: 'Good news! Premium Saffron (1g) is back in stock. Grab it before it runs out again.',
+    time: '5 days ago',
+    type: 'wishlist',
+    isUnread: false,
+  },
 ];
 
+const getIconForType = (type) => {
+  switch (type) {
+    case 'order': return <div className="w-12 h-12 rounded-full bg-emerald-50 text-[#2E8B57] flex items-center justify-center flex-shrink-0"><FiBox size={20} /></div>;
+    case 'offer': return <div className="w-12 h-12 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center flex-shrink-0"><FiTag size={20} /></div>;
+    case 'reward': return <div className="w-12 h-12 rounded-full bg-yellow-50 text-yellow-600 flex items-center justify-center flex-shrink-0"><FiGift size={20} /></div>;
+    case 'wishlist': return <div className="w-12 h-12 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center flex-shrink-0"><FiHeart size={20} /></div>;
+    default: return <div className="w-12 h-12 rounded-full bg-slate-50 text-slate-500 flex items-center justify-center flex-shrink-0"><FiBox size={20} /></div>;
+  }
+};
+
 const Notifications = () => {
-  const [notifications, setNotifications] = useState(initialNotifications);
-
-  const markAllAsRead = () => {
-    setNotifications(notifications.map(n => ({ ...n, unread: false })));
-  };
-
-  const hasUnread = notifications.some(n => n.unread);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
-    <div className="space-y-6 animate-fade-in max-w-4xl">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-dark">Notifications</h1>
-          <p className="text-slate-500 text-sm mt-1">Stay updated with your orders and offers.</p>
-        </div>
-        
-        {hasUnread && (
-          <button 
-            onClick={markAllAsRead}
-            className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-medium hover:bg-slate-50 transition-colors shrink-0"
-          >
-            <FiCheck className="w-4 h-4 text-green-500" />
-            Mark all as read
-          </button>
-        )}
-      </div>
+    <div className="bg-[#fcfbf9] min-h-screen pb-20">
+      <AccountPageHeader title="Notifications" />
 
-      {notifications.length > 0 ? (
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+      <div className="container px-4 lg:px-8 max-w-4xl mx-auto">
+        <div className="bg-white rounded-[24px] border border-slate-100 shadow-sm overflow-hidden">
+          
+          <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-[#FAFAF8]">
+            <h3 className="font-bold text-slate-800 text-lg">All Notifications</h3>
+            <button className="text-sm font-bold text-[#2E8B57] hover:underline">Mark all as read</button>
+          </div>
+
           <div className="divide-y divide-slate-100">
-            {notifications.map((notification) => (
-              <div 
-                key={notification.id} 
-                className={`p-6 flex gap-4 transition-colors hover:bg-slate-50 ${
-                  notification.unread ? 'bg-primary-50/30 relative' : ''
-                }`}
+            {dummyNotifications.map((notif, index) => (
+              <motion.div
+                key={notif.id}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
+                className={`p-6 flex items-start gap-4 transition-colors relative group ${notif.isUnread ? 'bg-emerald-50/30' : 'hover:bg-slate-50/50'}`}
               >
-                {notification.unread && (
-                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
+                {notif.isUnread && (
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#2E8B57]"></div>
                 )}
                 
-                <div className={`w-12 h-12 rounded-full border flex items-center justify-center shrink-0 ${notification.bg}`}>
-                  {notification.icon}
-                </div>
+                {getIconForType(notif.type)}
                 
-                <div className="flex-grow">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-1 gap-1">
-                    <h4 className={`text-sm ${notification.unread ? 'font-bold text-dark' : 'font-semibold text-slate-700'}`}>
-                      {notification.title}
-                    </h4>
-                    <span className="text-xs text-slate-400 font-medium whitespace-nowrap">
-                      {notification.time}
-                    </span>
+                <div className="flex-1 min-w-0 pr-8">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h4 className={`font-bold ${notif.isUnread ? 'text-slate-900' : 'text-slate-800'}`}>{notif.title}</h4>
+                    {notif.isUnread && <span className="w-2 h-2 rounded-full bg-rose-500"></span>}
                   </div>
-                  <p className="text-sm text-slate-600 leading-relaxed">
-                    {notification.message}
+                  <p className={`text-sm leading-relaxed mb-2 ${notif.isUnread ? 'text-slate-700 font-medium' : 'text-slate-600'}`}>
+                    {notif.message}
                   </p>
+                  <p className="text-xs font-bold text-slate-400">{notif.time}</p>
                 </div>
-              </div>
+
+                <button className="text-slate-400 hover:text-slate-800 opacity-0 group-hover:opacity-100 transition-opacity p-2 rounded-full hover:bg-slate-100">
+                  <FiMoreVertical />
+                </button>
+              </motion.div>
             ))}
           </div>
+
         </div>
-      ) : (
-        /* Empty State */
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-12 flex flex-col items-center justify-center text-center">
-          <div className="w-24 h-24 mb-6 rounded-full bg-slate-50 flex items-center justify-center">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-300">
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-            </svg>
-          </div>
-          <h3 className="text-xl font-bold text-dark mb-2">No notifications yet</h3>
-          <p className="text-slate-500 max-w-sm mb-6">When you get updates about your orders or special offers, they will appear here.</p>
-          <button className="px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-dark transition-colors shadow-md shadow-primary/20">
-            Start Shopping
-          </button>
-        </div>
-      )}
+      </div>
     </div>
   );
 };

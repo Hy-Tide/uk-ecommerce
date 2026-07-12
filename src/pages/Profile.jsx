@@ -1,147 +1,100 @@
-import React, { useState } from 'react';
-import { FiCamera, FiEdit2, FiSave, FiX } from 'react-icons/fi';
+import React, { useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { FiEdit2, FiMail, FiPhone, FiMapPin, FiShield } from 'react-icons/fi';
+import { useAuth } from '../context/AuthContext';
+import AccountPageHeader from '../components/account/AccountPageHeader';
 
 const Profile = () => {
-  const [isEditing, setIsEditing] = useState(false);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const handleEdit = () => {
+    alert("Edit Profile modal would open here.");
+  };
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-dark">Profile Information</h1>
-          <p className="text-slate-500 text-sm mt-1">Manage your personal details.</p>
-        </div>
-        {!isEditing ? (
-          <button 
-            onClick={() => setIsEditing(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-primary-50 text-primary font-bold rounded-xl hover:bg-primary-100 transition-colors"
-          >
-            <FiEdit2 className="w-4 h-4" />
-            Edit Profile
-          </button>
-        ) : (
-          <div className="flex gap-2">
-            <button 
-              onClick={() => setIsEditing(false)}
-              className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-600 font-bold rounded-xl hover:bg-slate-200 transition-colors"
+    <div className="bg-[#fcfbf9] min-h-screen pb-20">
+      <AccountPageHeader title="My Profile" />
+
+      <div className="container px-4 lg:px-8 max-w-4xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="bg-white rounded-[24px] border border-slate-100 shadow-sm overflow-hidden"
+        >
+          {/* Cover Photo Area */}
+          <div className="h-32 bg-gradient-to-r from-[#2E8B57] to-[#1D3B2A] relative">
+            <button
+              onClick={handleEdit}
+              className="absolute top-4 right-4 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-colors border border-white/20"
             >
-              <FiX className="w-4 h-4" />
-              Cancel
-            </button>
-            <button 
-              onClick={() => setIsEditing(false)}
-              className="flex items-center gap-2 px-4 py-2 bg-primary text-white font-bold rounded-xl hover:bg-primary-dark transition-colors shadow-md shadow-primary/20"
-            >
-              <FiSave className="w-4 h-4" />
-              Save Changes
+              <FiEdit2 /> Edit Profile
             </button>
           </div>
-        )}
-      </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sm:p-8">
-        <form className="max-w-2xl">
-          <div className="mb-10 flex items-center gap-6">
-            <div className="relative">
-              <div className="w-24 h-24 rounded-full bg-primary-50 text-primary flex items-center justify-center text-3xl font-bold overflow-hidden border-4 border-white shadow-sm ring-1 ring-slate-100">
-                <img src="https://i.pravatar.cc/150?img=47" alt="Profile" className="w-full h-full object-cover" />
+          <div className="px-8 pb-8">
+            {/* Avatar */}
+            <div className="relative -mt-16 mb-6 flex justify-between items-end">
+              <div className="w-32 h-32 rounded-full border-4 border-white shadow-md bg-white overflow-hidden flex items-center justify-center">
+                {user?.avatar ? (
+                  <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                ) : (
+                  <span className="font-black text-[#2E8B57] text-5xl">
+                    {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                  </span>
+                )}
               </div>
-              {isEditing && (
-                <button type="button" className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-dark text-white flex items-center justify-center border-2 border-white hover:bg-primary transition-colors cursor-pointer shadow-sm">
-                  <FiCamera className="w-4 h-4" />
-                </button>
-              )}
             </div>
-            <div>
-              <h3 className="font-bold text-lg text-dark">Deepika</h3>
-              <p className="text-sm text-slate-500 mt-1">PNG, JPG up to 5MB</p>
-            </div>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">First Name</label>
-              <input 
-                type="text" 
-                defaultValue="Deepika"
-                disabled={!isEditing}
-                className={`w-full px-5 py-3 rounded-xl border outline-none transition-colors text-sm ${
-                  isEditing 
-                    ? 'border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary bg-white' 
-                    : 'border-transparent bg-slate-50 text-slate-700 font-medium'
-                }`}
-              />
+            {/* User Info */}
+            <div className="mb-10">
+              <h2 className="text-3xl font-black text-slate-800 mb-1">{user?.name || 'Customer Name'}</h2>
+              <div className="flex items-center gap-2 text-[#2E8B57] font-bold text-sm bg-emerald-50 px-3 py-1 rounded-full w-fit">
+                <FiShield /> Verified Customer
+              </div>
             </div>
-            <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">Last Name</label>
-              <input 
-                type="text" 
-                defaultValue="V"
-                disabled={!isEditing}
-                className={`w-full px-5 py-3 rounded-xl border outline-none transition-colors text-sm ${
-                  isEditing 
-                    ? 'border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary bg-white' 
-                    : 'border-transparent bg-slate-50 text-slate-700 font-medium'
-                }`}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">Email Address</label>
-              <input 
-                type="email" 
-                defaultValue="deepika@example.com"
-                disabled={!isEditing}
-                className={`w-full px-5 py-3 rounded-xl border outline-none transition-colors text-sm ${
-                  isEditing 
-                    ? 'border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary bg-white' 
-                    : 'border-transparent bg-slate-50 text-slate-700 font-medium'
-                }`}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">Phone Number</label>
-              <input 
-                type="tel" 
-                defaultValue="+44 20 7946 0958"
-                disabled={!isEditing}
-                className={`w-full px-5 py-3 rounded-xl border outline-none transition-colors text-sm ${
-                  isEditing 
-                    ? 'border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary bg-white' 
-                    : 'border-transparent bg-slate-50 text-slate-700 font-medium'
-                }`}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">Date of Birth</label>
-              <input 
-                type="date" 
-                defaultValue="1990-01-01"
-                disabled={!isEditing}
-                className={`w-full px-5 py-3 rounded-xl border outline-none transition-colors text-sm ${
-                  isEditing 
-                    ? 'border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary bg-white' 
-                    : 'border-transparent bg-slate-50 text-slate-700 font-medium'
-                }`}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">Gender</label>
-              <select
-                disabled={!isEditing}
-                className={`w-full px-5 py-3 rounded-xl border outline-none transition-colors text-sm appearance-none ${
-                  isEditing 
-                    ? 'border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary bg-white' 
-                    : 'border-transparent bg-slate-50 text-slate-700 font-medium'
-                }`}
-              >
-                <option value="female">Female</option>
-                <option value="male">Male</option>
-                <option value="other">Other</option>
-                <option value="prefer_not_to_say">Prefer not to say</option>
-              </select>
+
+            {/* Details Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+              <div className="p-6 bg-[#FAFAF8] rounded-[20px] border border-slate-100 flex items-start gap-4 hover:shadow-sm transition-shadow">
+                <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-[#FF8A00] shadow-sm flex-shrink-0">
+                  <FiMail size={20} />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Email Address</p>
+                  <p className="font-bold text-slate-800">{user?.email || 'customer@example.com'}</p>
+                </div>
+              </div>
+
+              <div className="p-6 bg-[#FAFAF8] rounded-[20px] border border-slate-100 flex items-start gap-4 hover:shadow-sm transition-shadow">
+                <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-[#2E8B57] shadow-sm flex-shrink-0">
+                  <FiPhone size={20} />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Mobile Number</p>
+                  <p className="font-bold text-slate-800">{user?.phone || '+44 7700 900000'}</p>
+                </div>
+              </div>
+
+              <div className="p-6 bg-[#FAFAF8] rounded-[20px] border border-slate-100 flex items-start gap-4 hover:shadow-sm transition-shadow md:col-span-2">
+                <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-blue-500 shadow-sm flex-shrink-0">
+                  <FiMapPin size={20} />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Default Address</p>
+                  <p className="font-bold text-slate-800 mb-1">UK Groceries (London)</p>
+                  <p className="text-slate-600 font-medium">123 Grocery Lane, Wembley, London, HA0 1AB</p>
+                </div>
+              </div>
+
             </div>
           </div>
-        </form>
+        </motion.div>
       </div>
     </div>
   );

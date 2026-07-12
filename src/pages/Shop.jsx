@@ -4,10 +4,10 @@ import Breadcrumbs from '../components/common/Breadcrumbs';
 import ShopHero from '../components/shop/ShopHero';
 import ShopSidebar from '../components/shop/ShopSidebar';
 import ShopProductCard from '../components/shop/ShopProductCard';
-import QuickViewBlock from '../components/shop/QuickViewBlock';
 import ProductScroller from '../components/shop/ProductScroller';
 import { shopProducts, subCategories } from '../data/dummyData';
 import Newsletter from '../components/home/Newsletter';
+import SubCategoryPills from '../components/shop/SubCategoryPills';
 
 const Shop = () => {
   return (
@@ -15,30 +15,23 @@ const Shop = () => {
       <div className="container">
         {/* Top Breadcrumb */}
         <Breadcrumbs paths={[{ name: 'Shop', url: '/shop' }, { name: 'Atta & Flour' }]} />
-        
+
         {/* Banner */}
         <ShopHero />
 
         {/* Layout Split */}
         <div className="flex flex-col lg:flex-row gap-8 mb-16">
-          
+
           {/* Sidebar */}
           <div className="w-full lg:w-[280px] flex-shrink-0">
             <ShopSidebar />
           </div>
 
           {/* Main Content */}
-          <div className="w-full lg:flex-grow">
-            
+          <div className="w-full lg:flex-grow min-w-0">
+
             {/* Sub Categories Pills */}
-            <div className="flex items-center gap-3 overflow-x-auto hide-scrollbar mb-6 pb-2">
-              <button className="bg-[#e8f5ed] text-[#379c6b] font-bold text-sm px-5 py-2 rounded-xl whitespace-nowrap">All Products</button>
-              {subCategories.map((sub, idx) => (
-                <button key={idx} className="bg-white border border-slate-200 text-slate-500 hover:text-dark hover:border-slate-300 font-bold text-sm px-5 py-2 rounded-xl whitespace-nowrap transition-colors">
-                  {sub}
-                </button>
-              ))}
-            </div>
+            <SubCategoryPills categories={subCategories} />
 
             {/* Grid Header */}
             <div className="flex items-center justify-between mb-6">
@@ -69,18 +62,16 @@ const Shop = () => {
           </div>
         </div>
 
-        {/* Quick View Block */}
-        <QuickViewBlock />
 
         {/* Carousels */}
-        <ProductScroller 
-          title="Recently Viewed" 
-          products={shopProducts.slice(0, 4)} 
+        <ProductScroller
+          title="Recently Viewed"
+          products={shopProducts.slice(0, 4)}
           actionText=""
         />
-        <ProductScroller 
-          title="Recommended Products" 
-          products={shopProducts.slice(4, 8)} 
+        <ProductScroller
+          title="Recommended Products"
+          products={shopProducts.slice(4, 8)}
           actionText="See more recommendations"
         />
       </div>

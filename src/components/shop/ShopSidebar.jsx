@@ -101,16 +101,6 @@ const ShopSidebar = () => {
         initiallyOpen={false}
       />
 
-      {/* Customer Ratings */}
-      <CheckboxGroup 
-        title="Customer Ratings" 
-        options={[
-          { name: '4★ & above', count: 42 },
-          { name: '3★ & above', count: 65 }
-        ]} 
-        initiallyOpen={false}
-      />
-
     </aside>
   );
 };

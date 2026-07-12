@@ -29,16 +29,8 @@ const ProductInfo = ({ product }) => {
       {/* Title */}
       <h1 className="text-3xl md:text-4xl font-black text-dark leading-tight mb-4">{product.name}</h1>
 
-      {/* Rating & Stats */}
+      {/* Stats */}
       <div className="flex flex-wrap items-center gap-3 mb-6">
-        <div className="flex items-center gap-1 bg-[#fcfbf9] border border-slate-100 px-2 py-1 rounded-md">
-          <FaStar className="text-yellow-400" size={14} />
-          <span className="text-sm font-bold text-dark">{product.rating}</span>
-        </div>
-        <a href="#reviews" className="text-sm text-slate-500 hover:text-[#379c6b] underline decoration-slate-300 underline-offset-4">
-          {product.reviewsCount} reviews
-        </a>
-        <span className="text-slate-300">•</span>
         <span className="text-sm text-slate-500 bg-[#fcfbf9] px-2 py-1 rounded-md border border-slate-100">
           {product.soldCount}
         </span>

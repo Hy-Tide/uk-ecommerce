@@ -71,18 +71,6 @@ const ProductCard = ({ product }) => {
         
         <span className="text-xs text-slate-400 mb-2 block">{product.weight}</span>
 
-        {/* Rating */}
-        <div className="flex items-center gap-0.5 mb-3">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <FaStar 
-              key={star} 
-              size={10} 
-              className={star <= product.rating ? "text-yellow-400" : "text-slate-200"} 
-            />
-          ))}
-          <span className="text-[10px] text-slate-400 ml-1">({product.reviews})</span>
-        </div>
-
         {/* Price Row */}
         <div className="mt-auto flex items-center gap-2 mb-4">
           <span className="text-lg font-black text-dark">£{product.price.toFixed(2)}</span>

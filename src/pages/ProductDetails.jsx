@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useMemo, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import Breadcrumbs from '../components/common/Breadcrumbs';
 import ProductGallery from '../components/product/ProductGallery';
 import ProductInfo from '../components/product/ProductInfo';
@@ -21,6 +21,29 @@ import {
 } from '../data/dummyData';
 
 const ProductDetails = () => {
+  const { slug } = useParams();
+
+  // Scroll to top when navigating to a new product
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [slug]);
+
+  const currentProduct = useMemo(() => {
+    const found = shopProducts.find(p => p.slug === slug);
+    if (!found) return detailedProduct;
+
+    // Merge basic product data with rich detailed structure
+    return {
+      ...detailedProduct,
+      ...found,
+      // Map basic fields to detailed names if they differ
+      discountBadge: found.discountAmount || detailedProduct.discountBadge,
+      reviewsCount: found.reviews || detailedProduct.reviewsCount,
+      oldPrice: found.oldPrice || detailedProduct.oldPrice,
+      savings: found.oldPrice ? `You Save £${(found.oldPrice - found.price).toFixed(2)}` : detailedProduct.savings,
+    };
+  }, [slug]);
+
   return (
     <div className="bg-[#fcfbf9] min-h-screen relative pb-16 md:pb-0">
       <div className="container">
@@ -30,8 +53,8 @@ const ProductDetails = () => {
           <Breadcrumbs 
             paths={[
               { name: 'Shop', url: '/shop' }, 
-              { name: 'Atta & Flour', url: '/shop' }, 
-              { name: 'Aashirvaad Whole Wheat Atta 10kg' }
+              { name: currentProduct.category ? currentProduct.category.charAt(0).toUpperCase() + currentProduct.category.slice(1) : 'Atta & Flour', url: '/shop' }, 
+              { name: currentProduct.name }
             ]} 
           />
         </div>
@@ -39,15 +62,15 @@ const ProductDetails = () => {
         {/* Main Product Section */}
         <div className="bg-white rounded-[32px] p-6 md:p-10 border border-slate-100 shadow-sm mb-12 flex flex-col lg:flex-row gap-10 lg:gap-16">
           <div className="w-full lg:w-[45%]">
-            <ProductGallery images={[detailedProduct.image, detailedProduct.image, detailedProduct.image, detailedProduct.image]} />
+            <ProductGallery images={[currentProduct.image, currentProduct.image, currentProduct.image, currentProduct.image]} />
           </div>
           <div className="w-full lg:w-[55%]">
-            <ProductInfo product={detailedProduct} />
+            <ProductInfo product={currentProduct} />
           </div>
         </div>
 
         {/* Product Tabs */}
-        <ProductTabs product={detailedProduct} />
+        <ProductTabs product={currentProduct} />
 
         {/* Related Products Grid */}
         <div className="mb-12">
@@ -74,8 +97,6 @@ const ProductDetails = () => {
           actionText="" 
         />
 
-        {/* Customer Reviews */}
-        <CustomerReviews data={productReviewsData} />
 
         {/* FAQ */}
         <ProductFAQ faqs={productFAQs} />
@@ -88,7 +109,7 @@ const ProductDetails = () => {
       </div>
 
       {/* Sticky Bottom Bar */}
-      <StickyBottomBar product={detailedProduct} />
+      <StickyBottomBar product={currentProduct} />
 
     </div>
   );

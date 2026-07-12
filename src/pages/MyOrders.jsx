@@ -1,177 +1,150 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { 
-  FiEye, 
-  FiDownload, 
-  FiRefreshCw, 
-  FiMapPin, 
-  FiMessageCircle,
-  FiSearch,
-  FiFilter
-} from 'react-icons/fi';
-import { ROUTES } from '../utils/constants';
+import { FiSearch, FiFilter, FiMapPin, FiRefreshCw, FiEye } from 'react-icons/fi';
+import AccountPageHeader from '../components/account/AccountPageHeader';
 
-const orders = [
+// Dummy Order Data
+const dummyOrders = [
   {
-    id: 'UK-294182',
-    date: 'Oct 12, 2024',
-    total: '£45.99',
-    paymentStatus: 'Paid',
-    deliveryStatus: 'Delivered',
-    estimatedDelivery: 'Delivered on Oct 14',
-    statusColor: 'bg-green-100 text-green-700',
-    items: 3
+    id: 'ORD-2026-8924',
+    date: '12 Jul 2026',
+    status: 'Delivered',
+    statusColor: 'text-[#2E8B57] bg-emerald-50 border-emerald-100',
+    total: '£45.90',
+    items: 4,
+    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=200'
   },
   {
-    id: 'UK-294005',
-    date: 'Sep 28, 2024',
-    total: '£12.50',
-    paymentStatus: 'Paid',
-    deliveryStatus: 'Processing',
-    estimatedDelivery: 'Est: Oct 02, 2024',
-    statusColor: 'bg-blue-100 text-blue-700',
-    items: 1
+    id: 'ORD-2026-8901',
+    date: '02 Jul 2026',
+    status: 'In Transit',
+    statusColor: 'text-[#FF8A00] bg-orange-50 border-orange-100',
+    total: '£112.50',
+    items: 12,
+    image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=200'
   },
   {
-    id: 'UK-293881',
-    date: 'Sep 15, 2024',
-    total: '£89.99',
-    paymentStatus: 'Refunded',
-    deliveryStatus: 'Cancelled',
-    estimatedDelivery: '-',
-    statusColor: 'bg-red-100 text-red-700',
-    items: 5
-  },
-  {
-    id: 'UK-293772',
-    date: 'Sep 01, 2024',
-    total: '£105.20',
-    paymentStatus: 'Paid',
-    deliveryStatus: 'Shipped',
-    estimatedDelivery: 'Est: Sep 05, 2024',
-    statusColor: 'bg-purple-100 text-purple-700',
-    items: 8
+    id: 'ORD-2026-8755',
+    date: '15 Jun 2026',
+    status: 'Cancelled',
+    statusColor: 'text-rose-600 bg-rose-50 border-rose-100',
+    total: '£22.00',
+    items: 2,
+    image: 'https://images.unsplash.com/photo-1626082895617-2c6b484a0d9c?auto=format&fit=crop&q=80&w=200'
   }
 ];
 
 const MyOrders = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-dark">My Orders</h1>
-          <p className="text-slate-500 text-sm mt-1">Manage and track your recent orders.</p>
-        </div>
+    <div className="bg-[#fcfbf9] min-h-screen pb-20">
+      <AccountPageHeader title="My Orders" />
+
+      <div className="container px-4 lg:px-8 max-w-5xl mx-auto">
         
-        <div className="flex items-center gap-3">
-          <div className="relative">
+        {/* Search & Filter Bar */}
+        <div className="bg-white rounded-[20px] border border-slate-100 shadow-sm p-4 mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
+          
+          <div className="relative w-full md:w-96 flex-shrink-0">
             <input 
               type="text" 
-              placeholder="Search by Order ID..." 
-              className="pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all w-full sm:w-64"
+              placeholder="Search by order ID or product..." 
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 outline-none focus:border-[#2E8B57] focus:ring-2 focus:ring-[#2E8B57]/10 transition-all font-medium text-slate-700"
             />
-            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-medium hover:bg-slate-50 transition-colors shrink-0">
-            <FiFilter className="w-4 h-4" />
-            Filter
-          </button>
-        </div>
-      </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-[900px]">
-            <thead>
-              <tr className="bg-slate-50 border-b border-slate-100">
-                <th className="py-4 px-6 font-bold text-slate-700 text-sm rounded-tl-2xl">Order ID & Date</th>
-                <th className="py-4 px-6 font-bold text-slate-700 text-sm">Total Amount</th>
-                <th className="py-4 px-6 font-bold text-slate-700 text-sm">Payment Status</th>
-                <th className="py-4 px-6 font-bold text-slate-700 text-sm">Delivery Status</th>
-                <th className="py-4 px-6 font-bold text-slate-700 text-sm">Estimated Delivery</th>
-                <th className="py-4 px-6 font-bold text-slate-700 text-sm text-right rounded-tr-2xl">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {orders.map((order) => (
-                <tr key={order.id} className="hover:bg-slate-50 transition-colors group">
-                  <td className="py-4 px-6">
-                    <span className="font-bold text-dark">{order.id}</span>
-                    <div className="flex items-center gap-2 mt-1">
-                      <p className="text-xs text-slate-500">{order.date}</p>
-                      <span className="w-1 h-1 rounded-full bg-slate-300"></span>
-                      <p className="text-xs text-slate-500">{order.items} Items</p>
-                    </div>
-                  </td>
-                  <td className="py-4 px-6 font-bold text-dark">{order.total}</td>
-                  <td className="py-4 px-6">
-                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                      order.paymentStatus === 'Paid' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                    }`}>
-                      {order.paymentStatus}
-                    </span>
-                  </td>
-                  <td className="py-4 px-6">
-                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${order.statusColor}`}>
-                      {order.deliveryStatus}
-                    </span>
-                  </td>
-                  <td className="py-4 px-6 text-sm text-slate-600">
-                    {order.estimatedDelivery}
-                  </td>
-                  <td className="py-4 px-6">
-                    <div className="flex items-center justify-end gap-2">
-                      <Link 
-                        to={ROUTES.ORDERS}
-                        className="p-2 text-slate-400 hover:text-primary hover:bg-primary-50 rounded-lg transition-colors group-hover:text-primary"
-                        title="View Details"
-                      >
-                        <FiEye className="w-4 h-4" />
-                      </Link>
-                      <Link 
-                        to={ROUTES.TRACK_ORDER}
-                        className="p-2 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
-                        title="Track Order"
-                      >
-                        <FiMapPin className="w-4 h-4" />
-                      </Link>
-                      <button 
-                        className="p-2 text-slate-400 hover:text-dark hover:bg-slate-200 rounded-lg transition-colors"
-                        title="Download Invoice"
-                      >
-                        <FiDownload className="w-4 h-4" />
-                      </button>
-                      <button 
-                        className="p-2 text-slate-400 hover:text-orange-500 hover:bg-orange-50 rounded-lg transition-colors"
-                        title="Reorder"
-                      >
-                        <FiRefreshCw className="w-4 h-4" />
-                      </button>
-                      <button 
-                        className="p-2 text-slate-400 hover:text-green-500 hover:bg-green-50 rounded-lg transition-colors"
-                        title="Need Help?"
-                      >
-                        <FiMessageCircle className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        
-        {/* Pagination */}
-        <div className="flex items-center justify-between p-6 border-t border-slate-100 bg-white">
-          <p className="text-sm text-slate-500">Showing 1 to 4 of 12 orders</p>
-          <div className="flex items-center gap-2">
-            <button className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-50 text-slate-400 font-bold hover:bg-slate-100 transition-colors border border-slate-200">&lt;</button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white font-bold shadow-md shadow-primary/20">1</button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-lg bg-white text-slate-500 font-bold hover:bg-slate-50 border border-slate-200 transition-colors">2</button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-lg bg-white text-slate-500 font-bold hover:bg-slate-50 border border-slate-200 transition-colors">3</button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-lg bg-white text-slate-500 font-bold hover:bg-slate-50 border border-slate-200 transition-colors">&gt;</button>
+          <div className="flex items-center gap-3 w-full md:w-auto">
+            <button className="flex items-center gap-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 font-bold px-5 py-3 rounded-xl transition-colors w-full md:w-auto justify-center">
+              <FiFilter /> Filter
+            </button>
+            <select className="bg-slate-50 border border-slate-200 text-slate-700 font-bold px-5 py-3 rounded-xl outline-none hover:bg-slate-100 transition-colors cursor-pointer w-full md:w-auto">
+              <option value="last30">Last 30 days</option>
+              <option value="last3months">Past 3 months</option>
+              <option value="2026">2026</option>
+              <option value="2025">2025</option>
+            </select>
           </div>
         </div>
+
+        {/* Order Cards */}
+        <div className="space-y-6">
+          {dummyOrders.map((order, index) => (
+            <motion.div
+              key={order.id}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: index * 0.1 }}
+              className="bg-white rounded-[24px] border border-slate-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+            >
+              {/* Order Header */}
+              <div className="bg-[#FAFAF8] px-6 py-4 border-b border-slate-100 flex flex-wrap items-center justify-between gap-4">
+                <div className="flex flex-wrap items-center gap-6 md:gap-12 text-sm">
+                  <div>
+                    <p className="text-slate-500 font-bold uppercase tracking-wider text-[10px] mb-1">Order Placed</p>
+                    <p className="font-bold text-slate-800">{order.date}</p>
+                  </div>
+                  <div>
+                    <p className="text-slate-500 font-bold uppercase tracking-wider text-[10px] mb-1">Total Amount</p>
+                    <p className="font-bold text-slate-800">{order.total}</p>
+                  </div>
+                  <div className="hidden sm:block">
+                    <p className="text-slate-500 font-bold uppercase tracking-wider text-[10px] mb-1">Ship To</p>
+                    <p className="font-bold text-[#2E8B57] hover:underline cursor-pointer">Deepika Venkatesan</p>
+                  </div>
+                </div>
+                
+                <div className="text-right">
+                  <p className="text-slate-500 font-bold uppercase tracking-wider text-[10px] mb-1">Order ID</p>
+                  <p className="font-bold text-slate-800">#{order.id}</p>
+                </div>
+              </div>
+
+              {/* Order Body */}
+              <div className="p-6 flex flex-col md:flex-row gap-6 items-center md:items-start justify-between">
+                
+                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left w-full md:w-auto">
+                  <div className="w-24 h-24 bg-white border border-slate-100 rounded-xl p-2 flex-shrink-0">
+                    <img src={order.image} alt="Product" className="w-full h-full object-contain rounded-lg" />
+                  </div>
+                  <div className="flex flex-col justify-center h-full pt-2">
+                    <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border w-fit mb-3 mx-auto sm:mx-0 ${order.statusColor}`}>
+                      <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
+                      {order.status}
+                    </div>
+                    <h4 className="font-bold text-slate-800 text-lg mb-1">Premium Indian Groceries</h4>
+                    <p className="text-slate-500 font-medium text-sm">{order.items} Items • Standard Delivery</p>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-3 w-full md:w-48 flex-shrink-0">
+                  <Link 
+                    to={`/orders/${order.id}`}
+                    className="w-full bg-[#2E8B57] hover:bg-[#236b43] text-white font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 transition-colors shadow-sm shadow-[#2E8B57]/20"
+                  >
+                    <FiEye /> View Details
+                  </Link>
+                  {order.status !== 'Cancelled' && (
+                    <button className="w-full bg-white border border-slate-200 hover:border-[#2E8B57] text-slate-700 hover:text-[#2E8B57] font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 transition-colors">
+                      <FiRefreshCw /> Buy Again
+                    </button>
+                  )}
+                  {order.status === 'In Transit' && (
+                    <button className="w-full bg-slate-50 border border-slate-200 hover:border-slate-300 text-slate-600 font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 transition-colors">
+                      <FiMapPin /> Track Order
+                    </button>
+                  )}
+                </div>
+
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
       </div>
     </div>
   );

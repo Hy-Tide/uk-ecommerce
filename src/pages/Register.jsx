@@ -3,10 +3,20 @@ import { Link } from 'react-router-dom';
 import { FiMail, FiLock, FiEye, FiEyeOff, FiUser, FiPhone } from 'react-icons/fi';
 import { FcGoogle } from 'react-icons/fc';
 import { ROUTES } from '../utils/constants';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const navigate = useNavigate();
+  const { login } = useAuth();
+
+  const handleRegister = (e) => {
+    e.preventDefault();
+    login({ name: 'Deepika Venkatesan', email: 'deepika@example.com' });
+    navigate(ROUTES.PROFILE);
+  };
 
   return (
     <div className="flex min-h-screen">
@@ -28,7 +38,7 @@ const Register = () => {
             <p className="text-slate-600">Fill in the info below to create your user account. All fields are required.</p>
           </div>
 
-          <form className="space-y-5" action="#" method="POST">
+          <form className="space-y-5" onSubmit={handleRegister}>
             <div>
               <div className="relative rounded-md shadow-sm">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">

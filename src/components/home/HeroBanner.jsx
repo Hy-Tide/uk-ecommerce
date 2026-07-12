@@ -62,10 +62,7 @@ const HeroBanner = () => {
                 <span className="text-3xl font-black text-white">50k<span className="text-orange-500">+</span></span>
                 <span className="text-xs text-slate-400 font-bold uppercase tracking-wider mt-1">Happy Customers</span>
               </div>
-              <div className="flex flex-col">
-                <span className="text-3xl font-black text-white flex items-center gap-1">4.9 <FiStar className="text-orange-500 fill-orange-500" size={24} /></span>
-                <span className="text-xs text-slate-400 font-bold uppercase tracking-wider mt-1">Avg. Rating</span>
-              </div>
+
             </div>
           </div>
 
