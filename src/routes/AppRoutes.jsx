@@ -9,6 +9,7 @@ const Shop = lazy(() => import('../pages/Shop'));
 const ProductDetails = lazy(() => import('../pages/ProductDetails'));
 const Categories = lazy(() => import('../pages/Categories'));
 const Brands = lazy(() => import('../pages/Brands'));
+const BrandDetails = lazy(() => import('../pages/BrandDetails'));
 const Recipes = lazy(() => import('../pages/Recipes'));
 const AllCuisines = lazy(() => import('../pages/AllCuisines'));
 const Blog = lazy(() => import('../pages/Blog'));
@@ -55,6 +56,7 @@ const AppRoutes = () => {
           <Route path={ROUTES.SHOP_CATEGORY} element={<Shop />} />
           <Route path={ROUTES.PRODUCT_DETAILS} element={<ProductDetails />} />
           <Route path={ROUTES.BRANDS} element={<Brands />} />
+          <Route path={ROUTES.BRAND_DETAILS} element={<BrandDetails />} />
           <Route path={ROUTES.RECIPES} element={<Recipes />} />
           <Route path={ROUTES.ALL_CUISINES} element={<AllCuisines />} />
           <Route path={ROUTES.BLOG} element={<Blog />} />

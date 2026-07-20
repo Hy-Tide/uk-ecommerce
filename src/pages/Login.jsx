@@ -3,18 +3,42 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 import { FcGoogle } from 'react-icons/fc';
 import { ROUTES } from '../utils/constants';
-
 import { useAuth } from '../context/AuthContext';
+import { postData, showSnackbar } from '../services/webservices';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    login({ name: 'Deepika Venkatesan', email: 'deepika@example.com' });
-    navigate(ROUTES.PROFILE);
+    
+    const formData = new FormData(e.target);
+    const email = formData.get('email');
+    const password = formData.get('password');
+    
+    setIsLoading(true);
+    const response = await postData('website/auth/login', { email, password }, '');
+    setIsLoading(false);
+
+    if (response && response.success !== false) {
+      if (response.data && response.data.tokens) {
+        sessionStorage.setItem('sessionToken', response.data.tokens.accessToken);
+        sessionStorage.setItem('refreshToken', response.data.tokens.refreshToken);
+      }
+      
+      if (response.data && response.data.user) {
+        sessionStorage.setItem('auth_user', JSON.stringify(response.data.user));
+        login(response.data.user);
+      } else {
+        login({ email }); // Fallback
+      }
+
+      showSnackbar('Login successful!', 'success');
+      navigate(ROUTES.PROFILE);
+    }
   };
 
   return (
@@ -108,9 +132,10 @@ const Login = () => {
             <div className="pt-2">
               <button
                 type="submit"
-                className="w-full flex justify-center py-4 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-dark hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-dark transition-colors"
+                disabled={isLoading}
+                className="w-full flex justify-center py-4 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-dark hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-dark transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                Login
+                {isLoading ? 'Logging in...' : 'Login'}
               </button>
             </div>
           </form>

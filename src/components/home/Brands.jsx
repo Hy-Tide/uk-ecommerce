@@ -1,18 +1,23 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../../utils/constants';
 import { FiArrowRight } from 'react-icons/fi';
+import { getData } from '../../services/webservices';
 
 const Brands = () => {
-  const brandList = [
-    { name: 'MDH', letter: 'M', color: '#f97316', bg: '#fff7ed', category: 'Spices', count: '120 products' },
-    { name: "Haldiram's", letter: 'H', color: '#f97316', bg: '#fff7ed', category: 'Snacks & Sweets', count: '340 products' },
-    { name: 'Tilda', letter: 'T', color: '#16a34a', bg: '#f0fdf4', category: 'Rice', count: '45 products' },
-    { name: 'Dabur', letter: 'D', color: '#0ea5e9', bg: '#f0f9ff', category: 'Health & Wellness', count: '88 products' },
-    { name: 'Patanjali', letter: 'P', color: '#a855f7', bg: '#faf5ff', category: 'Natural & Organic', count: '210 products' },
-    { name: 'Everest', letter: 'E', color: '#b91c1c', bg: '#fef2f2', category: 'Spices', count: '96 products' },
-    { name: 'Aashirvaad', letter: 'A', color: '#15803d', bg: '#f0fdf4', category: 'Flour & Staples', count: '74 products' },
-  ];
+  const [brands, setBrands] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBrands = async () => {
+      const response = await getData('website/brands');
+      if (response && response.success !== false && response.data && response.data.brands) {
+        setBrands(response.data.brands);
+      }
+      setIsLoading(false);
+    };
+    fetchBrands();
+  }, []);
 
   return (
     <section className="py-20 bg-[#fafafa]">
@@ -34,30 +39,34 @@ const Brands = () => {
         </div>
         
         {/* Brands Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
-          {brandList.map((brand, idx) => (
-            <Link 
-              key={idx} 
-              to={ROUTES.BRANDS}
-              className="bg-white rounded-[20px] p-6 flex flex-col items-center justify-center text-center shadow-[0_2px_15px_-3px_rgba(0,0,0,0.05)] border border-slate-100 hover:-translate-y-1 transition-transform group"
-            >
-              <div 
-                className="w-14 h-14 rounded-full flex items-center justify-center text-2xl font-black mb-4 transition-transform group-hover:scale-110"
-                style={{ backgroundColor: brand.bg, color: brand.color }}
+        {isLoading ? (
+          <div className="flex justify-center py-10 font-bold text-slate-500">Loading Brands...</div>
+        ) : brands.length === 0 ? (
+          <div className="flex justify-center py-10 font-bold text-slate-500">No brands found.</div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-4">
+            {brands.slice(0, 7).map((brand) => (
+              <Link 
+                key={brand._id} 
+                to={ROUTES.BRAND_DETAILS ? ROUTES.BRAND_DETAILS.replace(':slug', brand.slug) : `${ROUTES.BRANDS}/${brand.slug}`}
+                className="bg-white rounded-[20px] p-6 flex flex-col items-center justify-center text-center shadow-[0_2px_15px_-3px_rgba(0,0,0,0.05)] border border-slate-100 hover:-translate-y-1 transition-transform group"
               >
-                {brand.letter}
-              </div>
-              <h3 
-                className="font-black text-[15px] mb-1.5"
-                style={{ color: brand.color }}
-              >
-                {brand.name}
-              </h3>
-              <span className="text-[10px] text-slate-500 font-medium">{brand.category}</span>
-              <span className="text-[9px] text-slate-400 mt-0.5">{brand.count}</span>
-            </Link>
-          ))}
-        </div>
+                <div 
+                  className="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-black mb-4 transition-transform group-hover:scale-110 overflow-hidden bg-slate-50 border border-slate-100"
+                >
+                  {brand.image_url ? (
+                    <img src={brand.image_url} alt={brand.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-slate-400">{brand.name.charAt(0)}</span>
+                  )}
+                </div>
+                <h3 className="font-black text-[15px] mb-1.5 text-slate-800 group-hover:text-[#379c6b] transition-colors line-clamp-1">
+                  {brand.name}
+                </h3>
+              </Link>
+            ))}
+          </div>
+        )}
 
       </div>
     </section>

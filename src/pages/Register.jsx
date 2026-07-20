@@ -5,26 +5,71 @@ import { FcGoogle } from 'react-icons/fc';
 import { ROUTES } from '../utils/constants';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { postData, showSnackbar } from '../services/webservices';
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    login({ name: 'Deepika Venkatesan', email: 'deepika@example.com' });
-    navigate(ROUTES.PROFILE);
+
+    const formData = new FormData(e.target);
+    const name = formData.get('name').trim();
+    const email = formData.get('email');
+    const phone = formData.get('phone');
+    const password = formData.get('password');
+    const confirmPassword = formData.get('confirm-password');
+
+    if (password !== confirmPassword) {
+      showSnackbar('Passwords do not match', 'error');
+      return;
+    }
+
+    const nameParts = name.split(' ');
+    const first_name = nameParts[0];
+    const last_name = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+
+    setIsLoading(true);
+    const payload = {
+      first_name,
+      last_name,
+      email,
+      password,
+      phone_number: phone
+    };
+
+    const response = await postData('website/auth/register', payload, '');
+    setIsLoading(false);
+
+    if (response && response.success !== false) {
+      if (response.data && response.data.tokens) {
+        sessionStorage.setItem('sessionToken', response.data.tokens.accessToken);
+        sessionStorage.setItem('refreshToken', response.data.tokens.refreshToken);
+      }
+      
+      if (response.data && response.data.user) {
+        sessionStorage.setItem('auth_user', JSON.stringify(response.data.user));
+        login(response.data.user);
+      } else {
+        login({ name: `${first_name} ${last_name}`, email });
+      }
+
+      showSnackbar('Registration successful!', 'success');
+      navigate(ROUTES.PROFILE);
+    }
   };
 
   return (
     <div className="flex min-h-screen">
       {/* Left Column - Image */}
       <div className="hidden lg:flex lg:w-1/2 relative bg-[#f4ebd9]">
-        <img 
-          src="/images/signup-illustration.png" 
-          alt="Reusable grocery bag illustration" 
+        <img
+          src="/images/signup-illustration.png"
+          alt="Reusable grocery bag illustration"
           className="absolute inset-0 w-full h-full object-cover"
         />
       </div>
@@ -32,7 +77,7 @@ const Register = () => {
       {/* Right Column - Form */}
       <div className="w-full lg:w-1/2 flex flex-col justify-center py-12 px-6 sm:px-12 xl:px-24 bg-[#faf9f6]">
         <div className="max-w-md w-full mx-auto">
-          
+
           <div className="text-center mb-10">
             <h1 className="text-4xl font-serif text-dark mb-3">Create Account</h1>
             <p className="text-slate-600">Fill in the info below to create your user account. All fields are required.</p>
@@ -168,9 +213,10 @@ const Register = () => {
             <div className="pt-4">
               <button
                 type="submit"
-                className="w-full flex justify-center py-4 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-dark hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-dark transition-colors"
+                disabled={isLoading}
+                className="w-full flex justify-center py-4 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-dark hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-dark transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                Create Account
+                {isLoading ? 'Creating Account...' : 'Create Account'}
               </button>
             </div>
           </form>

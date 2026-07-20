@@ -35,8 +35,8 @@ const ShopProductCard = ({ product }) => {
 
         <Link to={ROUTES.PRODUCT_DETAILS.replace(':slug', product.slug)}>
           <img
-            src={product.image}
-            alt={product.name}
+            src={(product.images && product.images.length > 0) ? product.images[0] : product.image}
+            alt={product.title || product.name}
             className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 p-4"
           />
         </Link>
@@ -46,12 +46,12 @@ const ShopProductCard = ({ product }) => {
       <div className="p-4 flex flex-col flex-grow bg-white">
 
         <span className="text-[#379c6b] text-[10px] font-bold uppercase tracking-wider mb-1.5 block">
-          {product.brand}
+          {product.brand || product.brand_id || 'Brand Name'}
         </span>
 
         <Link to={ROUTES.PRODUCT_DETAILS.replace(':slug', product.slug)}>
           <h3 className="font-bold text-dark text-[15px] leading-tight mb-2 hover:text-[#379c6b] transition-colors line-clamp-2 min-h-[40px]">
-            {product.name}
+            {product.title || product.name}
           </h3>
         </Link>
 
@@ -68,13 +68,17 @@ const ShopProductCard = ({ product }) => {
 
         {/* Price Row */}
         <div className="flex items-center gap-2 mb-4">
-          <span className="text-[20px] font-black text-dark leading-none">£{product.price.toFixed(2)}</span>
-          {product.oldPrice && (
-            <span className="text-[13px] text-slate-400 line-through font-medium leading-none">£{product.oldPrice.toFixed(2)}</span>
+          <span className="text-[20px] font-black text-dark leading-none">
+            £{(product.discount_price || product.base_price || product.price || 0).toFixed(2)}
+          </span>
+          {((product.base_price && product.discount_price && product.base_price > product.discount_price) || product.oldPrice) && (
+            <span className="text-[13px] text-slate-400 line-through font-medium leading-none">
+              £{(product.base_price || product.oldPrice).toFixed(2)}
+            </span>
           )}
-          {product.discountAmount && (
+          {((product.base_price && product.discount_price && product.base_price > product.discount_price) || product.discountAmount) && (
             <span className="text-[#379c6b] text-[11px] font-bold ml-auto bg-[#e8f5ed] px-1.5 py-0.5 rounded-sm">
-              {product.discountAmount}
+              {product.discountAmount || `£${(product.base_price - product.discount_price).toFixed(2)} OFF`}
             </span>
           )}
         </div>

@@ -7,6 +7,7 @@ export const ROUTES = {
   SHOP_CATEGORY: '/shop/:category',
   PRODUCT_DETAILS: '/product/:slug',
   BRANDS: '/brands',
+  BRAND_DETAILS: '/brands/:slug',
   RECIPES: '/recipes',
   ALL_CUISINES: '/recipes/cuisines',
   BLOG: '/blog',

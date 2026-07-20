@@ -1,10 +1,24 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { categories } from '../../data/dummyData';
 import { ROUTES } from '../../utils/constants';
 import { FiArrowRight } from 'react-icons/fi';
+import { getData } from '../../services/webservices';
 
 const CategorySection = () => {
+  const [categories, setCategories] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const response = await getData('website/categories');
+      if (response && response.success !== false && response.data && response.data.categories) {
+        setCategories(response.data.categories);
+      }
+      setIsLoading(false);
+    };
+    fetchCategories();
+  }, []);
+
   return (
     <section className="bg-[#fcfbf9] py-16">
       <div className="container">
@@ -25,33 +39,30 @@ const CategorySection = () => {
         </div>
         
         {/* Carousel / Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-9 gap-4">
-          {categories.map((category) => (
-            <Link 
-              key={category.id} 
-              to={ROUTES.SHOP_CATEGORY.replace(':category', category.slug)}
-              className={`flex flex-col items-center justify-center p-6 rounded-[20px] transition-all duration-300 shadow-sm border border-slate-100 ${category.active ? 'bg-[#379c6b] text-white shadow-green-900/20 shadow-xl' : 'bg-white hover:border-primary/30 group'}`}
-            >
-              <div className={`w-[70px] h-[70px] rounded-full flex items-center justify-center text-3xl mb-4 ${category.active ? 'bg-white/20' : 'bg-slate-50 group-hover:bg-[#fcfbf9]'}`}>
-                {category.active ? (
-                   <div className="w-12 h-12 rounded-full bg-[#fde8e8] flex items-center justify-center">
-                     {category.icon}
-                   </div>
-                ) : (
+        {isLoading ? (
+          <div className="flex justify-center py-10 text-slate-500 font-bold">Loading...</div>
+        ) : categories.length === 0 ? (
+          <div className="flex justify-center py-10 text-slate-500 font-bold">No categories found.</div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-9 gap-4">
+            {categories.slice(0, 9).map((category) => (
+              <Link 
+                key={category._id} 
+                to={ROUTES.SHOP_CATEGORY ? ROUTES.SHOP_CATEGORY.replace(':category', category.slug) : ROUTES.SHOP}
+                className="flex flex-col items-center justify-center p-6 rounded-[20px] transition-all duration-300 shadow-sm border border-slate-100 bg-white hover:border-primary/30 group"
+              >
+                <div className="w-[70px] h-[70px] rounded-full flex items-center justify-center text-3xl mb-4 bg-slate-50 group-hover:bg-[#fcfbf9]">
                   <div className="w-14 h-14 rounded-full overflow-hidden">
-                    <img src={category.image} alt={category.name} className="w-full h-full object-cover" />
+                    <img src={category.image_url || 'https://dummyimage.com/600x600'} alt={category.name} className="w-full h-full object-cover" />
                   </div>
-                )}
-              </div>
-              <h3 className={`text-sm font-bold text-center mb-1 ${category.active ? 'text-white' : 'text-dark'}`}>
-                {category.name}
-              </h3>
-              <span className={`text-[10px] ${category.active ? 'text-white/80' : 'text-slate-400'}`}>
-                {category.count}
-              </span>
-            </Link>
-          ))}
-        </div>
+                </div>
+                <h3 className="text-sm font-bold text-center mb-1 text-dark">
+                  {category.name}
+                </h3>
+              </Link>
+            ))}
+          </div>
+        )}
         
         {/* Divider */}
         <div className="h-px w-full bg-slate-200 mt-12 hidden md:block"></div>

@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Breadcrumbs from '../components/common/Breadcrumbs';
 import ProductGallery from '../components/product/ProductGallery';
@@ -11,6 +11,7 @@ import CustomerReviews from '../components/product/CustomerReviews';
 import ProductFAQ from '../components/product/ProductFAQ';
 import StickyBottomBar from '../components/product/StickyBottomBar';
 import Newsletter from '../components/home/Newsletter';
+import { getData } from '../services/webservices';
 
 import { 
   detailedProduct, 
@@ -23,26 +24,52 @@ import {
 const ProductDetails = () => {
   const { slug } = useParams();
 
-  // Scroll to top when navigating to a new product
+  const [productData, setProductData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Scroll to top and fetch when navigating to a new product
   useEffect(() => {
     window.scrollTo(0, 0);
+    const fetchProduct = async () => {
+      setIsLoading(true);
+      const response = await getData(`website/products/${slug}`);
+      if (response && response.success !== false && response.data && response.data.product) {
+        setProductData(response.data.product);
+      } else {
+        setProductData(null);
+      }
+      setIsLoading(false);
+    };
+    fetchProduct();
   }, [slug]);
 
   const currentProduct = useMemo(() => {
-    const found = shopProducts.find(p => p.slug === slug);
-    if (!found) return detailedProduct;
+    if (!productData) return detailedProduct;
 
-    // Merge basic product data with rich detailed structure
+    const basePrice = productData.base_price;
+    const discountPrice = productData.discount_price;
+    const price = discountPrice || basePrice || 0;
+    const oldPrice = (basePrice && discountPrice && basePrice > discountPrice) ? basePrice : null;
+    const savings = oldPrice ? `You Save £${(oldPrice - price).toFixed(2)}` : null;
+
     return {
       ...detailedProduct,
-      ...found,
-      // Map basic fields to detailed names if they differ
-      discountBadge: found.discountAmount || detailedProduct.discountBadge,
-      reviewsCount: found.reviews || detailedProduct.reviewsCount,
-      oldPrice: found.oldPrice || detailedProduct.oldPrice,
-      savings: found.oldPrice ? `You Save £${(found.oldPrice - found.price).toFixed(2)}` : detailedProduct.savings,
+      id: productData._id,
+      name: productData.title,
+      description: productData.description || detailedProduct.description,
+      price: price,
+      oldPrice: oldPrice || detailedProduct.oldPrice,
+      savings: savings || detailedProduct.savings,
+      image: (productData.images && productData.images.length > 0) ? productData.images[0] : detailedProduct.image,
+      images: productData.images || [detailedProduct.image],
+      category: 'Shop',
+      weight: productData.weight ? `${productData.weight}${productData.unit || ''}` : detailedProduct.weight,
     };
-  }, [slug]);
+  }, [productData, slug]);
+
+  if (isLoading) {
+    return <div className="min-h-screen bg-[#fcfbf9] flex items-center justify-center font-bold text-slate-500">Loading Product...</div>;
+  }
 
   return (
     <div className="bg-[#fcfbf9] min-h-screen relative pb-16 md:pb-0">
@@ -62,7 +89,7 @@ const ProductDetails = () => {
         {/* Main Product Section */}
         <div className="bg-white rounded-[32px] p-6 md:p-10 border border-slate-100 shadow-sm mb-12 flex flex-col lg:flex-row gap-10 lg:gap-16">
           <div className="w-full lg:w-[45%]">
-            <ProductGallery images={[currentProduct.image, currentProduct.image, currentProduct.image, currentProduct.image]} />
+            <ProductGallery images={currentProduct.images.length >= 4 ? currentProduct.images : [currentProduct.image, currentProduct.image, currentProduct.image, currentProduct.image]} />
           </div>
           <div className="w-full lg:w-[55%]">
             <ProductInfo product={currentProduct} />

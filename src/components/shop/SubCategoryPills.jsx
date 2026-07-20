@@ -53,8 +53,8 @@ const SubCategoryPills = ({ categories }) => {
       >
         <button className="bg-[#e8f5ed] text-[#379c6b] font-bold text-sm px-5 py-2 rounded-xl whitespace-nowrap flex-shrink-0 shadow-sm transition-transform active:scale-95">All Products</button>
         {categories.map((sub, idx) => (
-          <button key={idx} className="bg-white border border-slate-200 text-slate-500 hover:text-dark hover:border-slate-300 font-bold text-sm px-5 py-2 rounded-xl whitespace-nowrap transition-all flex-shrink-0 shadow-sm hover:shadow active:scale-95">
-            {sub}
+          <button key={sub._id || idx} className="bg-white border border-slate-200 text-slate-500 hover:text-dark hover:border-slate-300 font-bold text-sm px-5 py-2 rounded-xl whitespace-nowrap transition-all flex-shrink-0 shadow-sm hover:shadow active:scale-95">
+            {sub.name || sub}
           </button>
         ))}
       </div>
