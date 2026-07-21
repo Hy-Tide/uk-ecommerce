@@ -30,4 +30,5 @@ export const ROUTES = {
   NOTIFICATIONS: '/notifications',
   SUPPORT: '/support',
   REWARDS: '/rewards',
+  COMING_SOON: '/coming-soon',
 };

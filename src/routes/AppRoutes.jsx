@@ -34,6 +34,7 @@ const Search = lazy(() => import('../pages/Search'));
 const TrackOrder = lazy(() => import('../pages/TrackOrder'));
 const NotFound = lazy(() => import('../pages/NotFound'));
 const Rewards = lazy(() => import('../pages/Rewards'));
+const ComingSoon = lazy(() => import('../pages/ComingSoon'));
 
 const Loader = () => (
   <div className="flex h-screen items-center justify-center">
@@ -42,6 +43,18 @@ const Loader = () => (
 );
 
 const AppRoutes = () => {
+  const isComingSoon = true; // Toggle this to false to reveal the full website
+
+  if (isComingSoon) {
+    return (
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          <Route path="*" element={<ComingSoon />} />
+        </Routes>
+      </Suspense>
+    );
+  }
+
   return (
     <Suspense fallback={<Loader />}>
       <Routes>
@@ -66,7 +79,7 @@ const AppRoutes = () => {
           <Route path={ROUTES.CART} element={<Cart />} />
           <Route path={ROUTES.CHECKOUT} element={<Checkout />} />
           <Route path={ROUTES.SEARCH} element={<Search />} />
-          
+
           {/* Standalone Account Pages (MainLayout) */}
           <Route path={ROUTES.PROFILE} element={<Profile />} />
           <Route path={ROUTES.ORDERS} element={<MyOrders />} />
@@ -78,7 +91,7 @@ const AppRoutes = () => {
           <Route path={ROUTES.NOTIFICATIONS} element={<Notifications />} />
           <Route path={ROUTES.SUPPORT} element={<Support />} />
           <Route path={ROUTES.REWARDS} element={<Rewards />} />
-          
+          <Route path={ROUTES.COMING_SOON} element={<ComingSoon />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
