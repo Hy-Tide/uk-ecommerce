@@ -1,3 +1,3 @@
-const API_URL = "https://uk-ecommerce-backend.onrender.com/api/v1/";
+const API_URL = "http://api.grandmasbasket.co.uk/api/v1/";
 
 export { API_URL };
