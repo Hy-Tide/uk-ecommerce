@@ -43,7 +43,7 @@ const Loader = () => (
 );
 
 const AppRoutes = () => {
-  const isComingSoon = true; // Toggle this to false to reveal the full website
+  const isComingSoon = false; // Toggle this to false to reveal the full website
 
   if (isComingSoon) {
     return (

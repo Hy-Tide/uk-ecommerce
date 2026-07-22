@@ -33,7 +33,7 @@ const getReturnValues = (countDown) => {
 };
 
 const groceryItems = [
-    '🍅', '🥕', '🥦', '🥬', '🍃', '🫑', '🥒', '🍆', '🧅', '🧄', 
+    '🍅', '🥕', '🥦', '🥬', '🍃', '🫑', '🥒', '🍆', '🧅', '🧄',
     '🍄', '🌽', '🥔', '🥑', '🍎', '🍊', '🍋', '🍓', '🍌', '🌿'
 ];
 
@@ -53,7 +53,7 @@ const GroceryParticles = () => {
             const isLeft = Math.random() > 0.5;
             // Left area: -5% to 25%, Right area: 75% to 105%
             const leftPos = isLeft ? Math.random() * 30 - 5 : Math.random() * 30 + 75;
-            
+
             return {
                 id: i,
                 icon: groceryItems[Math.floor(Math.random() * groceryItems.length)],
@@ -99,7 +99,7 @@ const GroceryParticles = () => {
                         transform: `translateY(${scrollY * p.parallaxFactor}px)`, // Parallax effect
                     }}
                 >
-                    <motion.div 
+                    <motion.div
                         className="pointer-events-auto cursor-default"
                         whileHover={{ scale: 1.3, rotate: 15, transition: { duration: 0.3 } }}
                     >
