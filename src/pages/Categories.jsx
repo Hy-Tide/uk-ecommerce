@@ -4,6 +4,7 @@ import Breadcrumbs from '../components/common/Breadcrumbs';
 import { useState, useEffect } from 'react';
 import { ROUTES } from '../utils/constants';
 import { getData } from '../services/webservices';
+import CategoryCardSkeleton from '../components/skeletons/CategoryCardSkeleton';
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
@@ -34,7 +35,11 @@ const Categories = () => {
         </div>
 
         {isLoading ? (
-          <div className="flex justify-center py-20 text-slate-500 font-bold">Loading Categories...</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <CategoryCardSkeleton key={i} />
+            ))}
+          </div>
         ) : categories.length === 0 ? (
           <div className="flex justify-center py-20 text-slate-500 font-bold">No categories found.</div>
         ) : (
@@ -44,7 +49,7 @@ const Categories = () => {
                 <div className="h-48 overflow-hidden relative">
                   <div className="absolute inset-0 bg-dark/20 group-hover:bg-transparent transition-colors z-10" />
                   <img 
-                    src={category.image_url || 'https://dummyimage.com/600x600'} 
+                    src={category.image || 'https://dummyimage.com/600x600'} 
                     alt={category.name} 
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   />

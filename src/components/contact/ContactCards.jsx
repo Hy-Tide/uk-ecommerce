@@ -28,7 +28,7 @@ const ContactCards = () => {
       id: 'warehouse',
       icon: <FiMapPin size={24} />,
       title: 'Warehouse Address',
-      detail: 'UK Groceries',
+      detail: "Grandma's Basket",
       subtext: 'London, United Kingdom',
       actionText: 'Show on Map',
       actionLink: '#locations',

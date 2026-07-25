@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ROUTES } from '../../utils/constants';
 import { FiArrowRight } from 'react-icons/fi';
 import { getData } from '../../services/webservices';
+import Skeleton from '../common/Skeleton';
 
 const Brands = () => {
   const [brands, setBrands] = useState([]);
@@ -40,7 +41,15 @@ const Brands = () => {
         
         {/* Brands Grid */}
         {isLoading ? (
-          <div className="flex justify-center py-10 font-bold text-slate-500">Loading Brands...</div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-4">
+            {Array.from({ length: 7 }).map((_, i) => (
+              <div key={i} className="bg-white rounded-[20px] p-6 flex flex-col items-center justify-center shadow-[0_2px_15px_-3px_rgba(0,0,0,0.05)] border border-slate-100">
+                <Skeleton className="w-16 h-16 rounded-full mb-4" />
+                <Skeleton className="h-4 w-20 mb-1" />
+                <Skeleton className="h-3 w-16" />
+              </div>
+            ))}
+          </div>
         ) : brands.length === 0 ? (
           <div className="flex justify-center py-10 font-bold text-slate-500">No brands found.</div>
         ) : (

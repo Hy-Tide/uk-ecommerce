@@ -4,7 +4,7 @@ import { FiHeart, FiEye, FiShoppingCart } from 'react-icons/fi';
 import { FaHeart, FaStar } from 'react-icons/fa';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
-import { ROUTES } from '../../utils/constants';
+import { ROUTES, getProductUrl } from '../../utils/constants';
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
@@ -42,7 +42,7 @@ const ProductCard = ({ product }) => {
           {inWishlist ? <FaHeart className="text-orange-500" size={12} /> : <FiHeart size={12} />}
         </button>
 
-        <Link to={ROUTES.PRODUCT_DETAILS.replace(':slug', product.slug)}>
+        <Link to={getProductUrl(product)}>
           <img 
             src={product.image} 
             alt={product.name} 
@@ -60,10 +60,10 @@ const ProductCard = ({ product }) => {
       <div className="p-4 flex flex-col flex-grow bg-white">
         
         <span className="text-[#379c6b] text-[10px] font-bold uppercase tracking-wide mb-1 block">
-          {product.brand}
+          {typeof product.brand === 'object' ? product.brand?.name : product.brand}
         </span>
         
-        <Link to={ROUTES.PRODUCT_DETAILS.replace(':slug', product.slug)}>
+        <Link to={getProductUrl(product)}>
           <h3 className="font-bold text-dark text-sm leading-tight mb-1 hover:text-primary transition-colors line-clamp-2">
             {product.name}
           </h3>

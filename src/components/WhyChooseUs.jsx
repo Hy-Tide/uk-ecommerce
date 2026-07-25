@@ -20,7 +20,7 @@ const WhyChooseUs = () => {
               viewport={{ once: true }}
               className="text-[#294535] text-[44px] font-[700] leading-[1.05] mb-[40px]"
             >
-              Premium UK Groceries Delivered Directly
+              Premium Grandma's Basket Delivered Directly
             </motion.h2>
 
             {/* Left Bottom Card */}

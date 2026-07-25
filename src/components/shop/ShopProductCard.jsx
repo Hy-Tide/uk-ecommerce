@@ -4,13 +4,18 @@ import { FiHeart, FiShoppingCart, FiChevronDown } from 'react-icons/fi';
 import { FaHeart } from 'react-icons/fa';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
-import { ROUTES } from '../../utils/constants';
+import { ROUTES, getProductUrl } from '../../utils/constants';
 
 const ShopProductCard = ({ product }) => {
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
 
-  const inWishlist = isInWishlist(product.id);
+  const inWishlist = isInWishlist(product.id || product._id);
+  const [selectedVarIdx, setSelectedVarIdx] = useState(0);
+
+  const currentVariation = product.variations && product.variations.length > selectedVarIdx 
+    ? product.variations[selectedVarIdx] 
+    : null;
 
   const renderBadge = () => {
     if (!product.badge) return null;
@@ -33,9 +38,9 @@ const ShopProductCard = ({ product }) => {
       <div className="relative bg-[#f9f9f9] pt-[95%] overflow-hidden">
         {renderBadge()}
 
-        <Link to={ROUTES.PRODUCT_DETAILS.replace(':slug', product.slug)}>
+        <Link to={getProductUrl(product)}>
           <img
-            src={(product.images && product.images.length > 0) ? product.images[0] : product.image}
+            src={(product.images && product.images.length > 0) ? product.images[0] : (product.mainImage || product.image)}
             alt={product.title || product.name}
             className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 p-4"
           />
@@ -46,10 +51,10 @@ const ShopProductCard = ({ product }) => {
       <div className="p-4 flex flex-col flex-grow bg-white">
 
         <span className="text-[#379c6b] text-[10px] font-bold uppercase tracking-wider mb-1.5 block">
-          {product.brand || product.brand_id || 'Brand Name'}
+          {typeof product.brand === 'object' ? product.brand?.name : (product.brand || product.brand_id || 'Brand Name')}
         </span>
 
-        <Link to={ROUTES.PRODUCT_DETAILS.replace(':slug', product.slug)}>
+        <Link to={getProductUrl(product)}>
           <h3 className="font-bold text-dark text-[15px] leading-tight mb-2 hover:text-[#379c6b] transition-colors line-clamp-2 min-h-[40px]">
             {product.title || product.name}
           </h3>
@@ -58,10 +63,20 @@ const ShopProductCard = ({ product }) => {
 
         {/* Weight Selector */}
         <div className="relative mb-4">
-          <select className="appearance-none w-full border border-slate-200 text-slate-600 text-sm font-medium py-2 px-3 rounded-lg outline-none focus:border-[#379c6b] transition-colors bg-white cursor-pointer">
-            <option value={product.weight}>{product.weight}</option>
-            <option value="1kg">1kg</option>
-            <option value="5kg">5kg</option>
+          <select 
+            className="appearance-none w-full border border-slate-200 text-slate-600 text-sm font-medium py-2 px-3 rounded-lg outline-none focus:border-[#379c6b] transition-colors bg-white cursor-pointer"
+            value={selectedVarIdx}
+            onChange={(e) => setSelectedVarIdx(Number(e.target.value))}
+          >
+            {product.variations && product.variations.length > 0 ? (
+              product.variations.map((v, i) => (
+                <option key={i} value={i}>{v.displayWeight || `${v.weight}${v.weightUnit}`}</option>
+              ))
+            ) : (
+              <>
+                <option value={0}>{product.weight}</option>
+              </>
+            )}
           </select>
           <FiChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
         </div>
@@ -69,16 +84,16 @@ const ShopProductCard = ({ product }) => {
         {/* Price Row */}
         <div className="flex items-center gap-2 mb-4">
           <span className="text-[20px] font-black text-dark leading-none">
-            £{(product.discount_price || product.base_price || product.price || 0).toFixed(2)}
+            £{(currentVariation?.salePrice || product.discount_price || product.base_price || product.price || 0).toFixed(2)}
           </span>
-          {((product.base_price && product.discount_price && product.base_price > product.discount_price) || product.oldPrice) && (
+          {((currentVariation?.regularPrice > currentVariation?.salePrice) || (product.base_price && product.discount_price && product.base_price > product.discount_price) || product.oldPrice) && (
             <span className="text-[13px] text-slate-400 line-through font-medium leading-none">
-              £{(product.base_price || product.oldPrice).toFixed(2)}
+              £{(currentVariation?.regularPrice || product.base_price || product.oldPrice).toFixed(2)}
             </span>
           )}
-          {((product.base_price && product.discount_price && product.base_price > product.discount_price) || product.discountAmount) && (
+          {((currentVariation?.regularPrice > currentVariation?.salePrice) || (product.base_price && product.discount_price && product.base_price > product.discount_price) || product.discountAmount) && (
             <span className="text-[#379c6b] text-[11px] font-bold ml-auto bg-[#e8f5ed] px-1.5 py-0.5 rounded-sm">
-              {product.discountAmount || `£${(product.base_price - product.discount_price).toFixed(2)} OFF`}
+              {product.badge?.type === 'discount' ? product.badge.text : (product.discountAmount || `£${((currentVariation?.regularPrice || product.base_price) - (currentVariation?.salePrice || product.discount_price)).toFixed(2)} OFF`)}
             </span>
           )}
         </div>

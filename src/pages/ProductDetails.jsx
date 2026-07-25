@@ -8,6 +8,7 @@ import SimpleProductCard from '../components/product/SimpleProductCard';
 import FrequentlyBought from '../components/product/FrequentlyBought';
 import ProductScroller from '../components/shop/ProductScroller';
 import CustomerReviews from '../components/product/CustomerReviews';
+import ProductDetailsSkeleton from '../components/skeletons/ProductDetailsSkeleton';
 import ProductFAQ from '../components/product/ProductFAQ';
 import StickyBottomBar from '../components/product/StickyBottomBar';
 import Newsletter from '../components/home/Newsletter';
@@ -22,7 +23,7 @@ import {
 } from '../data/dummyData';
 
 const ProductDetails = () => {
-  const { slug } = useParams();
+  const { productSlug } = useParams();
 
   const [productData, setProductData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -32,7 +33,7 @@ const ProductDetails = () => {
     window.scrollTo(0, 0);
     const fetchProduct = async () => {
       setIsLoading(true);
-      const response = await getData(`website/products/${slug}`);
+      const response = await getData(`website/products/${productSlug}`);
       if (response && response.success !== false && response.data && response.data.product) {
         setProductData(response.data.product);
       } else {
@@ -41,34 +42,32 @@ const ProductDetails = () => {
       setIsLoading(false);
     };
     fetchProduct();
-  }, [slug]);
+  }, [productSlug]);
 
   const currentProduct = useMemo(() => {
     if (!productData) return detailedProduct;
 
-    const basePrice = productData.base_price;
-    const discountPrice = productData.discount_price;
-    const price = discountPrice || basePrice || 0;
-    const oldPrice = (basePrice && discountPrice && basePrice > discountPrice) ? basePrice : null;
-    const savings = oldPrice ? `You Save £${(oldPrice - price).toFixed(2)}` : null;
-
     return {
       ...detailedProduct,
-      id: productData._id,
-      name: productData.title,
+      ...productData,
+      id: productData.id || productData._id,
+      name: productData.name || productData.title,
       description: productData.description || detailedProduct.description,
-      price: price,
-      oldPrice: oldPrice || detailedProduct.oldPrice,
-      savings: savings || detailedProduct.savings,
-      image: (productData.images && productData.images.length > 0) ? productData.images[0] : detailedProduct.image,
-      images: productData.images || [detailedProduct.image],
-      category: 'Shop',
-      weight: productData.weight ? `${productData.weight}${productData.unit || ''}` : detailedProduct.weight,
+      image: productData.mainImage || (productData.images && productData.images.length > 0 ? productData.images[0] : detailedProduct.image),
+      images: productData.images && productData.images.length > 0 ? productData.images : (productData.mainImage ? [productData.mainImage] : [detailedProduct.image]),
+      category: typeof productData.category === 'object' ? productData.category?.name : (productData.category || 'Shop'),
+      discountBadge: productData.badge?.text,
+      stockCount: productData.stockCount ?? detailedProduct.stockCount,
+      highlights: productData.highlights || detailedProduct.highlights,
+      features: productData.features || detailedProduct.features,
+      brand: productData.brand || detailedProduct.brand,
+      ingredients: productData.ingredients,
+      nutritionalInfo: productData.nutritionalInfo,
     };
-  }, [productData, slug]);
+  }, [productData, productSlug]);
 
   if (isLoading) {
-    return <div className="min-h-screen bg-[#fcfbf9] flex items-center justify-center font-bold text-slate-500">Loading Product...</div>;
+    return <ProductDetailsSkeleton />;
   }
 
   return (

@@ -4,6 +4,8 @@ import Breadcrumbs from '../components/common/Breadcrumbs';
 import ShopProductCard from '../components/shop/ShopProductCard';
 import Newsletter from '../components/home/Newsletter';
 import { getData } from '../services/webservices';
+import Skeleton from '../components/common/Skeleton';
+import ProductCardSkeleton from '../components/skeletons/ProductCardSkeleton';
 
 const BrandDetails = () => {
   const { slug } = useParams();
@@ -44,7 +46,33 @@ const BrandDetails = () => {
   }, [slug]);
 
   if (isLoading) {
-    return <div className="min-h-screen flex items-center justify-center font-bold text-slate-500 bg-[#fcfbf9]">Loading Brand Details...</div>;
+    return (
+      <div className="bg-[#fcfbf9] min-h-screen">
+        <div className="container py-8">
+          <div className="mb-6 flex gap-2">
+            <Skeleton className="h-5 w-16" />
+            <Skeleton className="h-5 w-4" />
+            <Skeleton className="h-5 w-32" />
+          </div>
+          <div className="bg-white rounded-[32px] p-8 md:p-12 shadow-sm border border-slate-100 mb-12 flex flex-col md:flex-row items-center gap-8">
+            <Skeleton className="w-32 h-32 md:w-48 md:h-48 rounded-full flex-shrink-0" />
+            <div className="flex-grow w-full">
+              <Skeleton className="h-10 md:h-12 w-1/2 mb-4 mx-auto md:mx-0" />
+              <Skeleton className="h-4 w-3/4 mb-2 mx-auto md:mx-0" />
+              <Skeleton className="h-4 w-2/3 mx-auto md:mx-0" />
+            </div>
+          </div>
+          <div className="mb-16">
+            <Skeleton className="h-8 w-48 mb-8" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <ProductCardSkeleton key={i} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (!brandData) {

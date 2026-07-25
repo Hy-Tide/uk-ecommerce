@@ -58,12 +58,12 @@ const About = () => {
         <div className="w-full flex flex-col justify-center">
           {/* Main Heading */}
           <h2 className="text-[#1D3B2A] text-[25px] lg:text-[41px] font-[700] leading-[1.05] max-w-[620px] mb-[24px]">
-            Welcome to UK Groceries – Delivering Quality to Your Doorstep
+            Welcome to Grandma's Basket – Delivering Quality to Your Doorstep
           </h2>
 
           {/* Description */}
           <p className="text-[#6B7280] text-[16px] lg:text-[20px] leading-[1.8] max-w-[620px] mb-[40px]">
-            We are your premier destination for authentic UK groceries. From premium flours and pure rice to traditional spices, vibrant sweets, and farm-fresh produce, we deliver quality food directly to your doorstep anywhere in the UK.
+            We are your premier destination for authentic Grandma's Basket. From premium flours and pure rice to traditional spices, vibrant sweets, and farm-fresh produce, we deliver quality food directly to your doorstep anywhere in the UK.
           </p>
 
           {/* Feature Card */}

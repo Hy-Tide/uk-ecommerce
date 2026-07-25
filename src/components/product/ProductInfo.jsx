@@ -1,10 +1,20 @@
 import React, { useState } from 'react';
-import { FiHeart, FiShare2, FiShield, FiTruck, FiMinus, FiPlus, FiCheck } from 'react-icons/fi';
-import { FaStar } from 'react-icons/fa';
+import { FiHeart, FiShare2, FiShield, FiTruck, FiMinus, FiPlus, FiCheckCircle, FiPackage, FiMapPin } from 'react-icons/fi';
+import { GiWheat } from 'react-icons/gi';
+import { FaStar, FaLeaf } from 'react-icons/fa';
 
 const ProductInfo = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
-  const [selectedWeight, setSelectedWeight] = useState('10kg');
+  const [selectedVarIdx, setSelectedVarIdx] = useState(0);
+
+  const currentVariation = product.variations && product.variations.length > selectedVarIdx 
+    ? product.variations[selectedVarIdx] 
+    : null;
+
+  const displayPrice = currentVariation?.salePrice || product.discount_price || product.price || 0;
+  const displayOldPrice = currentVariation?.regularPrice || product.base_price || product.oldPrice || null;
+  const showOldPrice = displayOldPrice && displayOldPrice > displayPrice;
+  const displaySavings = showOldPrice ? `You Save £${(displayOldPrice - displayPrice).toFixed(2)}` : null;
 
   const decreaseQuantity = () => {
     if (quantity > 1) setQuantity(quantity - 1);
@@ -18,7 +28,7 @@ const ProductInfo = ({ product }) => {
     <div className="flex flex-col">
       {/* Badges & Brand */}
       <div className="flex items-center gap-3 mb-3">
-        <span className="text-[#379c6b] text-xs font-bold uppercase tracking-wider">{product.brand}</span>
+        <span className="text-[#379c6b] text-xs font-bold uppercase tracking-wider">{typeof product.brand === 'object' ? product.brand?.name : product.brand}</span>
         {product.discountBadge && (
           <span className="bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm">
             {product.discountBadge}
@@ -29,41 +39,40 @@ const ProductInfo = ({ product }) => {
       {/* Title */}
       <h1 className="text-3xl md:text-4xl font-black text-dark leading-tight mb-4">{product.name}</h1>
 
-      {/* Stats */}
-      <div className="flex flex-wrap items-center gap-3 mb-6">
-        <span className="text-sm text-slate-500 bg-[#fcfbf9] px-2 py-1 rounded-md border border-slate-100">
-          {product.soldCount}
-        </span>
-      </div>
-
       {/* Price Area */}
       <div className="flex items-end gap-4 mb-6">
-        <span className="text-4xl font-black text-dark leading-none">£{product.price.toFixed(2)}</span>
-        {product.oldPrice && (
+        <span className="text-4xl font-black text-dark leading-none">£{displayPrice.toFixed(2)}</span>
+        {showOldPrice && (
           <div className="flex flex-col mb-1">
-            <span className="text-sm text-slate-400 line-through font-medium">£{product.oldPrice.toFixed(2)}</span>
-            <span className="text-[#379c6b] text-xs font-bold">{product.savings}</span>
+            <span className="text-sm text-slate-400 line-through font-medium">£{displayOldPrice.toFixed(2)}</span>
+            <span className="text-[#379c6b] text-xs font-bold">{displaySavings}</span>
           </div>
         )}
       </div>
 
       {/* Description Preview */}
-      <p className="text-slate-500 text-sm leading-relaxed mb-8">
-        {product.description}
-      </p>
+      <div className="text-slate-500 text-sm leading-relaxed mb-8" dangerouslySetInnerHTML={{ __html: product.description }} />
 
       {/* Weight Options */}
       <div className="mb-8">
         <div className="flex flex-wrap gap-3">
-          {['1kg', '5kg', '10kg'].map((weight) => (
-            <button 
-              key={weight}
-              onClick={() => setSelectedWeight(weight)}
-              className={`font-bold text-sm px-6 py-2.5 rounded-full transition-all border-2 ${selectedWeight === weight ? 'border-[#379c6b] text-[#379c6b] bg-[#e8f5ed]' : 'border-slate-200 text-slate-500 hover:border-slate-300 bg-white'}`}
+          {product.variations && product.variations.length > 0 ? (
+            product.variations.map((v, i) => (
+              <button
+                key={i}
+                onClick={() => setSelectedVarIdx(i)}
+                className={`font-bold text-sm px-6 py-2.5 rounded-full transition-all border-2 ${selectedVarIdx === i ? 'border-[#379c6b] text-[#379c6b] bg-[#e8f5ed]' : 'border-slate-200 text-slate-500 hover:border-slate-300 bg-white'}`}
+              >
+                {v.displayWeight || `${v.weight}${v.weightUnit}`}
+              </button>
+            ))
+          ) : (
+            <button
+              className="font-bold text-sm px-6 py-2.5 rounded-full transition-all border-2 border-[#379c6b] text-[#379c6b] bg-[#e8f5ed]"
             >
-              {weight}
+              {product.weight}
             </button>
-          ))}
+          )}
         </div>
       </div>
 
@@ -121,16 +130,32 @@ const ProductInfo = ({ product }) => {
       </div>
 
       {/* Highlights */}
-      <div>
-        <h4 className="text-dark font-bold text-sm mb-4">Product Highlights</h4>
-        <div className="grid grid-cols-2 gap-3">
-          {product.highlights?.map((highlight, idx) => (
-            <div key={idx} className="flex items-center gap-2 text-sm text-[#279c66] bg-[#e8f5ed] px-3 py-2 rounded-lg font-medium">
-              <FiCheck size={16} /> {highlight}
+      {product.highlights && (
+        <div>
+          <h4 className="text-dark font-bold text-sm mb-4">Product highlights</h4>
+          {Array.isArray(product.highlights) ? (
+            <div className="grid grid-cols-2 gap-3">
+              {product.highlights.map((highlight, idx) => {
+                const lower = highlight.toLowerCase();
+                let Icon = FiCheckCircle;
+                if (lower.includes('wheat') || lower.includes('fibre')) Icon = GiWheat;
+                else if (lower.includes('ground') || lower.includes('organic') || lower.includes('natural')) Icon = FaLeaf;
+                else if (lower.includes('stock') || lower.includes('pack')) Icon = FiPackage;
+                else if (lower.includes('india') || lower.includes('origin') || lower.includes('made')) Icon = FiMapPin;
+
+                return (
+                  <div key={idx} className="flex items-center gap-3 text-sm text-[#1b4d3e] bg-[#f4fbf6] px-4 py-3 rounded-xl font-bold">
+                    <Icon size={18} className="shrink-0" /> 
+                    <span>{highlight}</span>
+                  </div>
+                );
+              })}
             </div>
-          ))}
+          ) : (
+            <div className="text-sm text-slate-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: product.highlights }} />
+          )}
         </div>
-      </div>
+      )}
 
     </div>
   );

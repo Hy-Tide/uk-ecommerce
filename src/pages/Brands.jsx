@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../utils/constants';
 import { getData } from '../services/webservices';
+import BrandCardSkeleton from '../components/skeletons/BrandCardSkeleton';
 
 const Brands = () => {
   const [brands, setBrands] = useState([]);
@@ -32,7 +33,11 @@ const Brands = () => {
 
         {/* Brands Grid */}
         {isLoading ? (
-          <div className="flex justify-center py-20 font-bold text-slate-500 text-lg">Loading Brands...</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <BrandCardSkeleton key={i} />
+            ))}
+          </div>
         ) : brands.length === 0 ? (
           <div className="flex justify-center py-20 font-bold text-slate-500 text-lg">No brands found.</div>
         ) : (

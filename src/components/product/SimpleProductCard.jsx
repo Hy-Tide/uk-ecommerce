@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { FiHeart } from 'react-icons/fi';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
-import { ROUTES } from '../../utils/constants';
+import { ROUTES, getProductUrl } from '../../utils/constants';
 
 const SimpleProductCard = ({ product }) => {
   const { addToCart } = useCart();
@@ -38,7 +38,7 @@ const SimpleProductCard = ({ product }) => {
           <FiHeart className={inWishlist ? "text-orange-500 fill-orange-500" : ""} size={12} />
         </button>
 
-        <Link to={ROUTES.PRODUCT_DETAILS.replace(':slug', product.slug || 'product')}>
+        <Link to={getProductUrl(product)}>
           <img
             src={product.image}
             alt={product.name}
@@ -50,10 +50,10 @@ const SimpleProductCard = ({ product }) => {
       {/* Content Area */}
       <div className="flex flex-col flex-grow">
         <span className="text-slate-400 text-[9px] font-bold uppercase tracking-wider mb-1 block">
-          {product.brand}
+          {typeof product.brand === 'object' ? product.brand?.name : product.brand}
         </span>
 
-        <Link to={ROUTES.PRODUCT_DETAILS.replace(':slug', product.slug || 'product')}>
+        <Link to={getProductUrl(product)}>
           <h3 className="font-bold text-dark text-[13px] leading-tight mb-2 hover:text-[#379c6b] transition-colors line-clamp-2 min-h-[36px]">
             {product.name}
           </h3>

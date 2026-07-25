@@ -22,7 +22,7 @@ const Footer = () => {
                 </svg>
               </div>
               <div className="flex flex-col leading-tight">
-                <span className="text-xl font-black text-white tracking-tight">UK Groceries</span>
+                <span className="text-xl font-black text-white tracking-tight">Grandma's Basket</span>
                 <span className="text-[9px] text-[#379c6b] font-bold uppercase tracking-[0.2em] -mt-0.5">Fresh & Local</span>
               </div>
             </Link>
@@ -113,7 +113,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-slate-500">
-            &copy; 2025 UK Groceries Ltd. All rights reserved. Registered in England & Wales.
+            &copy; 2025 Grandma's Basket Ltd. All rights reserved. Registered in England & Wales.
           </p>
 
           <div className="flex items-center gap-4">

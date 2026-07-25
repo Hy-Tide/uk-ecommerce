@@ -4,6 +4,7 @@ import { FiEdit2, FiMail, FiPhone, FiMapPin, FiShield, FiTrash2 } from 'react-ic
 import { useAuth } from '../context/AuthContext';
 import AccountPageHeader from '../components/account/AccountPageHeader';
 import { getData, putData, postData, deleteData, showSnackbar } from '../services/webservices';
+import Skeleton from '../components/common/Skeleton';
 
 const Profile = () => {
   const { user } = useAuth();
@@ -174,7 +175,7 @@ const Profile = () => {
 
             {/* User Info */}
             <div className="mb-10">
-              <h2 className="text-3xl font-black text-slate-800 mb-1">{isLoading ? 'Loading...' : fullName}</h2>
+              <h2 className="text-3xl font-black text-slate-800 mb-1">{isLoading ? <Skeleton className="h-8 w-48 inline-block rounded-md" /> : fullName}</h2>
               <div className="flex items-center gap-2 text-[#2E8B57] font-bold text-sm bg-emerald-50 px-3 py-1 rounded-full w-fit">
                 <FiShield /> Verified Customer
               </div>
@@ -189,7 +190,7 @@ const Profile = () => {
                 </div>
                 <div>
                   <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Email Address</p>
-                  <p className="font-bold text-slate-800">{isLoading ? 'Loading...' : (displayUser?.email || 'customer@example.com')}</p>
+                  <p className="font-bold text-slate-800">{isLoading ? <Skeleton className="h-5 w-40 inline-block rounded" /> : (displayUser?.email || 'customer@example.com')}</p>
                 </div>
               </div>
 
@@ -199,7 +200,7 @@ const Profile = () => {
                 </div>
                 <div>
                   <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Mobile Number</p>
-                  <p className="font-bold text-slate-800">{isLoading ? 'Loading...' : (displayUser?.phone_number || displayUser?.phone || 'Not Provided')}</p>
+                  <p className="font-bold text-slate-800">{isLoading ? <Skeleton className="h-5 w-32 inline-block rounded" /> : (displayUser?.phone_number || displayUser?.phone || 'Not Provided')}</p>
                 </div>
               </div>
 
@@ -223,8 +224,14 @@ const Profile = () => {
 
                 <div className="space-y-4">
                   {isLoading ? (
-                    <div className="p-6 bg-[#FAFAF8] rounded-[20px] border border-slate-100 flex justify-center items-center">
-                      <p className="text-slate-500 font-medium">Loading addresses...</p>
+                    <div className="space-y-4">
+                      <div className="p-6 bg-[#FAFAF8] rounded-[20px] border border-slate-100 flex items-start gap-4">
+                        <Skeleton className="w-12 h-12 rounded-full flex-shrink-0" />
+                        <div className="w-full">
+                          <Skeleton className="h-5 w-3/4 mb-2" />
+                          <Skeleton className="h-4 w-1/2" />
+                        </div>
+                      </div>
                     </div>
                   ) : addresses.length === 0 ? (
                     <div className="p-6 bg-[#FAFAF8] rounded-[20px] border border-slate-100 flex justify-center items-center text-center">

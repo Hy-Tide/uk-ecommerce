@@ -3,9 +3,9 @@ export const CURRENCY_CODE = 'GBP';
 
 export const ROUTES = {
   HOME: '/',
-  SHOP: '/shop',
-  SHOP_CATEGORY: '/shop/:category',
-  PRODUCT_DETAILS: '/product/:slug',
+  SHOP: '/category',
+  SHOP_CATEGORY: '/category/:category',
+  PRODUCT_DETAILS: '/category/:categorySlug/:subCategorySlug/:productSlug',
   BRANDS: '/brands',
   BRAND_DETAILS: '/brands/:slug',
   RECIPES: '/recipes',
@@ -31,4 +31,10 @@ export const ROUTES = {
   SUPPORT: '/support',
   REWARDS: '/rewards',
   COMING_SOON: '/coming-soon',
+};
+
+export const getProductUrl = (product) => {
+  const cat = typeof product.category === 'object' ? product.category?.slug : (product.category || 'all');
+  const sub = typeof product.subCategory === 'object' ? product.subCategory?.slug : (product.subCategory || 'all');
+  return `/category/${cat}/${sub}/${product.slug || 'product'}`;
 };

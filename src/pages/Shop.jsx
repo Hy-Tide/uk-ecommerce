@@ -10,16 +10,18 @@ import { shopProducts } from '../data/dummyData';
 import Newsletter from '../components/home/Newsletter';
 import SubCategoryPills from '../components/shop/SubCategoryPills';
 import { getData } from '../services/webservices';
+import ProductCardSkeleton from '../components/skeletons/ProductCardSkeleton';
 
 const Shop = () => {
   const { category: categorySlug } = useParams();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const brandSlug = queryParams.get('brand');
-  
+
   const [categoryData, setCategoryData] = useState(null);
   const [brandData, setBrandData] = useState(null);
   const [subCategoriesData, setSubCategoriesData] = useState([]);
+  const [activeSubCategoryId, setActiveSubCategoryId] = useState(null);
   const [products, setProducts] = useState([]);
   const [isProductsLoading, setIsProductsLoading] = useState(true);
 
@@ -45,7 +47,7 @@ const Shop = () => {
         if (response && response.success !== false && response.data && response.data.category) {
           setCategoryData(response.data.category);
         }
-        
+
         const subResponse = await getData(`website/subcategories/category/${categorySlug}`);
         if (subResponse && subResponse.success !== false && subResponse.data && subResponse.data.subCategories) {
           setSubCategoriesData(subResponse.data.subCategories);
@@ -54,6 +56,7 @@ const Shop = () => {
         setCategoryData(null);
         setSubCategoriesData([]);
       }
+      setActiveSubCategoryId(null);
     };
     fetchCategoryAndSub();
   }, [categorySlug]);
@@ -62,19 +65,26 @@ const Shop = () => {
     const fetchProducts = async () => {
       setIsProductsLoading(true);
       let params = {};
-      
+
       // If we are on a category or brand page, we must wait for respective data to be populated
       if (categorySlug && !categoryData) return;
       if (brandSlug && !brandData) return;
-      
+
       if (categoryData) {
         params.category_id = categoryData._id;
       }
       if (brandData) {
         params.brand_id = brandData._id;
       }
-      
-      const response = await getData('website/products', params);
+
+      let endpoint = 'website/products';
+      if (activeSubCategoryId) {
+        endpoint = `website/products/subcategory/${activeSubCategoryId}`;
+      } else if (categoryData) {
+        endpoint = `website/products/category/${categoryData._id}`;
+      }
+
+      const response = await getData(endpoint, params);
       if (response && response.success !== false && response.data && response.data.products) {
         setProducts(response.data.products);
       } else {
@@ -82,12 +92,12 @@ const Shop = () => {
       }
       setIsProductsLoading(false);
     };
-    
+
     fetchProducts();
-  }, [categorySlug, categoryData, brandSlug, brandData]);
+  }, [categorySlug, categoryData, brandSlug, brandData, activeSubCategoryId]);
 
   const displayName = categoryData?.name || brandData?.name || 'All Products';
-  
+
   const breadcrumbPaths = [{ name: 'Shop', url: '/shop' }];
   if (categoryData) {
     breadcrumbPaths.push({ name: categoryData.name });
@@ -102,7 +112,10 @@ const Shop = () => {
         <Breadcrumbs paths={breadcrumbPaths} />
 
         {/* Banner */}
-        <ShopHero />
+        <ShopHero
+          title={displayName}
+          description={categoryData?.description || brandData?.description || 'Discover pure goodness in every bite with our organic, premium products. The perfect choice for your daily health.'}
+        />
 
         {/* Layout Split */}
         <div className="flex flex-col lg:flex-row gap-8 mb-16">
@@ -117,7 +130,11 @@ const Shop = () => {
 
             {/* Sub Categories Pills */}
             {subCategoriesData.length > 0 && (
-              <SubCategoryPills categories={subCategoriesData} />
+              <SubCategoryPills
+                categories={subCategoriesData}
+                activeCategoryId={activeSubCategoryId}
+                onCategoryChange={setActiveSubCategoryId}
+              />
             )}
 
             {/* Grid Header */}
@@ -133,7 +150,11 @@ const Shop = () => {
 
             {/* Grid */}
             {isProductsLoading ? (
-              <div className="flex justify-center py-20 text-slate-500 font-bold">Loading Products...</div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
+                {Array.from({ length: 9 }).map((_, i) => (
+                  <ProductCardSkeleton key={i} />
+                ))}
+              </div>
             ) : products.length === 0 ? (
               <div className="flex justify-center py-20 text-slate-500 font-bold">No products found.</div>
             ) : (
@@ -145,13 +166,13 @@ const Shop = () => {
             )}
 
             {/* Pagination */}
-            <div className="flex items-center justify-center gap-2 mt-8">
+            {/* <div className="flex items-center justify-center gap-2 mt-8">
               <button className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 text-slate-400 font-bold hover:bg-slate-200 transition-colors">&lt;</button>
               <button className="w-10 h-10 flex items-center justify-center rounded-full bg-[#379c6b] text-white font-bold shadow-md">1</button>
               <button className="w-10 h-10 flex items-center justify-center rounded-full bg-white text-slate-500 font-bold hover:bg-slate-50 border border-slate-100 transition-colors">2</button>
               <button className="w-10 h-10 flex items-center justify-center rounded-full bg-white text-slate-500 font-bold hover:bg-slate-50 border border-slate-100 transition-colors">3</button>
               <button className="w-10 h-10 flex items-center justify-center rounded-full bg-white text-slate-500 font-bold hover:bg-slate-50 border border-slate-100 transition-colors">&gt;</button>
-            </div>
+            </div> */}
           </div>
         </div>
 

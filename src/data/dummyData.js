@@ -200,7 +200,7 @@ export const testimonials = [
     id: 1,
     name: 'Sarah Jenkins',
     role: 'Customer',
-    content: 'UK Groceries has the freshest produce I have ever bought online. Delivery is always on time!',
+    content: "Grandma's Basket has the freshest produce I have ever bought online. Delivery is always on time!",
     avatar: 'https://i.pravatar.cc/150?img=1'
   },
   {

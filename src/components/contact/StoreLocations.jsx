@@ -28,7 +28,7 @@ const StoreLocations = () => {
               allowFullScreen="" 
               loading="lazy" 
               referrerPolicy="no-referrer-when-downgrade"
-              title="UK Groceries Location"
+              title="Grandma's Basket Location"
             ></iframe>
           </div>
 
@@ -44,7 +44,7 @@ const StoreLocations = () => {
                 </div>
                 <div>
                   <h4 className="font-bold text-slate-800 mb-1">Address</h4>
-                  <p className="text-slate-500 font-medium">UK Groceries<br />123 Grocery Lane, Wembley<br />London, HA0 1AB, United Kingdom</p>
+                  <p className="text-slate-500 font-medium">Grandma's Basket<br />123 Grocery Lane, Wembley<br />London, HA0 1AB, United Kingdom</p>
                 </div>
               </div>
 

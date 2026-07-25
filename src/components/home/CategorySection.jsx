@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ROUTES } from '../../utils/constants';
 import { FiArrowRight } from 'react-icons/fi';
 import { getData } from '../../services/webservices';
+import Skeleton from '../common/Skeleton';
 
 const CategorySection = () => {
   const [categories, setCategories] = useState([]);
@@ -40,7 +41,15 @@ const CategorySection = () => {
         
         {/* Carousel / Grid */}
         {isLoading ? (
-          <div className="flex justify-center py-10 text-slate-500 font-bold">Loading...</div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-9 gap-4">
+            {Array.from({ length: 9 }).map((_, i) => (
+              <div key={i} className="flex flex-col items-center justify-center p-6 rounded-[20px] shadow-sm border border-slate-100 bg-white">
+                <Skeleton className="w-[70px] h-[70px] rounded-full mb-4" />
+                <Skeleton className="h-4 w-16 mb-1" />
+                <Skeleton className="h-3 w-10" />
+              </div>
+            ))}
+          </div>
         ) : categories.length === 0 ? (
           <div className="flex justify-center py-10 text-slate-500 font-bold">No categories found.</div>
         ) : (
@@ -53,7 +62,7 @@ const CategorySection = () => {
               >
                 <div className="w-[70px] h-[70px] rounded-full flex items-center justify-center text-3xl mb-4 bg-slate-50 group-hover:bg-[#fcfbf9]">
                   <div className="w-14 h-14 rounded-full overflow-hidden">
-                    <img src={category.image_url || 'https://dummyimage.com/600x600'} alt={category.name} className="w-full h-full object-cover" />
+                    <img src={category.image || 'https://dummyimage.com/600x600'} alt={category.name} className="w-full h-full object-cover" />
                   </div>
                 </div>
                 <h3 className="text-sm font-bold text-center mb-1 text-dark">

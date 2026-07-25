@@ -32,7 +32,7 @@ const ContactHero = () => {
 
             {/* Large Heading */}
             <h1 className="text-4xl md:text-6xl font-black text-white leading-[1.1] mb-6">
-              Contact UK Groceries
+              Contact Grandma's Basket
             </h1>
 
             {/* Description */}

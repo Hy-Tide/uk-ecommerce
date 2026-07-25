@@ -5,7 +5,7 @@ import { ROUTES } from '../../utils/constants';
 const SmallProductCard = ({ product }) => {
   return (
     <Link 
-      to={`${ROUTES.SHOP}?category=${product.category}&product=${product.id}`}
+      to={`${ROUTES.SHOP}?category=${typeof product.category === 'object' ? product.category?.slug : product.category}&product=${product.id}`}
       className="flex items-center gap-4 bg-white border border-slate-100 p-3 rounded-2xl hover:border-[#379c6b]/50 hover:shadow-md transition-all min-w-[260px] md:min-w-[300px] snap-start"
     >
       <div className="w-16 h-16 bg-[#f9fafb] rounded-xl flex items-center justify-center p-2 flex-shrink-0">
@@ -13,7 +13,7 @@ const SmallProductCard = ({ product }) => {
       </div>
       <div className="flex flex-col flex-grow overflow-hidden">
         <span className="text-dark font-bold text-sm truncate mb-0.5">{product.name}</span>
-        <span className="text-slate-400 text-[11px] font-medium mb-1.5">{product.weight} • {product.brand}</span>
+        <span className="text-slate-400 text-[11px] font-medium mb-1.5">{product.weight} • {typeof product.brand === 'object' ? product.brand?.name : product.brand}</span>
         <span className="text-dark font-black text-sm leading-none">£{product.price.toFixed(2)}</span>
       </div>
     </Link>

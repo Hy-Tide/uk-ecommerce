@@ -57,23 +57,16 @@ const UserDropdown = () => {
       {/* Avatar Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 p-1 pr-3 rounded-full border border-slate-200 hover:border-[#2E8B57] bg-white transition-colors group focus:outline-none"
+        className="flex flex-col items-center justify-center text-[#1a5d2b] hover:text-primary transition-colors focus:outline-none"
       >
-        <div className="w-10 h-10 rounded-full bg-slate-100 overflow-hidden flex items-center justify-center border border-slate-200 group-hover:border-[#2E8B57]">
+        <div className="relative mb-1">
           {user?.avatar ? (
-            <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+            <img src={user.avatar} alt={user.name} className="w-[22px] h-[22px] rounded-full object-cover border border-white" />
           ) : (
-            <span className="font-bold text-[#2E8B57] text-lg">
-              {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
-            </span>
+            <FiUser size={22} />
           )}
         </div>
-        <div className="hidden lg:flex flex-col text-left">
-          <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider leading-none">Hello,</span>
-          <span className="text-sm font-bold text-slate-800 leading-tight group-hover:text-[#2E8B57] transition-colors">
-            {user?.name?.split(' ')[0] || 'User'}
-          </span>
-        </div>
+        <span className="text-xs font-medium">Account</span>
       </button>
 
       {/* Dropdown Menu */}
