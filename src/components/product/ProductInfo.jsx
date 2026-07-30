@@ -3,11 +3,13 @@ import { FiHeart, FiShare2, FiShield, FiTruck, FiMinus, FiPlus, FiCheckCircle, F
 import { GiWheat } from 'react-icons/gi';
 import { FaStar, FaLeaf } from 'react-icons/fa';
 import { useWishlist } from '../../context/WishlistContext';
+import { useCart } from '../../context/CartContext';
 
 const ProductInfo = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
   const [selectedVarIdx, setSelectedVarIdx] = useState(0);
   const { toggleWishlist, isInWishlist } = useWishlist();
+  const { addToCart } = useCart();
 
   const currentVariation = product.variations && product.variations.length > selectedVarIdx 
     ? product.variations[selectedVarIdx] 
@@ -26,6 +28,10 @@ const ProductInfo = ({ product }) => {
 
   const increaseQuantity = () => {
     if (quantity < product.stockCount) setQuantity(quantity + 1);
+  };
+
+  const handleAddToCart = () => {
+    addToCart(product, currentVariation, quantity);
   };
 
   return (
@@ -115,7 +121,7 @@ const ProductInfo = ({ product }) => {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3">
-          <button className="flex-1 bg-[#279c66] hover:bg-[#1f7e52] text-white font-bold py-4 px-6 rounded-xl transition-colors shadow-lg shadow-green-900/20 active:scale-[0.98]">
+          <button onClick={handleAddToCart} className="flex-1 bg-[#279c66] hover:bg-[#1f7e52] text-white font-bold py-4 px-6 rounded-xl transition-colors shadow-lg shadow-green-900/20 active:scale-[0.98]">
             Add to Cart
           </button>
           <button className="flex-1 bg-[#1a2522] hover:bg-black text-white font-bold py-4 px-6 rounded-xl transition-colors active:scale-[0.98]">

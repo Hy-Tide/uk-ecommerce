@@ -5,6 +5,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { ROUTES } from '../utils/constants';
 import { useAuth } from '../context/AuthContext';
 import { useWishlist } from '../context/WishlistContext';
+import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 import { postData, showSnackbar } from '../services/webservices';
 
@@ -15,6 +16,7 @@ const Register = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
   const { syncGuestWishlist } = useWishlist();
+  const { syncGuestCart } = useCart();
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -54,6 +56,7 @@ const Register = () => {
       }
       
       await syncGuestWishlist();
+      await syncGuestCart();
 
       if (response.data && response.data.user) {
         sessionStorage.setItem('auth_user', JSON.stringify(response.data.user));

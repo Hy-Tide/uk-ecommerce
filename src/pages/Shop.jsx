@@ -84,7 +84,8 @@ const Shop = () => {
         endpoint = `website/products/category/${categoryData._id}`;
       }
 
-      const response = await getData(endpoint, params);
+      const token = sessionStorage.getItem('sessionToken');
+      const response = await getData(endpoint, {}, token);
       if (response && response.success !== false && response.data && response.data.products) {
         setProducts(response.data.products);
       } else {
