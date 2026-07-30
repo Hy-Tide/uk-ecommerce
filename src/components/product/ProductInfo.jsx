@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { FiHeart, FiShare2, FiShield, FiTruck, FiMinus, FiPlus, FiCheckCircle, FiPackage, FiMapPin } from 'react-icons/fi';
 import { GiWheat } from 'react-icons/gi';
 import { FaStar, FaLeaf } from 'react-icons/fa';
+import { useWishlist } from '../../context/WishlistContext';
 
 const ProductInfo = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
   const [selectedVarIdx, setSelectedVarIdx] = useState(0);
+  const { toggleWishlist, isInWishlist } = useWishlist();
 
   const currentVariation = product.variations && product.variations.length > selectedVarIdx 
     ? product.variations[selectedVarIdx] 
@@ -15,6 +17,8 @@ const ProductInfo = ({ product }) => {
   const displayOldPrice = currentVariation?.regularPrice || product.base_price || product.oldPrice || null;
   const showOldPrice = displayOldPrice && displayOldPrice > displayPrice;
   const displaySavings = showOldPrice ? `You Save £${(displayOldPrice - displayPrice).toFixed(2)}` : null;
+
+  const inWishlist = isInWishlist(product._id || product.id);
 
   const decreaseQuantity = () => {
     if (quantity > 1) setQuantity(quantity - 1);
@@ -26,14 +30,32 @@ const ProductInfo = ({ product }) => {
 
   return (
     <div className="flex flex-col">
-      {/* Badges & Brand */}
-      <div className="flex items-center gap-3 mb-3">
-        <span className="text-[#379c6b] text-xs font-bold uppercase tracking-wider">{typeof product.brand === 'object' ? product.brand?.name : product.brand}</span>
-        {product.discountBadge && (
-          <span className="bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm">
-            {product.discountBadge}
-          </span>
-        )}
+      {/* Badges, Brand, and Top Actions */}
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-3">
+          <span className="text-[#379c6b] text-xs font-bold uppercase tracking-wider">{typeof product.brand === 'object' ? product.brand?.name : product.brand}</span>
+          {product.discountBadge && (
+            <span className="bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm">
+              {product.discountBadge}
+            </span>
+          )}
+        </div>
+        
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={() => toggleWishlist(product)}
+            className={`flex items-center justify-center w-10 h-10 rounded-full border transition-all ${inWishlist ? 'bg-red-50 border-red-100 text-red-500' : 'bg-[#fcfbf9] border-slate-200 text-slate-500 hover:text-dark hover:border-slate-300'}`}
+            title={inWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
+          >
+            <FiHeart size={18} className={inWishlist ? "fill-current" : ""} />
+          </button>
+          <button 
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-[#fcfbf9] border border-slate-200 text-slate-500 hover:text-dark hover:border-slate-300 transition-all"
+            title="Share Product"
+          >
+            <FiShare2 size={18} />
+          </button>
+        </div>
       </div>
 
       {/* Title */}
@@ -98,15 +120,6 @@ const ProductInfo = ({ product }) => {
           </button>
           <button className="flex-1 bg-[#1a2522] hover:bg-black text-white font-bold py-4 px-6 rounded-xl transition-colors active:scale-[0.98]">
             Buy Now
-          </button>
-        </div>
-
-        <div className="flex items-center gap-4 mt-2">
-          <button className="flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-dark transition-colors">
-            <FiHeart size={16} /> Add to Wishlist
-          </button>
-          <button className="flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-dark transition-colors">
-            <FiShare2 size={16} /> Share Product
           </button>
         </div>
       </div>

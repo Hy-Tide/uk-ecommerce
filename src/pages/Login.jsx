@@ -4,6 +4,7 @@ import { FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 import { FcGoogle } from 'react-icons/fc';
 import { ROUTES } from '../utils/constants';
 import { useAuth } from '../context/AuthContext';
+import { useWishlist } from '../context/WishlistContext';
 import { postData, showSnackbar } from '../services/webservices';
 
 const Login = () => {
@@ -11,6 +12,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { syncGuestWishlist } = useWishlist();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -28,6 +30,8 @@ const Login = () => {
         sessionStorage.setItem('sessionToken', response.data.tokens.accessToken);
         sessionStorage.setItem('refreshToken', response.data.tokens.refreshToken);
       }
+      
+      await syncGuestWishlist();
       
       if (response.data && response.data.user) {
         sessionStorage.setItem('auth_user', JSON.stringify(response.data.user));
