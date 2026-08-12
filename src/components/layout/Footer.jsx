@@ -16,10 +16,10 @@ import { FaInstagram, FaFacebookF, FaTwitter, FaYoutube, FaWhatsapp } from 'reac
 
 const Footer = () => {
   return (
-    <footer className="bg-[#F8F9FA] text-slate-600 relative pt-0 border-t border-slate-200/80">
+    <footer className="bg-primary text-slate-300 relative pt-0 border-t border-primary-dark">
 
       {/* Top Value Banner */}
-      <div className="bg-white border-b border-slate-200/80 py-6 shadow-xs">
+      {/* <div className="bg-white border-b border-slate-200/80 py-6 shadow-xs">
         <div className="container grid grid-cols-2 md:grid-cols-4 gap-6">
 
           <div className="flex items-center gap-3.5">
@@ -63,7 +63,7 @@ const Footer = () => {
           </div>
 
         </div>
-      </div>
+      </div> */}
 
       {/* Main Footer Section */}
       <div className="pt-14 pb-10">
@@ -82,26 +82,26 @@ const Footer = () => {
                   />
                 </div>
                 <div className="flex flex-col leading-tight">
-                  <span className="text-xl font-black text-[#0C3823] tracking-tight">Grandma's Basket</span>
-                  <span className="text-[9px] text-[#FF6B00] font-bold uppercase tracking-[0.2em] -mt-0.5">Fresh & Local</span>
+                  <span className="text-xl font-black text-white tracking-tight">Grandma's Basket</span>
+                  <span className="text-[9px] text-secondary-light font-bold uppercase tracking-[0.2em] -mt-0.5">Fresh & Local</span>
                 </div>
               </Link>
 
-              <p className="text-xs text-slate-600 leading-relaxed mb-6">
+              <p className="text-xs text-slate-300 leading-relaxed mb-6">
                 Bringing authentic Indian groceries, regional spices, aromatic basmati rice, organic dals, and traditional mithai directly to your doorstep across the UK.
               </p>
 
               <div className="flex items-center gap-2.5">
-                <a href="#" className="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-[#FF6B00] hover:text-white hover:border-[#FF6B00] transition-all shadow-xs">
+                <a href="#" className="w-9 h-9 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-secondary hover:text-white hover:border-secondary transition-all shadow-xs">
                   <FaInstagram size={15} />
                 </a>
-                <a href="#" className="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-[#FF6B00] hover:text-white hover:border-[#FF6B00] transition-all shadow-xs">
+                <a href="#" className="w-9 h-9 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-secondary hover:text-white hover:border-secondary transition-all shadow-xs">
                   <FaFacebookF size={15} />
                 </a>
-                <a href="#" className="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-[#FF6B00] hover:text-white hover:border-[#FF6B00] transition-all shadow-xs">
+                <a href="#" className="w-9 h-9 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-secondary hover:text-white hover:border-secondary transition-all shadow-xs">
                   <FaTwitter size={15} />
                 </a>
-                <a href="#" className="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-[#FF6B00] hover:text-white hover:border-[#FF6B00] transition-all shadow-xs">
+                <a href="#" className="w-9 h-9 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-secondary hover:text-white hover:border-secondary transition-all shadow-xs">
                   <FaYoutube size={15} />
                 </a>
               </div>
@@ -109,53 +109,53 @@ const Footer = () => {
 
             {/* Column 2: Department / Shop */}
             <div>
-              <h4 className="text-[#0C3823] font-bold text-sm uppercase tracking-wider mb-5 border-l-2 border-[#FF6B00] pl-3">
+              <h4 className="text-white font-bold text-sm uppercase tracking-wider mb-5 border-l-2 border-secondary pl-3">
                 Categories
               </h4>
-              <ul className="flex flex-col gap-3 text-xs font-medium text-slate-600">
-                <li><Link to={ROUTES.SHOP} className="hover:text-[#FF6B00] transition-colors">Rice & Atta Flours</Link></li>
-                <li><Link to="/shop" className="hover:text-[#FF6B00] transition-colors">Authentic Spices & Masalas</Link></li>
-                <li><Link to="/shop" className="hover:text-[#FF6B00] transition-colors">Sweets & Mithai</Link></li>
-                <li><Link to="/shop" className="hover:text-[#FF6B00] transition-colors">Crispy Snacks & Namkeen</Link></li>
-                <li><Link to="/shop" className="hover:text-[#FF6B00] transition-colors">Frozen Indian Delicacies</Link></li>
-                <li><Link to={ROUTES.BRANDS} className="hover:text-[#FF6B00] transition-colors">All Popular Brands</Link></li>
+              <ul className="flex flex-col gap-3 text-xs font-medium text-slate-300">
+                <li><Link to={ROUTES.SHOP} className="hover:text-secondary-light transition-colors">Rice & Atta Flours</Link></li>
+                <li><Link to="/shop" className="hover:text-secondary-light transition-colors">Authentic Spices & Masalas</Link></li>
+                <li><Link to="/shop" className="hover:text-secondary-light transition-colors">Sweets & Mithai</Link></li>
+                <li><Link to="/shop" className="hover:text-secondary-light transition-colors">Crispy Snacks & Namkeen</Link></li>
+                <li><Link to="/shop" className="hover:text-secondary-light transition-colors">Frozen Indian Delicacies</Link></li>
+                <li><Link to={ROUTES.BRANDS} className="hover:text-secondary-light transition-colors">All Popular Brands</Link></li>
               </ul>
             </div>
 
             {/* Column 3: Customer Care */}
             <div>
-              <h4 className="text-[#0C3823] font-bold text-sm uppercase tracking-wider mb-5 border-l-2 border-[#FF6B00] pl-3">
+              <h4 className="text-white font-bold text-sm uppercase tracking-wider mb-5 border-l-2 border-secondary pl-3">
                 Customer Care
               </h4>
-              <ul className="flex flex-col gap-3 text-xs font-medium text-slate-600">
-                <li><Link to={ROUTES.TRACK_ORDER} className="hover:text-[#FF6B00] transition-colors">Track Order Status</Link></li>
-                <li><Link to="/delivery" className="hover:text-[#FF6B00] transition-colors">Delivery & Shipping Info</Link></li>
-                <li><Link to="/returns" className="hover:text-[#FF6B00] transition-colors">Returns & Refunds</Link></li>
-                <li><Link to={ROUTES.SUPPORT} className="hover:text-[#FF6B00] transition-colors">FAQ & Help Center</Link></li>
-                <li><Link to={ROUTES.CONTACT} className="hover:text-[#FF6B00] transition-colors">Contact Support</Link></li>
+              <ul className="flex flex-col gap-3 text-xs font-medium text-slate-300">
+                <li><Link to={ROUTES.TRACK_ORDER} className="hover:text-secondary-light transition-colors">Track Order Status</Link></li>
+                <li><Link to="/delivery" className="hover:text-secondary-light transition-colors">Delivery & Shipping Info</Link></li>
+                <li><Link to="/returns" className="hover:text-secondary-light transition-colors">Returns & Refunds</Link></li>
+                <li><Link to={ROUTES.SUPPORT} className="hover:text-secondary-light transition-colors">FAQ & Help Center</Link></li>
+                <li><Link to={ROUTES.CONTACT} className="hover:text-secondary-light transition-colors">Contact Support</Link></li>
               </ul>
             </div>
 
             {/* Column 4: Quick Links */}
             <div>
-              <h4 className="text-[#0C3823] font-bold text-sm uppercase tracking-wider mb-5 border-l-2 border-[#FF6B00] pl-3">
+              <h4 className="text-white font-bold text-sm uppercase tracking-wider mb-5 border-l-2 border-secondary pl-3">
                 Quick Links
               </h4>
-              <ul className="flex flex-col gap-3 text-xs font-medium text-slate-600">
-                <li><Link to={ROUTES.ABOUT} className="hover:text-[#FF6B00] transition-colors">About Grandma's Basket</Link></li>
-                <li><Link to={ROUTES.RECIPES} className="hover:text-[#FF6B00] transition-colors">Indian Recipe Corner</Link></li>
-                <li><Link to={ROUTES.BLOG} className="hover:text-[#FF6B00] transition-colors">Kitchen & Cooking Blog</Link></li>
-                <li><Link to="/privacy" className="hover:text-[#FF6B00] transition-colors">Privacy Policy</Link></li>
-                <li><Link to="/terms" className="hover:text-[#FF6B00] transition-colors">Terms of Service</Link></li>
+              <ul className="flex flex-col gap-3 text-xs font-medium text-slate-300">
+                <li><Link to={ROUTES.ABOUT} className="hover:text-secondary-light transition-colors">About Grandma's Basket</Link></li>
+                <li><Link to={ROUTES.RECIPES} className="hover:text-secondary-light transition-colors">Indian Recipe Corner</Link></li>
+                <li><Link to={ROUTES.BLOG} className="hover:text-secondary-light transition-colors">Kitchen & Cooking Blog</Link></li>
+                <li><Link to="/privacy" className="hover:text-secondary-light transition-colors">Privacy Policy</Link></li>
+                <li><Link to="/terms" className="hover:text-secondary-light transition-colors">Terms of Service</Link></li>
               </ul>
             </div>
 
             {/* Column 5: Newsletter & Contact Box */}
             <div className="lg:col-span-1">
-              <h4 className="text-[#0C3823] font-bold text-sm uppercase tracking-wider mb-5 border-l-2 border-[#FF6B00] pl-3">
+              <h4 className="text-white font-bold text-sm uppercase tracking-wider mb-5 border-l-2 border-secondary pl-3">
                 Join Newsletter
               </h4>
-              <p className="text-xs text-slate-600 mb-4">
+              <p className="text-xs text-slate-300 mb-4">
                 Subscribe for secret offers, discounts & fresh recipes.
               </p>
 
@@ -163,26 +163,26 @@ const Footer = () => {
                 <input
                   type="email"
                   placeholder="Enter your email..."
-                  className="w-full bg-white border border-slate-200 text-slate-800 placeholder:text-slate-400 px-4 py-2.5 rounded-xl outline-none focus:border-[#FF6B00] focus:ring-2 focus:ring-[#FF6B00]/10 transition-all text-xs shadow-xs"
+                  className="w-full bg-white/10 border border-white/20 text-white placeholder:text-slate-400 px-4 py-2.5 rounded-xl outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/50 transition-all text-xs shadow-xs"
                 />
                 <button
                   type="submit"
-                  className="w-full bg-[#FF6B00] hover:bg-[#e05e00] text-white font-bold px-4 py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 text-xs shadow-sm active:scale-95"
+                  className="w-full bg-secondary hover:bg-secondary-light text-white font-bold px-4 py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 text-xs shadow-sm active:scale-95"
                 >
                   <FiSend size={13} /> Subscribe Now
                 </button>
               </form>
 
-              <div className="flex flex-col gap-2 text-xs text-slate-600 font-medium">
-                <div className="flex items-center gap-2.5 text-[#0C3823] font-bold">
-                  <FiPhone size={14} className="text-[#FF6B00]" />
+              <div className="flex flex-col gap-2 text-xs text-slate-300 font-medium">
+                <div className="flex items-center gap-2.5 text-white font-bold">
+                  <FiPhone size={14} className="text-secondary" />
                   <span>+44 7700 900000</span>
                 </div>
-                <div className="flex items-center gap-2.5 text-slate-600">
+                <div className="flex items-center gap-2.5 text-slate-300">
                   <FiMail size={14} className="text-slate-400" />
                   <span>support@grandmasbasket.co.uk</span>
                 </div>
-                <div className="flex items-center gap-2.5 text-slate-600">
+                <div className="flex items-center gap-2.5 text-slate-300">
                   <FiMapPin size={14} className="text-slate-400" />
                   <span>London, United Kingdom</span>
                 </div>
@@ -190,39 +190,20 @@ const Footer = () => {
             </div>
 
           </div>
-
-          {/* Payment Gateways Bar */}
-          <div className="border-t border-slate-200/80 pt-6 pb-4 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <span className="text-xs font-bold text-slate-700">We Accept:</span>
-              <div className="flex items-center gap-2 flex-wrap">
-                {['Mastercard', 'VISA', 'Apple Pay', 'Google Pay', 'PayPal', 'Stripe'].map(method => (
-                  <span key={method} className="bg-white border border-slate-200 px-3 py-1 rounded-lg text-[10px] font-bold text-[#0C3823] shadow-xs">
-                    {method}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 bg-white border border-slate-200 px-3 py-1.5 rounded-xl text-xs text-[#0C3823] font-bold shadow-xs">
-              <FiGlobe className="text-[#FF6B00]" /> 🇬🇧 United Kingdom (GBP £)
-            </div>
-          </div>
-
           {/* Bottom Copyright */}
-          <div className="border-t border-slate-200/80 pt-6 mt-4 flex flex-col md:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
+          <div className="border-t border-white/10 pt-6 mt-4 flex flex-col md:flex-row items-center justify-between gap-4 text-[11px] text-slate-400">
             <div className="flex flex-col sm:flex-row items-center gap-1.5 sm:gap-3 text-center sm:text-left">
               <p>
                 &copy; 2025 Grandma's Basket Ltd. All rights reserved.
               </p>
-              <span className="hidden sm:inline text-slate-300">|</span>
+              <span className="hidden sm:inline text-slate-500">|</span>
               <div className="flex items-center gap-1 flex-wrap justify-center sm:justify-start">
-                <span className="font-medium text-slate-500">Designed & Developed by</span>
+                <span className="font-medium text-slate-400">Designed & Developed by</span>
                 <a
                   href="https://www.hytide.in"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-bold text-[#0C3823] hover:text-[#FF6B00] transition-colors"
+                  className="font-bold text-white hover:text-secondary-light transition-colors"
                   title="HYTIDE Technology - www.hytide.in"
                 >
                   hytide.in
@@ -231,9 +212,9 @@ const Footer = () => {
             </div>
 
             <div className="flex items-center gap-6">
-              <Link to="/terms" className="hover:text-[#0C3823] transition-colors">Terms of Service</Link>
-              <Link to="/privacy" className="hover:text-[#0C3823] transition-colors">Privacy Policy</Link>
-              <Link to="/cookie" className="hover:text-[#0C3823] transition-colors">Cookie Preferences</Link>
+              <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+              <Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+              <Link to="/cookie" className="hover:text-white transition-colors">Cookie Preferences</Link>
             </div>
           </div>
 

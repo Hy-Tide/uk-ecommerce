@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import { 
-  FiChevronDown, 
-  FiMenu, 
-  FiX, 
-  FiMail 
+import {
+  FiChevronDown,
+  FiMenu,
+  FiX,
+  FiMail
 } from 'react-icons/fi';
 import { ROUTES } from '../../utils/constants';
 
@@ -136,8 +136,8 @@ const Navbar = () => {
       {/* Mobile Toggle Button */}
       <div className="bg-[#0C3823] text-white px-4 py-3 lg:hidden flex items-center justify-between shadow-sm">
         <span className="font-bold text-sm">Navigation</span>
-        <button 
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
           aria-label="Toggle menu"
         >
@@ -150,7 +150,7 @@ const Navbar = () => {
 
           {/* Left Navigation Links */}
           <ul className="flex flex-col lg:flex-row lg:items-center gap-1.5 lg:gap-6 w-full lg:w-auto">
-            
+
             <li>
               <NavLink
                 to={ROUTES.HOME}
@@ -162,7 +162,7 @@ const Navbar = () => {
 
             {/* Mega Menu Categories Dropdown */}
             <li className="group lg:border-none border-b border-slate-100">
-              
+
               {/* Desktop Trigger */}
               <div className="hidden lg:flex items-center gap-1 py-1.5 px-2 hover:text-[#0C3823] cursor-pointer transition-colors font-bold text-[#0C3823]">
                 <span>Categories</span>
@@ -191,8 +191,8 @@ const Navbar = () => {
                           <ul className="flex flex-col gap-2.5">
                             {section.items.map((itemName, itemIdx) => (
                               <li key={itemIdx}>
-                                <Link 
-                                  to={ROUTES.SHOP} 
+                                <Link
+                                  to={ROUTES.SHOP}
                                   className="block text-[13px] text-slate-600 hover:text-[#0C3823] transition-colors font-medium"
                                 >
                                   {itemName}
@@ -233,7 +233,7 @@ const Navbar = () => {
 
             {/* Brands Mega Menu Dropdown */}
             <li className="group lg:border-none border-b border-slate-100">
-              
+
               {/* Desktop Trigger */}
               <div className="hidden lg:flex items-center gap-1 py-1.5 px-2 hover:text-[#0C3823] cursor-pointer transition-colors font-bold text-[#0C3823]">
                 <span>Brands</span>
@@ -260,10 +260,10 @@ const Navbar = () => {
                       title={brand.name}
                     >
                       {brand.image ? (
-                        <img 
-                          src={brand.image} 
-                          alt={brand.name} 
-                          className="max-h-16 md:max-h-18 max-w-full object-contain group-hover/brand:scale-110 transition-transform duration-300 drop-shadow-xs" 
+                        <img
+                          src={brand.image}
+                          alt={brand.name}
+                          className="max-h-16 md:max-h-18 max-w-full object-contain group-hover/brand:scale-110 transition-transform duration-300 drop-shadow-xs"
                         />
                       ) : (
                         <span className={`font-black text-base md:text-lg tracking-tight ${brand.color} group-hover/brand:scale-110 transition-transform duration-300`}>
@@ -345,7 +345,7 @@ const Navbar = () => {
               FAQs
             </Link>
             <a
-              href="mailto:support@grandmasbasket.co.uk"
+              href="mailto:hello@grandmasbasket.co.uk"
               className="inline-flex items-center gap-1.5 bg-[#FFF3EB] text-[#FF6B00] hover:bg-[#FFE5D6] font-bold px-3.5 py-1.5 rounded-full transition-colors"
             >
               <FiMail size={14} /> Email support

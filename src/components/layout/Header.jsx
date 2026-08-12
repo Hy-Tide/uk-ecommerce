@@ -66,7 +66,7 @@ const Header = () => {
 
         {/* All Action Icons (Wishlist, Cart, Account) */}
         <div className="flex items-center gap-4 md:gap-6 flex-shrink-0">
-          
+
           {/* Wishlist */}
           <Link to={ROUTES.WISHLIST} className="hidden md:flex flex-col items-center justify-center text-[#0C3823] hover:text-[#FF6B00] transition-colors">
             <div className="relative mb-0.5">

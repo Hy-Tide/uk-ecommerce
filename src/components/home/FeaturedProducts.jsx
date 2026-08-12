@@ -31,8 +31,8 @@ const FeaturedProducts = () => {
 
   if (featuredProducts.length === 0) return null;
 
-  const topDeals = featuredProducts.slice(0, 8);
-  const limitedProducts = featuredProducts.slice(8, 12);
+  const topDeals = featuredProducts.slice(0, 4);
+  const limitedProducts = featuredProducts.slice(4, 8);
 
   return (
     <div className="bg-[#F8F9FA] py-12">
