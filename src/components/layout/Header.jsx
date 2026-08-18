@@ -5,12 +5,14 @@ import { ROUTES } from '../../utils/constants';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useAuth } from '../../context/AuthContext';
+import { usePostcode } from '../../context/PostcodeContext';
 import UserDropdown from './UserDropdown';
 
 const Header = () => {
   const { cartItems, cartTotal } = useCart();
   const { wishlistItems } = useWishlist();
   const { user } = useAuth();
+  const { postcode, postcodeData, changePostcode } = usePostcode();
   const navigate = useNavigate();
 
   const handleSearch = (e) => {
@@ -38,13 +40,19 @@ const Header = () => {
           </Link>
 
           {/* Delivery Location Indicator (from mockup) */}
-          <div className="hidden xl:flex items-center gap-2.5 pl-4 border-l border-slate-200">
+          <div 
+            onClick={changePostcode}
+            className="hidden xl:flex items-center gap-2.5 pl-4 border-l border-slate-200 cursor-pointer hover:opacity-80 transition-opacity"
+            title="Change Delivery Postcode"
+          >
             <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
               <FiMapPin size={16} />
             </div>
             <div className="flex flex-col text-xs leading-tight">
-              <span className="text-slate-400 font-medium">Delivery to</span>
-              <span className="font-bold text-[#0C3823]">London, UK</span>
+              <span className="text-slate-400 font-medium">
+                Delivery to {postcodeData?.admin_district || ''}
+              </span>
+              <span className="font-bold text-[#0C3823]">{postcode || 'Set Postcode'}</span>
             </div>
           </div>
         </div>

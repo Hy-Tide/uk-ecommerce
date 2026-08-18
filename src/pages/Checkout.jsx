@@ -17,6 +17,7 @@ import { FaCcStripe, FaPaypal, FaGooglePay } from 'react-icons/fa';
 import { useCart } from '../context/CartContext';
 import { getData, postData } from '../services/webservices';
 import { showSnackbar } from '../services/webservices';
+import PaymentWrapper from '../components/checkout/PaymentWrapper';
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -39,6 +40,8 @@ const Checkout = () => {
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [clientSecret, setClientSecret] = useState('');
+  const [publishableKey, setPublishableKey] = useState('');
 
   useEffect(() => {
     const validateCheckout = async () => {
@@ -97,9 +100,20 @@ const Checkout = () => {
       };
       const res = await postData('website/checkout/place-order', payload, token);
       if (res && res.success !== false) {
-        showSnackbar('Order placed successfully!', 'success');
-        clearCart();
-        navigate('/order-success');
+        if (selectedPaymentMethod === 'stripe') {
+          const intentRes = await postData('website/payments/create-payment-intent', { orderId: res.data.order._id }, token);
+          if (intentRes && intentRes.success !== false) {
+            setClientSecret(intentRes.data.clientSecret);
+            setPublishableKey(intentRes.data.publishableKey);
+            clearCart();
+          } else {
+            showSnackbar(intentRes.error || 'Failed to initialize payment', 'error');
+          }
+        } else {
+          showSnackbar('Order placed successfully!', 'success');
+          clearCart();
+          navigate('/order-success');
+        }
       } else {
         showSnackbar(res.error || 'Failed to place order', 'error');
       }
@@ -448,18 +462,24 @@ const Checkout = () => {
                     </div>
                   </div>
 
-                  <button 
-                    onClick={handlePlaceOrder}
-                    disabled={isLoading}
-                    className="w-full bg-[#eb5b27] hover:bg-[#ca4313] text-white font-extrabold py-4 rounded-xl transition-all shadow-lg shadow-[#eb5b27]/30 text-sm mb-3 disabled:opacity-50 flex justify-center items-center gap-2 active:scale-[0.98]"
-                  >
-                    {isLoading ? <FiClock className="animate-spin" /> : null}
-                    {isLoading ? 'Placing Order...' : 'Place Order Securely'}
-                  </button>
-                  
-                  <div className="text-center">
-                    <span className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">256-bit SSL Encrypted Payment</span>
-                  </div>
+                  {clientSecret && publishableKey ? (
+                    <PaymentWrapper clientSecret={clientSecret} publishableKey={publishableKey} />
+                  ) : (
+                    <>
+                      <button 
+                        onClick={handlePlaceOrder}
+                        disabled={isLoading}
+                        className="w-full bg-[#eb5b27] hover:bg-[#ca4313] text-white font-extrabold py-4 rounded-xl transition-all shadow-lg shadow-[#eb5b27]/30 text-sm mb-3 disabled:opacity-50 flex justify-center items-center gap-2 active:scale-[0.98]"
+                      >
+                        {isLoading ? <FiClock className="animate-spin" /> : null}
+                        {isLoading ? 'Placing Order...' : 'Place Order Securely'}
+                      </button>
+                      
+                      <div className="text-center">
+                        <span className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">256-bit SSL Encrypted Payment</span>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
 

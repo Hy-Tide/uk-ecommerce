@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ROUTES } from '../../utils/constants';
 import { FiArrowRight, FiTruck, FiShield, FiStar, FiZap } from 'react-icons/fi';
 import floatingSpicesHero from '../../assets/floating-spices-hero.png';
+import grandmasBasketBg from '../../assets/grandmas_basket_bg.png';
 
 const HeroBanner = () => {
   return (
@@ -10,8 +11,8 @@ const HeroBanner = () => {
       {/* Background Image & Editorial Overlay */}
       <div className="absolute inset-0 w-full h-full">
         <img
-          src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=2000"
-          alt="Indian Spices and Groceries"
+          src={grandmasBasketBg}
+          alt="Grandma's Basket - Authentic Indian Groceries"
           className="w-full h-full object-cover"
         />
         {/* Editorial Dark Forest Green Gradient Overlays */}
@@ -24,7 +25,7 @@ const HeroBanner = () => {
 
           {/* Left Content Column */}
           <div className="lg:col-span-7" data-aos="fade-right">
-            
+
             {/* Small Pill Badge */}
             <div className="inline-flex items-center gap-2 bg-[#FF8A00]/20 backdrop-blur-md border border-[#FF8A00]/30 text-[#FF8A00] px-4 py-2 rounded-full text-sm font-bold tracking-wider mb-6">
               <span className="w-2 h-2 rounded-full bg-[#FF8A00] animate-pulse"></span>
@@ -76,7 +77,7 @@ const HeroBanner = () => {
           </div>
 
           {/* Right Hero Column - Single Floating Premium Spices PNG Graphic */}
-          <div className="lg:col-span-5 relative flex items-center justify-center" data-aos="fade-left" data-aos-delay="150">
+          {/* <div className="lg:col-span-5 relative flex items-center justify-center" data-aos="fade-left" data-aos-delay="150">
             <div className="relative z-10 w-full max-w-lg h-full flex items-center justify-center animate-[bounce_6s_easeInOut_infinite]">
               <img
                 src={floatingSpicesHero}
@@ -84,7 +85,7 @@ const HeroBanner = () => {
                 className="w-full max-h-[440px] object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.6)] transition-transform duration-700 hover:scale-105"
               />
             </div>
-          </div>
+          </div> */}
 
         </div>
       </div>
