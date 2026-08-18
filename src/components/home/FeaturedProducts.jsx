@@ -54,7 +54,7 @@ const FeaturedProducts = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {topDeals.map((product, index) => (
             <div key={product._id || product.id} data-aos="fade-up" data-aos-delay={(index % 4) * 100}>
-              <ProductCard product={product} />
+              <ProductCard product={product} removeImagePadding={true} />
             </div>
           ))}
         </div>

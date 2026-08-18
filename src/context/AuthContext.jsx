@@ -1,16 +1,45 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { getData } from '../services/webservices';
 
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem('user') || sessionStorage.getItem('auth_user');
+    if (storedUser) {
+      try {
+        return JSON.parse(storedUser);
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  });
   const [loading, setLoading] = useState(true);
 
+  const fetchUserProfile = async () => {
+    const token = sessionStorage.getItem('sessionToken');
+    if (token && token !== 'demo_token') {
+      try {
+        const response = await getData('website/users/profile', {}, token);
+        if (response && response.success !== false && response.data) {
+          const userData = response.data.user || response.data;
+          setUser(userData);
+          localStorage.setItem('user', JSON.stringify(userData));
+          sessionStorage.setItem('auth_user', JSON.stringify(userData));
+          return userData;
+        }
+      } catch (err) {
+        console.error("Failed to fetch user profile:", err);
+      }
+    }
+    return null;
+  };
+
   useEffect(() => {
-    // Check auth state from localStorage
-    const checkAuth = setTimeout(() => {
+    const initAuth = async () => {
       const storedUser = localStorage.getItem('user') || sessionStorage.getItem('auth_user');
       if (storedUser) {
         try {
@@ -18,18 +47,23 @@ export const AuthProvider = ({ children }) => {
         } catch {
           setUser(null);
         }
-      } else {
-        setUser(null);
+      }
+
+      const token = sessionStorage.getItem('sessionToken');
+      if (token && token !== 'demo_token') {
+        await fetchUserProfile();
       }
       setLoading(false);
-    }, 500); // Simulated delay
-    return () => clearTimeout(checkAuth);
+    };
+
+    initAuth();
   }, []);
 
   const login = (userData) => {
     localStorage.setItem('user', JSON.stringify(userData));
     sessionStorage.setItem('auth_user', JSON.stringify(userData));
     setUser(userData);
+    fetchUserProfile();
   };
 
   const logout = () => {
@@ -41,8 +75,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, setUser, loading, login, logout, fetchUserProfile }}>
       {children}
     </AuthContext.Provider>
   );
 };
+

@@ -5,7 +5,7 @@ import { FaStar } from 'react-icons/fa';
 import { useCart } from '../../context/CartContext';
 import { getProductUrl, resolveProductImageUrl } from '../../utils/constants';
 
-const ProductCard = ({ product, showStockProgress = false }) => {
+const ProductCard = ({ product, showStockProgress = false, removeImagePadding = false }) => {
   const { addToCart } = useCart();
   const [added, setAdded] = useState(false);
   const [imgError, setImgError] = useState(false);
@@ -23,10 +23,10 @@ const ProductCard = ({ product, showStockProgress = false }) => {
   const imageUrl = resolveProductImageUrl(product);
 
   return (
-    <div className="bg-[#F3F4F6] rounded-2xl p-4 flex flex-col justify-between h-full group hover:shadow-xl transition-all duration-300 relative border border-slate-200/50">
+    <div className={`bg-[#F3F4F6] rounded-2xl flex flex-col justify-between h-full group hover:shadow-xl transition-all duration-300 relative border border-slate-200/50 ${removeImagePadding ? 'pb-4 pt-0 px-0' : 'p-4'}`}>
 
       {/* Top Image & Badges Container */}
-      <div className="relative bg-white rounded-xl p-3 mb-3 flex items-center justify-center h-48 overflow-hidden">
+      <div className={`relative bg-white flex items-center justify-center h-48 overflow-hidden ${removeImagePadding ? 'rounded-t-2xl rounded-b-none pb-3 pt-0 px-0 mb-3' : 'rounded-xl p-3 mb-3'}`}>
 
         {/* Badges Left */}
         <div className="absolute top-2.5 left-2.5 z-10 flex flex-col gap-1">
@@ -57,7 +57,7 @@ const ProductCard = ({ product, showStockProgress = false }) => {
         </div>
 
         {/* Product Image */}
-        <Link to={getProductUrl(product)} className="w-full h-full flex items-center justify-center p-1">
+        <Link to={getProductUrl(product)} className={`w-full h-full flex items-center justify-center ${removeImagePadding ? 'pb-1 pt-0 px-0' : 'p-1'}`}>
           {imageUrl && !imgError ? (
             <img
               src={imageUrl}
@@ -82,7 +82,7 @@ const ProductCard = ({ product, showStockProgress = false }) => {
       </div>
 
       {/* Details Container */}
-      <div className="flex flex-col flex-grow">
+      <div className={`flex flex-col flex-grow ${removeImagePadding ? 'px-4' : ''}`}>
         {/* Title */}
         <Link to={getProductUrl(product)}>
           <h3 className="font-bold text-[#0C3823] text-xs md:text-sm leading-snug mb-1 line-clamp-2 hover:text-[#FF6B00] transition-colors">
