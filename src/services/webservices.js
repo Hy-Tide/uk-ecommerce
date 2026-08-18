@@ -82,7 +82,7 @@ const getData = async (route, params = {}, token = null) => {
     if (response.status === 401) {
       if (URL_ROUTE.includes('/auth/')) {
         const responseData = await response.json();
-        return { success: false, error: Array.isArray(responseData?.error) ? responseData.error[0] : responseData?.error || responseData.message, data: responseData };
+        return { success: false, error: Array.isArray(responseData?.errors) ? responseData.errors[0] : Array.isArray(responseData?.error) ? responseData.error[0] : responseData?.error || responseData.message, data: responseData };
       }
 
       const newToken = await handleTokenRefresh();
@@ -95,7 +95,7 @@ const getData = async (route, params = {}, token = null) => {
           },
         });
         const retryData = await retryResponse.json();
-        if (!retryResponse.ok) return { success: false, error: Array.isArray(retryData?.error) ? retryData.error[0] : retryData?.error || retryData.message, data: retryData };
+        if (!retryResponse.ok) return { success: false, error: Array.isArray(retryData?.errors) ? retryData.errors[0] : Array.isArray(retryData?.error) ? retryData.error[0] : retryData?.error || retryData.message, data: retryData };
         return retryData;
       }
 
@@ -116,7 +116,7 @@ const getData = async (route, params = {}, token = null) => {
 
     if (!response.ok) {
       showSnackbar(`Response Error: ${JSON.stringify(responseData)}`, 'error');
-      return { success: false, error: Array.isArray(responseData?.error) ? responseData.error[0] : responseData?.error || responseData.message, data: responseData };
+      return { success: false, error: Array.isArray(responseData?.errors) ? responseData.errors[0] : Array.isArray(responseData?.error) ? responseData.error[0] : responseData?.error || responseData.message, data: responseData };
     }
 
     return responseData;
@@ -141,7 +141,7 @@ const postData = async (route, data, token) => {
     if (response.status === 401) {
       if (URL_ROUTE.includes('/auth/')) {
         const responseData = await response.json();
-        return { success: false, error: Array.isArray(responseData?.error) ? responseData.error[0] : responseData?.error || responseData.message, data: responseData };
+        return { success: false, error: Array.isArray(responseData?.errors) ? responseData.errors[0] : Array.isArray(responseData?.error) ? responseData.error[0] : responseData?.error || responseData.message, data: responseData };
       }
 
       const newToken = await handleTokenRefresh();
@@ -155,7 +155,7 @@ const postData = async (route, data, token) => {
           body: JSON.stringify(data),
         });
         const retryData = await retryResponse.json();
-        if (!retryResponse.ok) return { success: false, error: Array.isArray(retryData?.error) ? retryData.error[0] : retryData?.error || retryData.message, data: retryData };
+        if (!retryResponse.ok) return { success: false, error: Array.isArray(retryData?.errors) ? retryData.errors[0] : Array.isArray(retryData?.error) ? retryData.error[0] : retryData?.error || retryData.message, data: retryData };
         return retryData;
       }
 
@@ -175,7 +175,7 @@ const postData = async (route, data, token) => {
     const responseData = await response.json();
     if (!response.ok) {
       console.error('Response Error:', responseData);
-      return { success: false, error: Array.isArray(responseData?.error) ? responseData.error[0] : responseData?.error || responseData.message, data: responseData };
+      return { success: false, error: Array.isArray(responseData?.errors) ? responseData.errors[0] : Array.isArray(responseData?.error) ? responseData.error[0] : responseData?.error || responseData.message, data: responseData };
     }
 
     return responseData;
@@ -201,7 +201,7 @@ const patchData = async (route, body = {}, token = null) => {
     if (response.status === 401) {
       if (URL_ROUTE.includes('/auth/')) {
         const responseData = await response.json();
-        return { success: false, error: Array.isArray(responseData?.error) ? responseData.error[0] : responseData?.error || responseData.message, data: responseData };
+        return { success: false, error: Array.isArray(responseData?.errors) ? responseData.errors[0] : Array.isArray(responseData?.error) ? responseData.error[0] : responseData?.error || responseData.message, data: responseData };
       }
 
       const newToken = await handleTokenRefresh();
@@ -215,7 +215,7 @@ const patchData = async (route, body = {}, token = null) => {
           body: JSON.stringify(body),
         });
         const retryData = await retryResponse.json();
-        if (!retryResponse.ok) return { success: false, error: Array.isArray(retryData?.error) ? retryData.error[0] : retryData?.error || retryData.message, data: retryData };
+        if (!retryResponse.ok) return { success: false, error: Array.isArray(retryData?.errors) ? retryData.errors[0] : Array.isArray(retryData?.error) ? retryData.error[0] : retryData?.error || retryData.message, data: retryData };
         return retryData;
       }
 
@@ -235,7 +235,7 @@ const patchData = async (route, body = {}, token = null) => {
     const responseData = await response.json();
     if (!response.ok) {
       console.error('Response Error:', responseData);
-      return { success: false, error: Array.isArray(responseData?.error) ? responseData.error[0] : responseData?.error || responseData.message, data: responseData };
+      return { success: false, error: Array.isArray(responseData?.errors) ? responseData.errors[0] : Array.isArray(responseData?.error) ? responseData.error[0] : responseData?.error || responseData.message, data: responseData };
     }
 
     return responseData;
@@ -316,7 +316,7 @@ const deleteData = async (route, token) => {
     if (response.status === 401) {
       if (URL_ROUTE.includes('/auth/')) {
         const responseData = await response.json();
-        return { success: false, error: Array.isArray(responseData?.error) ? responseData.error[0] : responseData?.error || responseData.message, data: responseData };
+        return { success: false, error: Array.isArray(responseData?.errors) ? responseData.errors[0] : Array.isArray(responseData?.error) ? responseData.error[0] : responseData?.error || responseData.message, data: responseData };
       }
 
       const newToken = await handleTokenRefresh();
@@ -328,7 +328,7 @@ const deleteData = async (route, token) => {
           },
         });
         const retryData = await retryResponse.json();
-        if (!retryResponse.ok) return { success: false, error: Array.isArray(retryData?.error) ? retryData.error[0] : retryData?.error || retryData.message, data: retryData };
+        if (!retryResponse.ok) return { success: false, error: Array.isArray(retryData?.errors) ? retryData.errors[0] : Array.isArray(retryData?.error) ? retryData.error[0] : retryData?.error || retryData.message, data: retryData };
         return retryData;
       }
 
@@ -345,7 +345,7 @@ const deleteData = async (route, token) => {
     const responseData = await response.json();
     if (!response.ok) {
       console.error('Response Error:', responseData);
-      return { success: false, error: Array.isArray(responseData?.error) ? responseData.error[0] : responseData?.error || responseData.message, data: responseData };
+      return { success: false, error: Array.isArray(responseData?.errors) ? responseData.errors[0] : Array.isArray(responseData?.error) ? responseData.error[0] : responseData?.error || responseData.message, data: responseData };
     }
 
     return responseData;
@@ -376,7 +376,7 @@ const uploadFile = async (route, file, token) => {
     if (response.status === 401) {
       if (URL_ROUTE.includes('/auth/')) {
         const responseData = await response.json();
-        return { success: false, error: Array.isArray(responseData?.error) ? responseData.error[0] : responseData?.error || responseData.message, data: responseData };
+        return { success: false, error: Array.isArray(responseData?.errors) ? responseData.errors[0] : Array.isArray(responseData?.error) ? responseData.error[0] : responseData?.error || responseData.message, data: responseData };
       }
 
       const newToken = await handleTokenRefresh();
@@ -388,7 +388,7 @@ const uploadFile = async (route, file, token) => {
           body: file,
         });
         const retryData = await retryResponse.json();
-        if (!retryResponse.ok) return { success: false, error: Array.isArray(retryData?.error) ? retryData.error[0] : retryData?.error || retryData.message, data: retryData };
+        if (!retryResponse.ok) return { success: false, error: Array.isArray(retryData?.errors) ? retryData.errors[0] : Array.isArray(retryData?.error) ? retryData.error[0] : retryData?.error || retryData.message, data: retryData };
         return retryData;
       }
 
@@ -405,7 +405,7 @@ const uploadFile = async (route, file, token) => {
     const responseData = await response.json();
     if (!response.ok) {
       console.error('Response Error:', responseData);
-      return { success: false, error: Array.isArray(responseData?.error) ? responseData.error[0] : responseData?.error || responseData.message, data: responseData };
+      return { success: false, error: Array.isArray(responseData?.errors) ? responseData.errors[0] : Array.isArray(responseData?.error) ? responseData.error[0] : responseData?.error || responseData.message, data: responseData };
     }
 
     return responseData;

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, useLocation } from 'react-router-dom';
 import AppRoutes from './routes/AppRoutes';
+import PostcodePopup from './components/common/PostcodePopup';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
@@ -27,6 +28,7 @@ const AOSInitializer = () => {
 function App() {
   return (
     <BrowserRouter>
+      <PostcodePopup />
       <AOSInitializer />
       <AppRoutes />
     </BrowserRouter>

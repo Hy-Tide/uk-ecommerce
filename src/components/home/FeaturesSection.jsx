@@ -20,7 +20,7 @@ const FeaturesSection = () => {
       icon: <FiLock size={24} className="text-yellow-600" />,
       bg: 'bg-yellow-50',
       title: 'Secure Payment',
-      desc: 'Stripe, PayPal & more'
+      desc: 'Stripe'
     },
     {
       icon: <FaWhatsapp size={24} className="text-green-500" />,
