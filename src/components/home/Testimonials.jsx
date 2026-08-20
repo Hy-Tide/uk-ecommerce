@@ -2,39 +2,6 @@ import React, { useState } from 'react';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { FaQuoteLeft, FaStar } from 'react-icons/fa';
 
-const reviewsData = [
-  {
-    id: 1,
-    category: 'Spices & Masalas',
-    bg: 'bg-[#0C3823]',
-    accentColor: 'text-emerald-300',
-    name: 'Tanvir Ahammed Tamim',
-    role: "Grandma's Basket Customer",
-    content: "I've been shopping at Grandma's Basket for over a year now, and I couldn't be happier. The variety of regional spices available is impressive. The checkout process is quick and efficient!",
-    avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=600&auto=format&fit=crop&q=80'
-  },
-  {
-    id: 2,
-    category: 'Fast Delivery',
-    bg: 'bg-[#700B0B]',
-    accentColor: 'text-rose-200',
-    name: 'Sohidur Rahman',
-    role: "Grandma's Basket Customer",
-    content: "Grandma's Basket has completely transformed my grocery shopping. The store is well-organized, produce is fresh, and next-day UK express delivery makes it my ultimate go-to store!",
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&auto=format&fit=crop&q=80'
-  },
-  {
-    id: 3,
-    category: 'Quality & Packaging',
-    bg: 'bg-[#162123]',
-    accentColor: 'text-amber-300',
-    name: 'Priya Sharma',
-    role: "Grandma's Basket Customer",
-    content: "Outstanding quality Indian spices and authentic flours! The Aashirvaad Atta and organic dal are always fresh, pure, and delivered in perfect sealed packaging across the UK.",
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80'
-  }
-];
-
 const filterChips = [
   'All Reviews',
   'Spices & Masalas',
@@ -42,12 +9,16 @@ const filterChips = [
   'Quality & Packaging'
 ];
 
-const Testimonials = () => {
+const Testimonials = ({ data }) => {
   const [activeChip, setActiveChip] = useState('All Reviews');
+  
+  const reviewsData = Array.isArray(data) ? data : (data?.data || []);
 
   const filteredReviews = activeChip === 'All Reviews'
     ? reviewsData.slice(0, 3)
     : reviewsData.filter(r => r.category === activeChip).slice(0, 3);
+
+  if (reviewsData.length === 0) return null; // Since user asked to remove dummy data completely
 
   return (
     <section className="py-16 bg-[#F8F9FA]">

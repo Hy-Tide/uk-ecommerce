@@ -3,22 +3,8 @@ import { FiTruck, FiShield, FiLock } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import { getData } from '../../services/webservices';
 
-const FeaturesSection = () => {
-  const [featuresData, setFeaturesData] = useState([]);
-
-  useEffect(() => {
-    const fetchFeatures = async () => {
-      try {
-        const response = await getData('website/home/features');
-        if (response?.success && response.data?.items) {
-          setFeaturesData(response.data.items);
-        }
-      } catch (error) {
-        console.error('Error fetching features:', error);
-      }
-    };
-    fetchFeatures();
-  }, []);
+const FeaturesSection = ({ data }) => {
+  const featuresData = data?.items || [];
 
   const defaultIcons = [
     { icon: <FiTruck size={24} className="text-green-600" />, bg: 'bg-green-50' },

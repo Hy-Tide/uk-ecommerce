@@ -5,22 +5,8 @@ import { ROUTES } from '../../utils/constants';
 import { FiArrowRight } from 'react-icons/fi';
 import { getData } from '../../services/webservices';
 
-const NewArrivals = () => {
-  const [newArrivals, setNewArrivals] = useState([]);
-
-  useEffect(() => {
-    const fetchNewArrivals = async () => {
-      try {
-        const res = await getData('website/products/new-arrivals');
-        if (res?.success && res?.data?.products) {
-          setNewArrivals(res.data.products);
-        }
-      } catch (err) {
-        console.error('Failed to fetch new arrivals', err);
-      }
-    };
-    fetchNewArrivals();
-  }, []);
+const NewArrivals = ({ data }) => {
+  const newArrivals = data?.data || [];
 
   if (newArrivals.length === 0) return null;
 

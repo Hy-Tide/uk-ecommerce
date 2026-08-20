@@ -4,45 +4,24 @@ import { ROUTES } from '../../utils/constants';
 import { FiArrowRight } from 'react-icons/fi';
 import { getData } from '../../services/webservices';
 
-const fallbackCategoryStyles = [
-  { name: 'Vegetable', subtitle: 'Local Market', bg: 'bg-[#657D1B]', image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400&q=80' },
-  { name: 'Bakery', subtitle: 'In store delivery', bg: 'bg-[#6B1C88]', image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&q=80' },
-  { name: 'Fruits', subtitle: 'Comical fee', bg: 'bg-[#00796B]', image: 'https://images.unsplash.com/photo-1619566636858-adf3ef46400b?w=400&q=80' },
-  { name: 'Meat', subtitle: 'Frozen meal', bg: 'bg-[#7B3F00]', image: 'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=400&q=80' },
-  { name: 'Fresh Fish', subtitle: 'Local Market', bg: 'bg-[#8A0B0B]', image: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=400&q=80' },
-  { name: 'Beverages', subtitle: 'Comical fee', bg: 'bg-[#0B4F9C]', image: 'https://images.unsplash.com/photo-1527661591475-527312dd65f5?w=400&q=80' },
+const bgColors = [
+  'bg-[#657D1B]', 'bg-[#6B1C88]', 'bg-[#00796B]', 
+  'bg-[#7B3F00]', 'bg-[#8A0B0B]', 'bg-[#0B4F9C]'
 ];
 
-const CategorySection = () => {
-  const [categories, setCategories] = useState([]);
+const CategorySection = ({ data }) => {
+  const categories = data?.data || [];
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const response = await getData('website/categories');
-      if (response && response.success !== false && response.data && response.data.categories) {
-        setCategories(response.data.categories);
-      }
-    };
-    fetchCategories();
-  }, []);
+  if (categories.length === 0) return null;
 
-  const displayCategories = categories.length > 0
-    ? categories.slice(0, 6).map((cat, idx) => ({
-      id: cat._id || idx,
-      name: cat.name,
-      slug: cat.slug,
-      subtitle: fallbackCategoryStyles[idx % fallbackCategoryStyles.length].subtitle,
-      bg: fallbackCategoryStyles[idx % fallbackCategoryStyles.length].bg,
-      image: cat.image || fallbackCategoryStyles[idx % fallbackCategoryStyles.length].image
-    }))
-    : fallbackCategoryStyles.map((item, idx) => ({
-      id: idx,
-      name: item.name,
-      slug: item.name.toLowerCase().replace(/\s+/g, '-'),
-      subtitle: item.subtitle,
-      bg: item.bg,
-      image: item.image
-    }));
+  const displayCategories = categories.slice(0, 6).map((cat, idx) => ({
+    id: cat._id || idx,
+    name: cat.name,
+    slug: cat.slug,
+    subtitle: '', // API doesn't provide subtitle, we can use an empty string
+    bg: bgColors[idx % bgColors.length],
+    image: cat.image
+  }));
 
   return (
     <section className="bg-[#F8F9FA] py-12">

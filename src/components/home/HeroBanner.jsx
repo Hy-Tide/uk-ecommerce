@@ -14,22 +14,7 @@ const resolveImageUrl = (url, fallback) => {
   return `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
 };
 
-const HeroBanner = () => {
-  const [cmsData, setCmsData] = useState(null);
-
-  useEffect(() => {
-    const fetchCmsData = async () => {
-      try {
-        const res = await getData('website/home');
-        if (res?.success && res.data && res.data.banners) {
-          setCmsData(res.data.banners);
-        }
-      } catch (err) {
-        console.error('Error fetching hero banner data:', err);
-      }
-    };
-    fetchCmsData();
-  }, []);
+const HeroBanner = ({ data: cmsData }) => {
 
   const title = cmsData?.title;
   const description = cmsData?.description;
@@ -40,7 +25,6 @@ const HeroBanner = () => {
   const secondaryButtonUrl = cmsData?.secondaryButtonUrl;
 
   const bgImage = resolveImageUrl(cmsData?.backgroundImage, grandmasBasketBg);
-  const mainImage = resolveImageUrl(cmsData?.desktopImage, floatingSpicesHero);
 
   return (
     <section className="relative w-full min-h-[520px] md:min-h-[600px] flex flex-col justify-center overflow-hidden bg-[#1D3B2A]">

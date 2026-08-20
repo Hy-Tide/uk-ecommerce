@@ -5,22 +5,8 @@ import { ROUTES } from '../../utils/constants';
 import { FiArrowRight, FiThumbsUp } from 'react-icons/fi';
 import { getData } from '../../services/webservices';
 
-const RecommendedProducts = () => {
-  const [recommended, setRecommended] = useState([]);
-
-  useEffect(() => {
-    const fetchBestSelling = async () => {
-      try {
-        const res = await getData('website/products/best-selling');
-        if (res?.success && res?.data?.products) {
-          setRecommended(res.data.products);
-        }
-      } catch (err) {
-        console.error('Failed to fetch best selling products', err);
-      }
-    };
-    fetchBestSelling();
-  }, []);
+const RecommendedProducts = ({ data }) => {
+  const recommended = data?.data || [];
 
   if (recommended.length === 0) return null;
 
