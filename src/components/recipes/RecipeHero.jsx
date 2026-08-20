@@ -1,85 +1,111 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FiBookOpen, FiArrowRight, FiShield, FiStar, FiZap } from 'react-icons/fi';
 import floatingSpicesHero from '../../assets/floating-spices-hero.png';
+import { getData } from '../../services/webservices';
 
 const RecipeHero = () => {
+  const [banner, setBanner] = useState(null);
+
+  useEffect(() => {
+    const fetchBanner = async () => {
+      try {
+        const response = await getData('website/banners/recipes');
+        if (response?.success && response?.data?.banners?.length > 0) {
+          setBanner(response.data.banners[0]);
+        }
+      } catch (error) {
+        console.error('Error fetching recipes banner:', error);
+      }
+    };
+    fetchBanner();
+  }, []);
+
+  if (!banner) {
+    return (
+      <section className="relative w-full min-h-[520px] md:min-h-[640px] bg-[#0c2415] flex items-center justify-center">
+        <div className="w-16 h-16 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin"></div>
+      </section>
+    );
+  }
+
+  const titleWords = banner.title ? banner.title.split(' ') : [];
+  const lastWord = titleWords.length > 1 ? titleWords.pop() : '';
+  const restOfTitle = titleWords.join(' ');
+
   return (
-    <section className="relative w-full min-h-[520px] md:min-h-[600px] flex flex-col justify-center overflow-hidden bg-[#1D3B2A]">
+    <section className="relative w-full min-h-[520px] md:min-h-[640px] flex flex-col justify-center overflow-hidden bg-[#0c2415]">
       {/* Background Image & Editorial Overlay */}
       <div className="absolute inset-0 w-full h-full">
         <img
-          src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=2000"
-          alt="Indian Spices and Groceries"
-          className="w-full h-full object-cover"
+          src={banner.image_url}
+          alt={banner.title}
+          className="w-full h-full object-cover scale-105 animate-[pulse_20s_ease-in-out_infinite_alternate]"
         />
-        {/* Editorial Dark Forest Green Gradient Overlays */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#1D3B2A]/95 via-[#1D3B2A]/80 to-transparent"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1D3B2A]/95 via-transparent to-[#1D3B2A]/40"></div>
+        {/* Premium Dark Gradients for Depth */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0a1f12] via-[#0c2415]/80 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0a1f12] via-transparent to-[#0a1f12]/40"></div>
+        <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px]"></div>
       </div>
 
-      <div className="container relative z-10 px-4 pt-16 pb-14">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <div className="container relative z-10 px-4 pt-20 pb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
 
           {/* Left Content Column */}
-          <div className="lg:col-span-7" data-aos="fade-right">
-            
+          <div className="lg:col-span-7" data-aos="fade-right" data-aos-duration="1000">
+
             {/* Small Pill Badge */}
-            <div className="inline-flex items-center gap-2 bg-[#FF8A00]/20 backdrop-blur-md border border-[#FF8A00]/30 text-[#FF8A00] px-4 py-2 rounded-full text-sm font-bold tracking-wider mb-6">
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#FF8A00]/20 to-[#FFB703]/20 backdrop-blur-md border border-[#FF8A00]/40 text-[#FFB703] px-5 py-2.5 rounded-full text-xs uppercase font-black tracking-widest mb-6 shadow-[0_0_20px_rgba(255,138,0,0.15)] animate-[pulse_4s_ease-in-out_infinite]">
               <FiBookOpen className="text-sm" />
-              Over 1,000 Authentic Indian Recipes
+              <span>Chef's Special Recipes</span>
             </div>
 
             {/* Large Heading */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] mb-6">
-              Cook Authentic <span className="text-[#FF8A00]">Indian Meals</span> at Home
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-[1.05] mb-6 drop-shadow-lg tracking-tight">
+              {restOfTitle} {lastWord && <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF8A00] to-[#FFB703]">{lastWord}</span>}
+              {!lastWord && banner.title}
             </h1>
 
             {/* Description */}
-            <p className="text-lg md:text-xl text-white/85 leading-relaxed mb-10 max-w-xl font-medium">
-              Discover delicious recipes using fresh ingredients available in our store. Shop every ingredient in just one click.
+            <p className="text-lg md:text-xl text-emerald-50/80 leading-relaxed mb-10 max-w-xl font-medium drop-shadow-md">
+              {banner.description}
             </p>
 
             {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-4 mb-12">
-              <button className="bg-[#2E8B57] hover:bg-[#236b43] text-white font-bold text-base px-8 py-4 rounded-[16px] shadow-[0_8px_20px_rgba(46,139,87,0.4)] hover:-translate-y-1 transition-all duration-300 inline-flex items-center gap-2">
-                Explore Recipes <FiArrowRight size={18} />
+            <div className="flex flex-wrap items-center gap-4 mb-14">
+              <button className="group bg-gradient-to-r from-[#FF8A00] to-[#e67a00] text-white font-black text-base px-8 py-4.5 rounded-2xl shadow-[0_10px_30px_rgba(255,138,0,0.4)] hover:shadow-[0_15px_40px_rgba(255,138,0,0.5)] hover:-translate-y-1.5 transition-all duration-300 inline-flex items-center gap-3">
+                Start Cooking <FiArrowRight size={20} className="group-hover:translate-x-1.5 transition-transform duration-300" />
               </button>
               <Link
                 to="/shop"
-                className="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white font-bold text-base px-8 py-4 rounded-[16px] hover:-translate-y-1 transition-all duration-300 inline-flex items-center"
+                className="group bg-white/5 hover:bg-white/15 backdrop-blur-xl border border-white/20 text-white font-bold text-base px-8 py-4.5 rounded-2xl hover:-translate-y-1.5 transition-all duration-300 inline-flex items-center gap-2 shadow-[0_8px_30px_rgba(0,0,0,0.2)]"
               >
                 Shop Ingredients
               </Link>
             </div>
 
             {/* Trust Badges Bar */}
-            <div className="flex flex-wrap items-center gap-6 md:gap-10 border-t border-white/10 pt-6">
-              <div className="flex items-center gap-2.5 text-white/90 font-bold text-sm">
-                <FiShield className="text-[#FF8A00] text-lg" />
-                <span>100% Pure Ingredients</span>
+            <div className="flex flex-wrap items-center gap-6 md:gap-10 border-t border-white/10 pt-8">
+              <div className="flex items-center gap-3 text-white/90 font-bold text-sm group">
+                <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center group-hover:scale-110 transition-transform border border-emerald-500/30">
+                  <FiShield className="text-emerald-400 text-lg" />
+                </div>
+                <span>100% Pure<br /><span className="text-emerald-400/80 font-medium text-xs">Ingredients</span></span>
               </div>
-              <div className="flex items-center gap-2.5 text-white/90 font-bold text-sm">
-                <FiZap className="text-[#FF8A00] text-lg" />
-                <span>One-Click Ingredient Cart</span>
+              <div className="flex items-center gap-3 text-white/90 font-bold text-sm group">
+                <div className="w-10 h-10 rounded-full bg-[#FF8A00]/20 flex items-center justify-center group-hover:scale-110 transition-transform border border-[#FF8A00]/30">
+                  <FiZap className="text-[#FFB703] text-lg" />
+                </div>
+                <span>One-Click<br /><span className="text-[#FFB703]/80 font-medium text-xs">Smart Cart</span></span>
               </div>
-              <div className="flex items-center gap-2.5 text-white/90 font-bold text-sm">
-                <FiStar className="text-[#FF8A00] text-lg" />
-                <span>Master Chef Approved</span>
+              <div className="flex items-center gap-3 text-white/90 font-bold text-sm group">
+                <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center group-hover:scale-110 transition-transform border border-blue-500/30">
+                  <FiStar className="text-blue-400 text-lg" />
+                </div>
+                <span>Chef Approved<br /><span className="text-blue-400/80 font-medium text-xs">Curated Quality</span></span>
               </div>
             </div>
 
-          </div>
-
-          {/* Right Hero Column - Single Floating Premium Spices PNG Graphic */}
-          <div className="lg:col-span-5 relative flex items-center justify-center" data-aos="fade-left" data-aos-delay="150">
-            <div className="relative z-10 w-full max-w-lg h-full flex items-center justify-center animate-[bounce_6s_easeInOut_infinite]">
-              <img
-                src={floatingSpicesHero}
-                alt="Authentic Indian Floating Spices & Herbs"
-                className="w-full max-h-[440px] object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.6)] transition-transform duration-700 hover:scale-105"
-              />
-            </div>
           </div>
 
         </div>

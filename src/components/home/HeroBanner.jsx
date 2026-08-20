@@ -1,18 +1,54 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../../utils/constants';
 import { FiArrowRight, FiTruck, FiShield, FiStar, FiZap } from 'react-icons/fi';
 import floatingSpicesHero from '../../assets/floating-spices-hero.png';
 import grandmasBasketBg from '../../assets/grandmas_basket_bg.png';
+import { getData } from '../../services/webservices';
+import { API_URL } from '../../services/url';
+
+const resolveImageUrl = (url, fallback) => {
+  if (!url) return fallback;
+  if (url.startsWith('http') || url.startsWith('data:')) return url;
+  const baseUrl = API_URL.replace(/\/api\/v1\/?$/, '');
+  return `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
+};
 
 const HeroBanner = () => {
+  const [cmsData, setCmsData] = useState(null);
+
+  useEffect(() => {
+    const fetchCmsData = async () => {
+      try {
+        const res = await getData('website/home');
+        if (res?.success && res.data && res.data.banners) {
+          setCmsData(res.data.banners);
+        }
+      } catch (err) {
+        console.error('Error fetching hero banner data:', err);
+      }
+    };
+    fetchCmsData();
+  }, []);
+
+  const title = cmsData?.title;
+  const description = cmsData?.description;
+  const highlightTitle = cmsData?.highlightTitle;
+  const primaryButtonText = cmsData?.primaryButtonText;
+  const primaryButtonUrl = cmsData?.primaryButtonUrl;
+  const secondaryButtonText = cmsData?.secondaryButtonText;
+  const secondaryButtonUrl = cmsData?.secondaryButtonUrl;
+
+  const bgImage = resolveImageUrl(cmsData?.backgroundImage, grandmasBasketBg);
+  const mainImage = resolveImageUrl(cmsData?.desktopImage, floatingSpicesHero);
+
   return (
     <section className="relative w-full min-h-[520px] md:min-h-[600px] flex flex-col justify-center overflow-hidden bg-[#1D3B2A]">
       {/* Background Image & Editorial Overlay */}
       <div className="absolute inset-0 w-full h-full">
         <img
-          src={grandmasBasketBg}
-          alt="Grandma's Basket - Authentic Indian Groceries"
+          src={bgImage}
+          alt="Background"
           className="w-full h-full object-cover"
         />
         {/* Editorial Dark Forest Green Gradient Overlays */}
@@ -29,64 +65,50 @@ const HeroBanner = () => {
             {/* Small Pill Badge */}
             <div className="inline-flex items-center gap-2 bg-[#FF8A00]/20 backdrop-blur-md border border-[#FF8A00]/30 text-[#FF8A00] px-4 py-2 rounded-full text-sm font-bold tracking-wider mb-6">
               <span className="w-2 h-2 rounded-full bg-[#FF8A00] animate-pulse"></span>
-              Free UK Next-Day Delivery On Orders £30+
+              {highlightTitle}
             </div>
 
             {/* Large Heading */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] mb-6">
-              We Deliver Authentic <span className="text-[#FF8A00]">Groceries & Spices</span>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] mb-6" dangerouslySetInnerHTML={{ __html: title ? title.replace('Groceries & Spices', '<span class="text-[#FF8A00]">Groceries & Spices</span>') : '' }}>
             </h1>
 
             {/* Description */}
             <p className="text-lg md:text-xl text-white/85 leading-relaxed mb-10 max-w-xl font-medium">
-              Get 100% pure Indian spices, pulses, atta, and fresh groceries delivered straight to your doorstep across the UK.
+              {description}
             </p>
 
             {/* Action Buttons */}
             <div className="flex flex-wrap items-center gap-4 mb-12">
               <Link
-                to={ROUTES.SHOP}
+                to={primaryButtonUrl}
                 className="bg-[#2E8B57] hover:bg-[#236b43] text-white font-bold text-base px-8 py-4 rounded-[16px] shadow-[0_8px_20px_rgba(46,139,87,0.4)] hover:-translate-y-1 transition-all duration-300 inline-flex items-center gap-2"
               >
-                Shop Now <FiArrowRight size={18} />
+                {primaryButtonText} <FiArrowRight size={18} />
               </Link>
               <Link
-                to="/recipes"
+                to={secondaryButtonUrl}
                 className="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white font-bold text-base px-8 py-4 rounded-[16px] hover:-translate-y-1 transition-all duration-300"
               >
-                Explore Recipes
+                {secondaryButtonText}
               </Link>
             </div>
 
             {/* Trust Badges Bar */}
-            <div className="flex flex-wrap items-center gap-6 md:gap-10 border-t border-white/10 pt-6">
-              <div className="flex items-center gap-2.5 text-white/90 font-bold text-sm">
-                <FiShield className="text-[#FF8A00] text-lg" />
-                <span>100% Pure Organic</span>
+            {cmsData?.items && cmsData.items.length > 0 && (
+              <div className="flex flex-wrap items-center gap-6 md:gap-10 border-t border-white/10 pt-6">
+                {cmsData.items.map((item, index) => {
+                  const icons = [<FiShield className="text-[#FF8A00] text-lg" />, <FiZap className="text-[#FF8A00] text-lg" />, <FiStar className="text-[#FF8A00] text-lg" />];
+                  return (
+                    <div key={index} className="flex items-center gap-2.5 text-white/90 font-bold text-sm">
+                      {icons[index % icons.length]}
+                      <span>{item.title}</span>
+                    </div>
+                  );
+                })}
               </div>
-              <div className="flex items-center gap-2.5 text-white/90 font-bold text-sm">
-                <FiZap className="text-[#FF8A00] text-lg" />
-                <span>Next-Day UK Express</span>
-              </div>
-              <div className="flex items-center gap-2.5 text-white/90 font-bold text-sm">
-                <FiStar className="text-[#FF8A00] text-lg" />
-                <span>50,000+ UK Families</span>
-              </div>
-            </div>
+            )}
 
           </div>
-
-          {/* Right Hero Column - Single Floating Premium Spices PNG Graphic */}
-          {/* <div className="lg:col-span-5 relative flex items-center justify-center" data-aos="fade-left" data-aos-delay="150">
-            <div className="relative z-10 w-full max-w-lg h-full flex items-center justify-center animate-[bounce_6s_easeInOut_infinite]">
-              <img
-                src={floatingSpicesHero}
-                alt="Authentic Indian Floating Spices & Herbs"
-                className="w-full max-h-[440px] object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.6)] transition-transform duration-700 hover:scale-105"
-              />
-            </div>
-          </div> */}
-
         </div>
       </div>
     </section>

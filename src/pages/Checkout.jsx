@@ -98,24 +98,23 @@ const Checkout = () => {
         deliverySlot,
         paymentMethod: selectedPaymentMethod
       };
-      const res = await postData('website/checkout/place-order', payload, token);
-      if (res && res.success !== false) {
-        if (selectedPaymentMethod === 'stripe') {
-          const intentRes = await postData('website/payments/create-payment-intent', { orderId: res.data.order._id }, token);
-          if (intentRes && intentRes.success !== false) {
-            setClientSecret(intentRes.data.clientSecret);
-            setPublishableKey(intentRes.data.publishableKey);
-            clearCart();
-          } else {
-            showSnackbar(intentRes.error || 'Failed to initialize payment', 'error');
-          }
+      if (selectedPaymentMethod === 'stripe') {
+        const intentRes = await postData('website/payments/create-payment-intent', payload, token);
+        if (intentRes && intentRes.success !== false) {
+          setClientSecret(intentRes.data.clientSecret);
+          setPublishableKey(intentRes.data.publishableKey);
         } else {
+          showSnackbar(intentRes.error || 'Failed to initialize payment', 'error');
+        }
+      } else {
+        const res = await postData('website/checkout/place-order', payload, token);
+        if (res && res.success !== false) {
           showSnackbar('Order placed successfully!', 'success');
           clearCart();
           navigate('/order-success');
+        } else {
+          showSnackbar(res.error || 'Failed to place order', 'error');
         }
-      } else {
-        showSnackbar(res.error || 'Failed to place order', 'error');
       }
     } catch (e) {
       showSnackbar('Error placing order', 'error');
@@ -463,7 +462,7 @@ const Checkout = () => {
                   </div>
 
                   {clientSecret && publishableKey ? (
-                    <PaymentWrapper clientSecret={clientSecret} publishableKey={publishableKey} />
+                    <PaymentWrapper clientSecret={clientSecret} publishableKey={publishableKey} clearCart={clearCart} navigate={navigate} />
                   ) : (
                     <>
                       <button 

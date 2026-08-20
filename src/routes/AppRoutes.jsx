@@ -21,6 +21,7 @@ const OfferDetails = lazy(() => import('../pages/OfferDetails'));
 const Wishlist = lazy(() => import('../pages/Wishlist'));
 const Cart = lazy(() => import('../pages/Cart'));
 const Checkout = lazy(() => import('../pages/Checkout'));
+const OrderSuccess = lazy(() => import('../pages/OrderSuccess'));
 const Login = lazy(() => import('../pages/Login'));
 const Register = lazy(() => import('../pages/Register'));
 const ForgotPassword = lazy(() => import('../pages/ForgotPassword'));
@@ -82,6 +83,7 @@ const AppRoutes = () => {
           <Route path={ROUTES.OFFER_DETAILS} element={<OfferDetails />} />
           <Route path={ROUTES.CART} element={<Cart />} />
           <Route path={ROUTES.CHECKOUT} element={<Checkout />} />
+          <Route path={ROUTES.ORDER_SUCCESS} element={<OrderSuccess />} />
           <Route path={ROUTES.SEARCH} element={<Search />} />
 
           {/* Standalone Account Pages (MainLayout) */}

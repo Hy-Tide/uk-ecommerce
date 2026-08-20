@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js';
 import { FiLock, FiClock } from 'react-icons/fi';
+import { postData, showSnackbar } from '../../services/webservices';
 
-export default function CheckoutForm() {
+export default function CheckoutForm({ clearCart, navigate }) {
   const stripe = useStripe();
   const elements = useElements();
   const [errorMessage, setErrorMessage] = useState(null);
@@ -16,16 +17,34 @@ export default function CheckoutForm() {
     setIsLoading(true);
     setErrorMessage(null);
 
-    const { error } = await stripe.confirmPayment({
+    const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       confirmParams: {
         return_url: `${window.location.origin}/order-success`, 
       },
+      redirect: 'if_required'
     });
 
     if (error) {
       setErrorMessage(error.message);
       setIsLoading(false);
+    } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+      try {
+        const token = sessionStorage.getItem('sessionToken');
+        const verifyRes = await postData('website/payments/verify', { paymentIntentId: paymentIntent.id }, token);
+        
+        if (verifyRes && verifyRes.success !== false) {
+          showSnackbar(verifyRes.message || 'Payment successful! Order placed.', 'success');
+          clearCart();
+          navigate(`/order-success?orderId=${verifyRes.data?.orderId || ''}`);
+        } else {
+          setErrorMessage(verifyRes.error || 'Payment was successful but order creation failed. Please contact support.');
+          setIsLoading(false);
+        }
+      } catch (err) {
+        setErrorMessage('Failed to verify payment with server. Please contact support.');
+        setIsLoading(false);
+      }
     }
   };
 

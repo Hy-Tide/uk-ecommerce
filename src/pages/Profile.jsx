@@ -303,9 +303,9 @@ const Profile = () => {
                     <FiShield size={13} className="text-[#0C3823]" /> Verified Customer
                   </span>
                 </div>
-                <p className="text-sm text-slate-500 font-medium">
+                <div className="text-sm text-slate-500 font-medium">
                   {isLoading ? <Skeleton className="h-4 w-40 rounded" /> : (displayUser?.email || 'customer@example.com')}
-                </p>
+                </div>
               </div>
             </div>
 
@@ -403,9 +403,9 @@ const Profile = () => {
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Email Address</p>
-                    <p className="font-bold text-slate-800 text-xs truncate">
+                    <div className="font-bold text-slate-800 text-xs truncate">
                       {isLoading ? <Skeleton className="h-4 w-32 rounded" /> : (displayUser?.email || 'customer@example.com')}
-                    </p>
+                    </div>
                   </div>
                 </div>
 
@@ -415,9 +415,9 @@ const Profile = () => {
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Phone Number</p>
-                    <p className="font-bold text-slate-800 text-xs truncate">
+                    <div className="font-bold text-slate-800 text-xs truncate">
                       {isLoading ? <Skeleton className="h-4 w-28 rounded" /> : (displayUser?.phone_number || displayUser?.phone || 'Not Provided')}
-                    </p>
+                    </div>
                   </div>
                 </div>
 
