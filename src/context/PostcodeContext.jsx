@@ -14,7 +14,6 @@ export const PostcodeProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Check localStorage on mount
     const savedPostcode = localStorage.getItem('validatedPostcode');
     const savedData = localStorage.getItem('validatedPostcodeData');
     if (savedPostcode && savedData) {

@@ -73,12 +73,12 @@ const RecipeHero = () => {
 
             {/* Action Buttons */}
             <div className="flex flex-wrap items-center gap-4 mb-14">
-              <button className="group bg-gradient-to-r from-[#FF8A00] to-[#e67a00] text-white font-black text-base px-8 py-4.5 rounded-2xl shadow-[0_10px_30px_rgba(255,138,0,0.4)] hover:shadow-[0_15px_40px_rgba(255,138,0,0.5)] hover:-translate-y-1.5 transition-all duration-300 inline-flex items-center gap-3">
+              <button className="group bg-gradient-to-r from-[#FF8A00] to-[#e67a00] text-white font-black text-base px-8 py-3.5 rounded-full shadow-[0_10px_30px_rgba(255,138,0,0.4)] hover:shadow-[0_15px_40px_rgba(255,138,0,0.5)] hover:-translate-y-1.5 transition-all duration-300 inline-flex items-center gap-3">
                 Start Cooking <FiArrowRight size={20} className="group-hover:translate-x-1.5 transition-transform duration-300" />
               </button>
               <Link
                 to="/shop"
-                className="group bg-white/5 hover:bg-white/15 backdrop-blur-xl border border-white/20 text-white font-bold text-base px-8 py-4.5 rounded-2xl hover:-translate-y-1.5 transition-all duration-300 inline-flex items-center gap-2 shadow-[0_8px_30px_rgba(0,0,0,0.2)]"
+                className="group bg-white/5 hover:bg-white/15 backdrop-blur-xl border border-white/20 text-white font-bold text-base px-8 py-3.5 rounded-full hover:-translate-y-1.5 transition-all duration-300 inline-flex items-center gap-2 shadow-[0_8px_30px_rgba(0,0,0,0.2)]"
               >
                 Shop Ingredients
               </Link>

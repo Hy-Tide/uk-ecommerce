@@ -6,7 +6,7 @@ import ShopHero from '../components/shop/ShopHero';
 import ShopSidebar from '../components/shop/ShopSidebar';
 import ShopProductCard from '../components/shop/ShopProductCard';
 import ProductScroller from '../components/shop/ProductScroller';
-import { shopProducts } from '../data/dummyData';
+
 import Newsletter from '../components/home/Newsletter';
 import SubCategoryPills from '../components/shop/SubCategoryPills';
 import RecentlyViewed from '../components/home/RecentlyViewed';

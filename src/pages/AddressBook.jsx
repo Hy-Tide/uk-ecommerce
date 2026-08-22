@@ -20,18 +20,7 @@ import { ROUTES } from '../utils/constants';
 const AddressBook = () => {
   const { user } = useAuth();
 
-  const getInitialAddresses = () => {
-    try {
-      const stored = localStorage.getItem('user_addresses');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed)) return parsed;
-      }
-    } catch (e) {}
-    return [];
-  };
-
-  const [addresses, setAddresses] = useState(getInitialAddresses);
+  const [addresses, setAddresses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingAddressId, setEditingAddressId] = useState(null);
@@ -50,7 +39,7 @@ const AddressBook = () => {
   const fetchAddresses = async () => {
     const token = sessionStorage.getItem('sessionToken') || localStorage.getItem('token');
     if (!token || token === 'demo_token') {
-      setAddresses(getInitialAddresses());
+      setAddresses([]);
       return;
     }
 
@@ -72,7 +61,6 @@ const AddressBook = () => {
       }
 
       setAddresses(fetchedList);
-      localStorage.setItem('user_addresses', JSON.stringify(fetchedList));
     } catch (e) {
       console.error(e);
     } finally {
@@ -151,7 +139,6 @@ const AddressBook = () => {
     }
 
     setAddresses(updatedList);
-    localStorage.setItem('user_addresses', JSON.stringify(updatedList));
     showSnackbar(targetId ? 'Address updated successfully!' : 'Address added successfully!', 'success');
     setIsModalOpen(false);
     setEditingAddressId(null);
@@ -167,7 +154,6 @@ const AddressBook = () => {
 
     const updatedList = addresses.filter(a => (a._id || a.id) !== id);
     setAddresses(updatedList);
-    localStorage.setItem('user_addresses', JSON.stringify(updatedList));
     showSnackbar('Address deleted successfully!', 'success');
   };
 
@@ -177,7 +163,6 @@ const AddressBook = () => {
       is_default: (a._id === id || a.id === id)
     }));
     setAddresses(updatedList);
-    localStorage.setItem('user_addresses', JSON.stringify(updatedList));
     showSnackbar('Default address updated!', 'success');
   };
 

@@ -40,18 +40,7 @@ const Profile = () => {
     phone_number: ''
   });
   
-  const getInitialAddresses = () => {
-    try {
-      const stored = localStorage.getItem('user_addresses');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed)) return parsed;
-      }
-    } catch (e) {}
-    return [];
-  };
-
-  const [addresses, setAddresses] = useState(getInitialAddresses);
+  const [addresses, setAddresses] = useState([]);
   const [isAddingAddress, setIsAddingAddress] = useState(false);
   const [editingAddressId, setEditingAddressId] = useState(null);
   const [isSavingAddress, setIsSavingAddress] = useState(false);
@@ -69,7 +58,7 @@ const Profile = () => {
     const token = sessionStorage.getItem('sessionToken') || localStorage.getItem('token');
     
     if (!token || token === 'demo_token') {
-      setAddresses(getInitialAddresses());
+      setAddresses([]);
       return;
     }
 
@@ -90,7 +79,6 @@ const Profile = () => {
       }
 
       setAddresses(fetchedList);
-      localStorage.setItem('user_addresses', JSON.stringify(fetchedList));
     } catch (e) {
       console.error('Failed to fetch addresses:', e);
     }
@@ -120,7 +108,6 @@ const Profile = () => {
           setProfile(userObj);
           if (Array.isArray(userObj.addresses) && userObj.addresses.length > 0) {
             setAddresses(userObj.addresses);
-            localStorage.setItem('user_addresses', JSON.stringify(userObj.addresses));
           }
         } else {
           setProfile(user || { first_name: 'Customer', email: 'user@example.com' });
@@ -173,7 +160,6 @@ const Profile = () => {
     }
 
     setAddresses(updatedList);
-    localStorage.setItem('user_addresses', JSON.stringify(updatedList));
     showSnackbar(targetId ? 'Address updated successfully!' : 'Address added successfully!', 'success');
     setIsAddingAddress(false);
     setEditingAddressId(null);
@@ -212,7 +198,6 @@ const Profile = () => {
     
     const updatedList = addresses.filter(a => (a._id || a.id) !== id);
     setAddresses(updatedList);
-    localStorage.setItem('user_addresses', JSON.stringify(updatedList));
     showSnackbar('Address deleted successfully!', 'success');
   };
 

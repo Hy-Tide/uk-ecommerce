@@ -130,7 +130,7 @@ const TrackOrder = () => {
               <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Order ID</label>
               <input 
                 type="text" 
-                placeholder="e.g. ORD-2026-8924"
+                placeholder="Enter your Order ID"
                 value={orderIdInput}
                 onChange={(e) => setOrderIdInput(e.target.value)}
                 className="w-full bg-[#FAFBF9] border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-[#0C3823] focus:ring-2 focus:ring-[#0C3823]/15 transition-all text-xs font-bold text-slate-800"

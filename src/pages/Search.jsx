@@ -3,14 +3,43 @@ import { FiSearch, FiChevronDown } from 'react-icons/fi';
 import Breadcrumbs from '../components/common/Breadcrumbs';
 import ShopSidebar from '../components/shop/ShopSidebar';
 import ShopProductCard from '../components/shop/ShopProductCard';
-import { shopProducts } from '../data/dummyData';
+import { getData } from '../services/webservices';
 import Newsletter from '../components/home/Newsletter';
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState('Atta');
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  // Filter products based on search query (mock)
-  const results = shopProducts.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()));
+  useEffect(() => {
+    const fetchResults = async () => {
+      setLoading(true);
+      try {
+        const response = await getData('website/products', { search: searchQuery });
+        if (response?.success && response?.data?.products) {
+          setResults(response.data.products);
+        } else {
+          setResults([]);
+        }
+      } catch (err) {
+        console.error('Failed to fetch search results', err);
+        setResults([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    // Add debounce
+    const timeoutId = setTimeout(() => {
+      if (searchQuery.trim()) {
+        fetchResults();
+      } else {
+        setResults([]);
+      }
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery]);
 
   return (
     <div className="bg-[#fcfbf9] min-h-screen">
@@ -33,11 +62,16 @@ const Search = () => {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                  }
+                }}
                 className="w-full pl-6 pr-14 py-4 rounded-full border border-slate-200 shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-dark font-medium"
                 placeholder="Search for products, brands..."
               />
               <button 
-                type="submit" 
+                type="button" 
                 className="absolute right-2 w-10 h-10 bg-primary hover:bg-primary-dark text-white rounded-full flex items-center justify-center transition-colors"
               >
                 <FiSearch className="w-5 h-5" />
@@ -71,10 +105,14 @@ const Search = () => {
             </div>
 
             {/* Grid */}
-            {results.length > 0 ? (
+            {loading ? (
+              <div className="text-center py-20 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                <h3 className="text-xl font-bold text-dark mb-2">Searching...</h3>
+              </div>
+            ) : results.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
                 {results.map(product => (
-                  <ShopProductCard key={product.id} product={product} />
+                  <ShopProductCard key={product._id || product.id} product={product} />
                 ))}
               </div>
             ) : (

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { recipes } from '../../data/dummyData';
 import { ROUTES } from '../../utils/constants';
 import { FiArrowRight, FiClock } from 'react-icons/fi';
 
