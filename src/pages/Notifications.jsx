@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FiBox, FiTag, FiGift, FiHeart, FiMoreVertical, FiChevronRight, FiUser, FiBell } from 'react-icons/fi';
-import { getData, patchData, showSnackbar } from '../services/webservices';
+import { getData, patchData } from '../services/webservices';
+import { useToast } from '../context/ToastContext';
 import { ROUTES } from '../utils/constants';
 
 const getIconForType = (type) => {
@@ -16,6 +17,7 @@ const getIconForType = (type) => {
 };
 
 const Notifications = () => {
+  const { showToast } = useToast();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -54,7 +56,7 @@ const Notifications = () => {
       } catch (e) {}
     }
     setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
-    showSnackbar('All notifications marked as read', 'success');
+    showToast('All notifications marked as read', 'success');
   };
 
   const markAsRead = async (id) => {

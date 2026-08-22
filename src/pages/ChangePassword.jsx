@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FiLock, FiCheckCircle, FiChevronRight, FiUser, FiShield, FiKey } from 'react-icons/fi';
-import { postData, showSnackbar } from '../services/webservices';
+import { postData } from '../services/webservices';
+import { useToast } from '../context/ToastContext';
 import { ROUTES } from '../utils/constants';
 
 const ChangePassword = () => {
+  const { showToast } = useToast();
   const [current, setCurrent] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -35,15 +37,15 @@ const ChangePassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!current) {
-      showSnackbar('Please enter your current password', 'error');
+      showToast('Please enter your current password', 'error');
       return;
     }
     if (password.length < 8) {
-      showSnackbar('Password must be at least 8 characters long', 'error');
+      showToast('Password must be at least 8 characters long', 'error');
       return;
     }
     if (password !== confirm) {
-      showSnackbar('New passwords do not match', 'error');
+      showToast('New passwords do not match', 'error');
       return;
     }
 
@@ -57,12 +59,12 @@ const ChangePassword = () => {
           new_password: password
         }, token);
       }
-      showSnackbar('Password updated successfully!', 'success');
+      showToast('Password updated successfully!', 'success');
       setCurrent('');
       setPassword('');
       setConfirm('');
     } catch (err) {
-      showSnackbar('Failed to update password', 'error');
+      showToast('Failed to update password', 'error');
     } finally {
       setIsUpdating(false);
     }

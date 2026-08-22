@@ -16,10 +16,11 @@ import {
 import { FaCcStripe, FaPaypal, FaGooglePay } from 'react-icons/fa';
 import { useCart } from '../context/CartContext';
 import { getData, postData } from '../services/webservices';
-import { showSnackbar } from '../services/webservices';
+import { useToast } from '../context/ToastContext';
 import PaymentWrapper from '../components/checkout/PaymentWrapper';
 
 const Checkout = () => {
+  const { showToast } = useToast();
   const navigate = useNavigate();
   const { cartItems, cartTotal, cartDetails, clearCart } = useCart();
   
@@ -52,7 +53,7 @@ const Checkout = () => {
       try {
         const res = await postData('website/checkout/validate', {}, token);
         if (res.success === false) {
-          showSnackbar(res.error || 'Cart validation failed', 'error');
+          showToast(res.error || 'Cart validation failed', 'error');
           navigate('/cart');
         }
       } catch (e) {
@@ -104,20 +105,20 @@ const Checkout = () => {
           setClientSecret(intentRes.data.clientSecret);
           setPublishableKey(intentRes.data.publishableKey);
         } else {
-          showSnackbar(intentRes.error || 'Failed to initialize payment', 'error');
+          showToast(intentRes.error || 'Failed to initialize payment', 'error');
         }
       } else {
         const res = await postData('website/checkout/place-order', payload, token);
         if (res && res.success !== false) {
-          showSnackbar('Order placed successfully!', 'success');
+          showToast('Order placed successfully!', 'success');
           clearCart();
           navigate('/order-success');
         } else {
-          showSnackbar(res.error || 'Failed to place order', 'error');
+          showToast(res.error || 'Failed to place order', 'error');
         }
       }
     } catch (e) {
-      showSnackbar('Error placing order', 'error');
+      showToast('Error placing order', 'error');
     } finally {
       setIsLoading(false);
     }

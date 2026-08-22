@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiSearch, FiFilter, FiMapPin, FiRefreshCw, FiEye, FiChevronRight, FiUser, FiPackage } from 'react-icons/fi';
-import { getData, postData, showSnackbar } from '../services/webservices';
+import { getData, postData } from '../services/webservices';
+import { useToast } from '../context/ToastContext';
 import { ROUTES } from '../utils/constants';
 
 const getStatusColor = (status) => {
@@ -14,6 +15,7 @@ const getStatusColor = (status) => {
 };
 
 const MyOrders = () => {
+  const { showToast } = useToast();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [reorderingId, setReorderingId] = useState(null);
@@ -56,10 +58,10 @@ const MyOrders = () => {
       if (token && token !== 'demo_token') {
         await postData(`website/orders/${orderId}/reorder`, {});
       }
-      showSnackbar('Items added to cart for reorder', 'success');
+      showToast('Items added to cart for reorder', 'success');
       navigate('/cart');
     } catch (err) {
-      showSnackbar('Error during reorder', 'error');
+      showToast('Error during reorder', 'error');
     } finally {
       setReorderingId(null);
     }

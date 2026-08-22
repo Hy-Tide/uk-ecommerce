@@ -15,10 +15,12 @@ import {
   FiUser
 } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
-import { getData, showSnackbar } from '../services/webservices';
+import { getData } from '../services/webservices';
+import { useToast } from '../context/ToastContext';
 import { ROUTES } from '../utils/constants';
 
 const TrackOrder = () => {
+  const { showToast } = useToast();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -83,11 +85,11 @@ const TrackOrder = () => {
   const handleTrackSubmit = async (e) => {
     e.preventDefault();
     if (!orderIdInput.trim()) {
-      showSnackbar('Please enter a valid Order ID', 'error');
+      showToast('Please enter a valid Order ID', 'error');
       return;
     }
     await fetchOrderDetails(orderIdInput.trim());
-    showSnackbar('Tracking updated', 'success');
+    showToast('Tracking updated', 'success');
   };
 
   return (

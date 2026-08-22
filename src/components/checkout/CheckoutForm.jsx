@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js';
 import { FiLock, FiClock } from 'react-icons/fi';
-import { postData, showSnackbar } from '../../services/webservices';
+import { postData } from '../../services/webservices';
+import { useToast } from '../../context/ToastContext';
 
-export default function CheckoutForm({ clearCart, navigate }) {
+export default function CheckoutForm({ clientSecret, clearCart, navigate }) {
+  const { showToast } = useToast();
   const stripe = useStripe();
   const elements = useElements();
   const [errorMessage, setErrorMessage] = useState(null);
@@ -34,7 +36,7 @@ export default function CheckoutForm({ clearCart, navigate }) {
         const verifyRes = await postData('website/payments/verify', { paymentIntentId: paymentIntent.id }, token);
         
         if (verifyRes && verifyRes.success !== false) {
-          showSnackbar(verifyRes.message || 'Payment successful! Order placed.', 'success');
+          showToast(verifyRes.message || 'Payment successful! Order placed.', 'success');
           clearCart();
           navigate(`/order-success?orderId=${verifyRes.data?.orderId || ''}`);
         } else {

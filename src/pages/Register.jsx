@@ -6,13 +6,16 @@ import { ROUTES } from '../utils/constants';
 import { useAuth } from '../context/AuthContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
-import { postData, showSnackbar } from '../services/webservices';
+import { postData } from '../services/webservices';
+import { useToast } from '../context/ToastContext';
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const { login } = useAuth();
   const { syncGuestWishlist } = useWishlist();
   const { syncGuestCart } = useCart();
@@ -28,7 +31,7 @@ const Register = () => {
     const confirmPassword = formData.get('confirm-password');
 
     if (password !== confirmPassword) {
-      showSnackbar('Passwords do not match', 'error');
+      showToast('Passwords do not match', 'error');
       return;
     }
 
@@ -64,12 +67,12 @@ const Register = () => {
         login({ name: `${first_name} ${last_name}`, email });
       }
 
-      showSnackbar('Registration successful!', 'success');
+      showToast('Registration successful!', 'success');
       navigate(ROUTES.PROFILE);
     } else {
       const message = response?.error || response?.data?.message || response?.message || 'Registration failed. Please try again.';
       setErrorMsg(message);
-      showSnackbar(message, 'error');
+      showToast(message, 'error');
     }
   };
 

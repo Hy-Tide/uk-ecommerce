@@ -30,7 +30,7 @@ const NewArrivals = ({ data }) => {
       {/* Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {newArrivals.slice(0, 5).map((product, index) => (
-          <div key={product._id || product.id} data-aos="fade-up" data-aos-delay={index * 100}>
+          <div key={product._id || product.id || product.productId || index} data-aos="fade-up" data-aos-delay={index * 100}>
             <ProductCard product={{...product, badge: { type: 'new' }}} />
           </div>
         ))}

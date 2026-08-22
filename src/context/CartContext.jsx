@@ -1,11 +1,13 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getData, postData, putData, deleteData, showSnackbar } from '../services/webservices';
+import { getData, postData, putData, deleteData } from '../services/webservices';
+import { useToast } from './ToastContext';
 
 const CartContext = createContext();
 
 export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({ children }) => {
+  const { showToast } = useToast();
   const [cartItems, setCartItems] = useState([]);
   const [cartTotal, setCartTotal] = useState(0);
   const [cartDetails, setCartDetails] = useState(null); // to store full cart object (discounts, coupons, etc)
@@ -103,7 +105,7 @@ export const CartProvider = ({ children }) => {
       }
 
       sessionStorage.setItem('guestCart', JSON.stringify(guestCart));
-      showSnackbar('Added to cart', 'success');
+      showToast('Added to cart', 'success');
       await fetchCart();
       return;
     }
@@ -111,13 +113,13 @@ export const CartProvider = ({ children }) => {
     try {
       const response = await postData('website/cart/items', { productId, quantity, variationId }, token);
       if (response && response.success !== false) {
-        showSnackbar('Added to cart', 'success');
+        showToast('Added to cart', 'success');
         await fetchCart();
       } else {
-        showSnackbar(response?.error || 'Failed to add to cart', 'error');
+        showToast(response?.error || 'Failed to add to cart', 'error');
       }
     } catch (e) {
-      showSnackbar('Error adding to cart', 'error');
+      showToast('Error adding to cart', 'error');
     }
   };
 
@@ -145,10 +147,10 @@ export const CartProvider = ({ children }) => {
       if (response && response.success !== false) {
         await fetchCart();
       } else {
-        showSnackbar(response?.error || 'Failed to update quantity', 'error');
+        showToast(response?.error || 'Failed to update quantity', 'error');
       }
     } catch (e) {
-      showSnackbar('Error updating quantity', 'error');
+      showToast('Error updating quantity', 'error');
     }
   };
 
@@ -171,10 +173,10 @@ export const CartProvider = ({ children }) => {
       if (response && response.success !== false) {
         await fetchCart();
       } else {
-        showSnackbar(response?.error || 'Failed to remove item', 'error');
+        showToast(response?.error || 'Failed to remove item', 'error');
       }
     } catch (e) {
-      showSnackbar('Error removing item', 'error');
+      showToast('Error removing item', 'error');
     }
   };
 
@@ -192,30 +194,30 @@ export const CartProvider = ({ children }) => {
       if (response && response.success !== false) {
         await fetchCart();
       } else {
-        showSnackbar(response?.error || 'Failed to clear cart', 'error');
+        showToast(response?.error || 'Failed to clear cart', 'error');
       }
     } catch (e) {
-      showSnackbar('Error clearing cart', 'error');
+      showToast('Error clearing cart', 'error');
     }
   };
 
   const applyCoupon = async (code) => {
     const token = sessionStorage.getItem('sessionToken');
     if (!token) {
-      showSnackbar('Please log in to apply coupons', 'warning');
+      showToast('Please log in to apply coupons', 'warning');
       return;
     }
 
     try {
       const response = await postData('website/cart/coupon', { code }, token);
       if (response && response.success !== false) {
-        showSnackbar('Coupon applied successfully', 'success');
+        showToast('Coupon applied successfully', 'success');
         await fetchCart();
       } else {
-        showSnackbar(response?.error || 'Failed to apply coupon', 'error');
+        showToast(response?.error || 'Failed to apply coupon', 'error');
       }
     } catch (e) {
-      showSnackbar('Error applying coupon', 'error');
+      showToast('Error applying coupon', 'error');
     }
   };
 
@@ -226,13 +228,13 @@ export const CartProvider = ({ children }) => {
     try {
       const response = await deleteData('website/cart/coupon', token);
       if (response && response.success !== false) {
-        showSnackbar('Coupon removed', 'success');
+        showToast('Coupon removed', 'success');
         await fetchCart();
       } else {
-        showSnackbar(response?.error || 'Failed to remove coupon', 'error');
+        showToast(response?.error || 'Failed to remove coupon', 'error');
       }
     } catch (e) {
-      showSnackbar('Error removing coupon', 'error');
+      showToast('Error removing coupon', 'error');
     }
   };
 

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FiClock, FiHeart, FiArrowRight, FiBookmark } from 'react-icons/fi';
 
-const BlogList = ({ articles, authors }) => {
+const BlogList = ({ articles, authors, onLoadMore, hasMore, isLoadingMore }) => {
   if (!articles || articles.length === 0) return null;
 
   const getAuthor = (id) => authors.find(a => a.id === id);
@@ -19,7 +19,10 @@ const BlogList = ({ articles, authors }) => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {articles.map((article, index) => {
-            const author = getAuthor(article.authorId);
+            const author = getAuthor(article.authorId) || {
+              name: article.authorName || 'Admin',
+              avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(article.authorName || 'Admin')}&background=random`
+            };
             
             return (
               <motion.article
@@ -86,11 +89,24 @@ const BlogList = ({ articles, authors }) => {
         </div>
 
         {/* Load More */}
-        <div className="mt-12 text-center">
-          <button className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-8 py-3 rounded-xl transition-colors">
-            Load More Articles
-          </button>
-        </div>
+        {hasMore && (
+          <div className="mt-12 text-center">
+            <button 
+              onClick={onLoadMore}
+              disabled={isLoadingMore}
+              className="bg-[#124827] hover:bg-[#1c6b3b] text-white text-sm font-bold px-8 py-3.5 rounded-full transition-all shadow-lg shadow-[#124827]/20 hover:shadow-xl hover:-translate-y-1 disabled:opacity-70 disabled:hover:translate-y-0 flex items-center justify-center gap-2 mx-auto"
+            >
+              {isLoadingMore ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  Loading...
+                </>
+              ) : (
+                'Load More Articles'
+              )}
+            </button>
+          </div>
+        )}
 
       </div>
     </section>

@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { FiCheckCircle, FiSend } from 'react-icons/fi';
-import { showSnackbar } from '../../services/webservices';
+import { useToast } from '../../context/ToastContext';
 
 const Newsletter = () => {
+  const { showToast } = useToast();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!email) return;
-    showSnackbar('Thank you for subscribing to Grandma\'s Basket!', 'success');
+    showToast('Thank you for subscribing to Grandma\'s Basket!', 'success');
     setName('');
     setEmail('');
   };

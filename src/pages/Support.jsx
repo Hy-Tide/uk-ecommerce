@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FiMessageSquare, FiPhoneCall, FiMail, FiChevronDown, FiExternalLink, FiChevronRight, FiUser, FiSend } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
-import { showSnackbar } from '../services/webservices';
+import { useToast } from '../context/ToastContext';
 import { ROUTES } from '../utils/constants';
 
 const faqs = [
@@ -14,6 +14,7 @@ const faqs = [
 ];
 
 const Support = () => {
+  const { showToast } = useToast();
   const [subject, setSubject] = useState('Order Issue');
   const [orderId, setOrderId] = useState('');
   const [message, setMessage] = useState('');
@@ -26,7 +27,7 @@ const Support = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!message.trim()) {
-      showSnackbar('Please enter your message', 'error');
+      showToast('Please enter your message', 'error');
       return;
     }
     setIsSubmitting(true);
@@ -34,7 +35,7 @@ const Support = () => {
       setIsSubmitting(false);
       setMessage('');
       setOrderId('');
-      showSnackbar('Message sent! Our support team will reply shortly.', 'success');
+      showToast('Message sent! Our support team will reply shortly.', 'success');
     }, 800);
   };
 

@@ -6,6 +6,7 @@ import { getData } from '../../services/webservices';
 
 const RecipeHero = () => {
   const [banner, setBanner] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchBanner = async () => {
@@ -16,12 +17,14 @@ const RecipeHero = () => {
         }
       } catch (error) {
         console.error('Error fetching recipes banner:', error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchBanner();
   }, []);
 
-  if (!banner) {
+  if (loading) {
     return (
       <section className="relative w-full min-h-[520px] md:min-h-[640px] bg-[#0c2415] flex items-center justify-center">
         <div className="w-16 h-16 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin"></div>
@@ -29,7 +32,11 @@ const RecipeHero = () => {
     );
   }
 
-  const titleWords = banner.title ? banner.title.split(' ') : [];
+  const displayTitle = banner?.title || "Explore Authentic Indian Recipes";
+  const displayImage = banner?.image_url || floatingSpicesHero;
+  const displayDesc = banner?.description || "Discover our collection of traditional and modern Indian recipes crafted by expert chefs.";
+
+  const titleWords = displayTitle.split(' ');
   const lastWord = titleWords.length > 1 ? titleWords.pop() : '';
   const restOfTitle = titleWords.join(' ');
 
@@ -38,8 +45,8 @@ const RecipeHero = () => {
       {/* Background Image & Editorial Overlay */}
       <div className="absolute inset-0 w-full h-full">
         <img
-          src={banner.image_url}
-          alt={banner.title}
+          src={displayImage}
+          alt={displayTitle}
           className="w-full h-full object-cover scale-105 animate-[pulse_20s_ease-in-out_infinite_alternate]"
         />
         {/* Premium Dark Gradients for Depth */}
@@ -63,22 +70,22 @@ const RecipeHero = () => {
             {/* Large Heading */}
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-[1.05] mb-6 drop-shadow-lg tracking-tight">
               {restOfTitle} {lastWord && <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF8A00] to-[#FFB703]">{lastWord}</span>}
-              {!lastWord && banner.title}
+              {!lastWord && displayTitle}
             </h1>
 
             {/* Description */}
             <p className="text-lg md:text-xl text-emerald-50/80 leading-relaxed mb-10 max-w-xl font-medium drop-shadow-md">
-              {banner.description}
+              {displayDesc}
             </p>
 
             {/* Action Buttons */}
             <div className="flex flex-wrap items-center gap-4 mb-14">
-              <button className="group bg-gradient-to-r from-[#FF8A00] to-[#e67a00] text-white font-black text-base px-8 py-3.5 rounded-full shadow-[0_10px_30px_rgba(255,138,0,0.4)] hover:shadow-[0_15px_40px_rgba(255,138,0,0.5)] hover:-translate-y-1.5 transition-all duration-300 inline-flex items-center gap-3">
-                Start Cooking <FiArrowRight size={20} className="group-hover:translate-x-1.5 transition-transform duration-300" />
+              <button className="group bg-gradient-to-r from-[#FF8A00] to-[#e67a00] text-white font-black text-sm px-7 py-3 rounded-full shadow-[0_8px_25px_rgba(255,138,0,0.4)] hover:shadow-[0_12px_30px_rgba(255,138,0,0.5)] hover:-translate-y-1 transition-all duration-300 inline-flex items-center gap-2">
+                Start Cooking <FiArrowRight size={18} className="group-hover:translate-x-1.5 transition-transform duration-300" />
               </button>
               <Link
                 to="/shop"
-                className="group bg-white/5 hover:bg-white/15 backdrop-blur-xl border border-white/20 text-white font-bold text-base px-8 py-3.5 rounded-full hover:-translate-y-1.5 transition-all duration-300 inline-flex items-center gap-2 shadow-[0_8px_30px_rgba(0,0,0,0.2)]"
+                className="group bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white font-bold text-sm px-7 py-3 rounded-full hover:-translate-y-1 transition-all duration-300 inline-flex items-center gap-2 shadow-[0_4px_20px_rgba(0,0,0,0.2)]"
               >
                 Shop Ingredients
               </Link>

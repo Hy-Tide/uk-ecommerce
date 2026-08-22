@@ -19,11 +19,13 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { useWishlist } from '../context/WishlistContext';
 import AccountPageHeader from '../components/account/AccountPageHeader';
-import { getData, putData, postData, deleteData, showSnackbar } from '../services/webservices';
+import { getData, putData, postData, deleteData } from '../services/webservices';
+import { useToast } from '../context/ToastContext';
 import Skeleton from '../components/common/Skeleton';
 import { ROUTES } from '../utils/constants';
 
 const Profile = () => {
+  const { showToast } = useToast();
   const { user, fetchUserProfile } = useAuth();
   const { wishlistItems } = useWishlist();
   const navigate = useNavigate();
@@ -160,7 +162,7 @@ const Profile = () => {
     }
 
     setAddresses(updatedList);
-    showSnackbar(targetId ? 'Address updated successfully!' : 'Address added successfully!', 'success');
+    showToast(targetId ? 'Address updated successfully!' : 'Address added successfully!', 'success');
     setIsAddingAddress(false);
     setEditingAddressId(null);
     setAddressForm({
@@ -198,7 +200,7 @@ const Profile = () => {
     
     const updatedList = addresses.filter(a => (a._id || a.id) !== id);
     setAddresses(updatedList);
-    showSnackbar('Address deleted successfully!', 'success');
+    showToast('Address deleted successfully!', 'success');
   };
 
 
@@ -225,12 +227,12 @@ const Profile = () => {
     setIsUpdating(false);
     
     if (response && response.success !== false) {
-      showSnackbar('Profile updated successfully!', 'success');
+      showToast('Profile updated successfully!', 'success');
       setProfile({ ...displayUser, ...editForm });
       if (fetchUserProfile) fetchUserProfile();
       setIsEditing(false);
     } else {
-      showSnackbar(response?.error || 'Failed to update profile', 'error');
+      showToast(response?.error || 'Failed to update profile', 'error');
     }
   };
 

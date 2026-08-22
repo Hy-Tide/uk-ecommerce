@@ -6,13 +6,15 @@ import { ROUTES } from '../utils/constants';
 import { useAuth } from '../context/AuthContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
-import { postData, showSnackbar } from '../services/webservices';
+import { postData } from '../services/webservices';
+import { useToast } from '../context/ToastContext';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const { login } = useAuth();
   const { syncGuestWishlist } = useWishlist();
   const { syncGuestCart } = useCart();
@@ -45,12 +47,12 @@ const Login = () => {
         login({ email }); // Fallback
       }
 
-      showSnackbar('Login successful!', 'success');
+      showToast('Login successful!', 'success');
       navigate(ROUTES.PROFILE);
     } else {
       const message = response?.error || response?.data?.message || response?.message || 'Login failed. Invalid credentials or server error.';
       setErrorMsg(message);
-      showSnackbar(message, 'error');
+      showToast(message, 'error');
     }
   };
 

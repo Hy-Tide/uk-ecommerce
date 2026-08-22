@@ -14,10 +14,12 @@ import {
   FiUser
 } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
-import { getData, putData, postData, deleteData, showSnackbar } from '../services/webservices';
+import { getData, putData, postData, deleteData } from '../services/webservices';
+import { useToast } from '../context/ToastContext';
 import { ROUTES } from '../utils/constants';
 
 const AddressBook = () => {
+  const { showToast } = useToast();
   const { user } = useAuth();
 
   const [addresses, setAddresses] = useState([]);
@@ -139,7 +141,7 @@ const AddressBook = () => {
     }
 
     setAddresses(updatedList);
-    showSnackbar(targetId ? 'Address updated successfully!' : 'Address added successfully!', 'success');
+    showToast(targetId ? 'Address updated successfully!' : 'Address added successfully!', 'success');
     setIsModalOpen(false);
     setEditingAddressId(null);
   };
@@ -154,7 +156,7 @@ const AddressBook = () => {
 
     const updatedList = addresses.filter(a => (a._id || a.id) !== id);
     setAddresses(updatedList);
-    showSnackbar('Address deleted successfully!', 'success');
+    showToast('Address deleted successfully!', 'success');
   };
 
   const handleSetDefault = (id) => {
@@ -163,7 +165,7 @@ const AddressBook = () => {
       is_default: (a._id === id || a.id === id)
     }));
     setAddresses(updatedList);
-    showSnackbar('Default address updated!', 'success');
+    showToast('Default address updated!', 'success');
   };
 
   return (

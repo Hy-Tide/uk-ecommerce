@@ -1,11 +1,13 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getData, postData, deleteData, showSnackbar } from '../services/webservices';
+import { getData, postData, deleteData } from '../services/webservices';
+import { useToast } from './ToastContext';
 
 const WishlistContext = createContext();
 
 export const useWishlist = () => useContext(WishlistContext);
 
 export const WishlistProvider = ({ children }) => {
+  const { showToast } = useToast();
   const [wishlistItems, setWishlistItems] = useState([]);
 
   const fetchWishlist = async () => {
@@ -62,10 +64,10 @@ export const WishlistProvider = ({ children }) => {
       let newWishlist;
       if (isExisting) {
         newWishlist = wishlistItems.filter(item => (item._id || item.id) !== productId);
-        showSnackbar('Removed from wishlist', 'success');
+        showToast('Removed from wishlist', 'success');
       } else {
         newWishlist = [...wishlistItems, product];
-        showSnackbar('Added to wishlist', 'success');
+        showToast('Added to wishlist', 'success');
       }
       setWishlistItems(newWishlist);
       sessionStorage.setItem('guestWishlist', JSON.stringify(newWishlist));
@@ -77,7 +79,7 @@ export const WishlistProvider = ({ children }) => {
       
       const response = await deleteData(`website/wishlist/${productId}`, token);
       if (!response || !response.success) {
-        showSnackbar(response?.error || 'Failed to remove from wishlist', 'error');
+        showToast(response?.error || 'Failed to remove from wishlist', 'error');
         fetchWishlist();
       }
     } else {
@@ -85,7 +87,7 @@ export const WishlistProvider = ({ children }) => {
       
       const response = await postData('website/wishlist', { productId }, token);
       if (!response || !response.success) {
-        showSnackbar(response?.error || 'Failed to add to wishlist', 'error');
+        showToast(response?.error || 'Failed to add to wishlist', 'error');
         fetchWishlist();
       }
     }

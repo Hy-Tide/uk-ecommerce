@@ -1,16 +1,48 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FiBookOpen, FiUsers, FiStar, FiArrowRight } from 'react-icons/fi';
 import floatingSpicesHero from '../../assets/floating-spices-hero.png';
+import { getData } from '../../services/webservices';
 
 const BlogHero = () => {
+  const [banner, setBanner] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBanner = async () => {
+      try {
+        const response = await getData('website/banners/blogs');
+        if (response?.success && response?.data?.banners?.length > 0) {
+          setBanner(response.data.banners[0]);
+        }
+      } catch (error) {
+        console.error('Error fetching blogs banner:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchBanner();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="relative w-full min-h-[520px] md:min-h-[600px] bg-[#1D3B2A] flex items-center justify-center">
+        <div className="w-16 h-16 border-4 border-[#2E8B57]/20 border-t-[#2E8B57] rounded-full animate-spin"></div>
+      </section>
+    );
+  }
+
+  const displayTitle = banner?.title || "Discover Recipes, Grocery Tips & Living";
+  const displayImage = banner?.image_url || "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=2000";
+  const displayDesc = banner?.description || "Stay updated with authentic Indian recipes, grocery guides, nutrition tips, seasonal specials, product spotlights, and cooking inspiration.";
+
   return (
     <section className="relative w-full min-h-[520px] md:min-h-[600px] flex flex-col justify-center overflow-hidden bg-[#1D3B2A]">
       {/* Background Image & Editorial Overlay */}
       <div className="absolute inset-0 w-full h-full">
         <img
-          src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=2000"
-          alt="Indian Spices and Groceries"
+          src={displayImage}
+          alt={displayTitle}
           className="w-full h-full object-cover"
         />
         {/* Editorial Dark Forest Green Gradient Overlays */}
@@ -31,26 +63,27 @@ const BlogHero = () => {
             </div>
 
             {/* Large Heading */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] mb-6">
-              Discover Recipes, <span className="text-[#FF8A00]">Grocery Tips</span> & Living
-            </h1>
+            <h1
+              className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] mb-6"
+              dangerouslySetInnerHTML={{ __html: displayTitle.replace('Grocery Tips', '<span class="text-[#FF8A00]">Grocery Tips</span>') }}
+            />
 
             {/* Description */}
             <p className="text-lg md:text-xl text-white/85 leading-relaxed mb-10 max-w-xl font-medium">
-              Stay updated with authentic Indian recipes, grocery guides, nutrition tips, seasonal specials, product spotlights, and cooking inspiration.
+              {displayDesc}
             </p>
 
             {/* Action Buttons */}
             <div className="flex flex-wrap items-center gap-4 mb-12">
               <a
                 href="#latest"
-                className="bg-[#2E8B57] hover:bg-[#236b43] text-white font-bold text-base px-8 py-4 rounded-[16px] shadow-[0_8px_20px_rgba(46,139,87,0.4)] hover:-translate-y-1 transition-all duration-300 inline-flex items-center gap-2"
+                className="bg-[#FF8A00] hover:bg-[#e67a00] text-white font-bold text-base px-8 py-3.5 rounded-full shadow-[0_0_20px_rgba(255,138,0,0.4)] hover:shadow-[0_0_30px_rgba(255,138,0,0.6)] hover:-translate-y-1 transition-all duration-300 inline-flex items-center gap-2"
               >
-                Explore Articles <FiArrowRight size={18} />
+                Explore Articles <FiArrowRight size={20} />
               </a>
               <a
                 href="#categories"
-                className="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white font-bold text-base px-8 py-4 rounded-[16px] hover:-translate-y-1 transition-all duration-300"
+                className="bg-transparent hover:bg-white/10 backdrop-blur-sm border border-white/30 text-white font-bold text-base px-8 py-3.5 rounded-full hover:-translate-y-1 transition-all duration-300"
               >
                 Browse Categories
               </a>
@@ -73,18 +106,6 @@ const BlogHero = () => {
             </div>
 
           </div>
-
-          {/* Right Hero Column - Single Floating Premium Spices PNG Graphic */}
-          <div className="lg:col-span-5 relative flex items-center justify-center" data-aos="fade-left" data-aos-delay="150">
-            <div className="relative z-10 w-full max-w-lg h-full flex items-center justify-center animate-[bounce_6s_easeInOut_infinite]">
-              <img
-                src={floatingSpicesHero}
-                alt="Authentic Indian Floating Spices & Herbs"
-                className="w-full max-h-[440px] object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.6)] transition-transform duration-700 hover:scale-105"
-              />
-            </div>
-          </div>
-
         </div>
       </div>
     </section>
