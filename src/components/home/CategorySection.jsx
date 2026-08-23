@@ -43,7 +43,7 @@ const CategorySection = ({ data }) => {
           {displayCategories.map((cat, index) => (
             <Link
               key={cat.id}
-              to={ROUTES.SHOP_CATEGORY ? ROUTES.SHOP_CATEGORY.replace(':category', cat.slug) : ROUTES.SHOP}
+              to={`${ROUTES.SHOP}?category=${cat.slug}`}
               data-aos="fade-up"
               data-aos-delay={index * 50}
               className={`relative ${cat.bg} rounded-3xl p-5 flex flex-col justify-between overflow-hidden group shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 h-[190px] text-white`}

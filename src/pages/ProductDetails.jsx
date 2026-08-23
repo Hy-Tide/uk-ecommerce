@@ -15,6 +15,7 @@ import Newsletter from '../components/home/Newsletter';
 import RecentlyViewed from '../components/home/RecentlyViewed';
 import RecommendedProducts from '../components/home/RecommendedProducts';
 import { getData } from '../services/webservices';
+import { ROUTES } from '../utils/constants';
 
 import ProductCard from '../components/product/ProductCard';
 
@@ -101,8 +102,8 @@ const ProductDetails = () => {
         <div className="mb-4">
           <Breadcrumbs 
             paths={[
-              { name: 'Shop', url: '/shop' }, 
-              { name: currentProduct.category ? currentProduct.category.charAt(0).toUpperCase() + currentProduct.category.slice(1) : 'Atta & Flour', url: '/shop' }, 
+              { name: 'Shop', url: ROUTES.SHOP }, 
+              { name: currentProduct.category ? currentProduct.category.charAt(0).toUpperCase() + currentProduct.category.slice(1) : 'Shop', url: `${ROUTES.SHOP}?category=${productData?.category?.slug || productData?.category || 'all'}` }, 
               { name: currentProduct.name }
             ]} 
           />

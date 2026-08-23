@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { NavLink, Link, useLocation } from 'react-router-dom';
 import {
   FiChevronDown,
   FiMenu,
   FiX,
   FiMail
 } from 'react-icons/fi';
-import { ROUTES } from '../../utils/constants';
+import { ROUTES, getProductUrl } from '../../utils/constants';
 import { getData } from '../../services/webservices';
 
 const Navbar = () => {
@@ -28,6 +28,35 @@ const Navbar = () => {
     fetchNavigation();
   }, []);
 
+  const navRef = useRef(null);
+  const [forceClose, setForceClose] = useState(false);
+
+  useEffect(() => {
+    const handleClick = (e) => {
+      const isLink = e.target.closest('a');
+      const isNavClick = navRef.current && navRef.current.contains(e.target);
+      const isToggleBtn = e.target.closest('.mobile-menu-btn');
+
+      if (isLink) {
+        setIsMobileMenuOpen(false);
+        setForceClose(true);
+      } else if (!isNavClick && !isToggleBtn) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+    
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
+  }, []);
+
+  const location = useLocation();
+  
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+    setOpenAccordion(null);
+    setForceClose(true);
+  }, [location]);
+
   const toggleAccordion = (id) => {
     if (openAccordion === id) setOpenAccordion(null);
     else setOpenAccordion(id);
@@ -48,7 +77,7 @@ const Navbar = () => {
   return (
     <>
       {/* Mobile Toggle Button */}
-      <div className="bg-[#0C3823] text-white px-4 py-3 lg:hidden flex items-center justify-between shadow-sm">
+      <div className="bg-[#0C3823] text-white px-4 py-3 lg:hidden flex items-center justify-between shadow-sm mobile-menu-btn">
         <span className="font-bold text-sm">Navigation</span>
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -59,7 +88,7 @@ const Navbar = () => {
         </button>
       </div>
 
-      <nav className={`bg-white border-b border-slate-100 py-2.5 sticky top-0 z-30 ${isMobileMenuOpen ? 'block' : 'hidden'} lg:block shadow-xs`}>
+      <nav ref={navRef} className={`bg-white border-b border-slate-100 py-2.5 sticky top-0 z-30 ${isMobileMenuOpen ? 'block' : 'hidden'} lg:block shadow-xs`}>
         <div className="container relative flex flex-col lg:flex-row items-center justify-between gap-3 text-xs font-semibold text-slate-700">
 
           {/* Left Navigation Links */}
@@ -78,7 +107,10 @@ const Navbar = () => {
             <li className="group lg:border-none border-b border-slate-100">
 
               {/* Desktop Trigger */}
-              <div className="hidden lg:flex items-center gap-1 py-1.5 px-2 hover:text-[#0C3823] cursor-pointer transition-colors font-bold text-[#0C3823]">
+              <div 
+                className="hidden lg:flex items-center gap-1 py-1.5 px-2 hover:text-[#0C3823] cursor-pointer transition-colors font-bold text-[#0C3823]"
+                onMouseEnter={() => setForceClose(false)}
+              >
                 <span>Categories</span>
                 <FiChevronDown size={14} className="text-slate-400 group-hover:text-[#0C3823] transition-transform duration-300 group-hover:rotate-180" />
               </div>
@@ -93,7 +125,7 @@ const Navbar = () => {
               </div>
 
               {/* Desktop Mega Menu Dropdown (Centered 4-Column Design) */}
-              <div className="hidden lg:block absolute top-[100%] left-1/2 -translate-x-1/2 w-[1080px] xl:w-[1160px] bg-white border border-slate-100 shadow-2xl rounded-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 mt-1 p-8">
+              <div className={`hidden lg:block absolute top-[100%] left-1/2 -translate-x-1/2 w-[1080px] xl:w-[1160px] bg-white border border-slate-100 shadow-2xl rounded-2xl transition-all duration-300 z-50 mt-1 p-8 ${forceClose ? 'opacity-0 invisible' : 'opacity-0 invisible group-hover:opacity-100 group-hover:visible'}`}>
                 <div className="grid grid-cols-4 gap-x-12 gap-y-8">
                   {megaMenuColumns.map((col, colIdx) => (
                     <div key={colIdx} className="flex flex-col gap-8">
@@ -106,8 +138,8 @@ const Navbar = () => {
                             {section.subcategories?.map((item, itemIdx) => (
                               <li key={itemIdx}>
                                 <Link
-                                  to={`${ROUTES.SHOP}?category=${section.slug}&subcategory=${item.slug}`}
-                                  className="block text-[13px] text-slate-600 hover:text-[#0C3823] transition-colors font-medium"
+                                  to={`${ROUTES.SHOP}?category=${section.slug}&subcategoryId=${item._id}`}
+                                  className="block text-[13px] text-slate-600 hover:text-[#FF6B00] transition-colors font-medium"
                                 >
                                   {item.name}
                                 </Link>
@@ -132,7 +164,7 @@ const Navbar = () => {
                       <ul className="flex flex-col gap-2 pl-2">
                         {section.subcategories?.map((item, idx) => (
                           <li key={idx}>
-                            <Link to={`${ROUTES.SHOP}?category=${section.slug}&subcategory=${item.slug}`} className="block text-xs font-medium text-slate-700 hover:text-[#0C3823]">
+                            <Link to={`${ROUTES.SHOP}?category=${section.slug}&subcategoryId=${item._id}`} className="block text-xs font-medium text-slate-700 hover:text-[#FF6B00] transition-colors">
                               {item.name}
                             </Link>
                           </li>
@@ -149,7 +181,10 @@ const Navbar = () => {
             <li className="group lg:border-none border-b border-slate-100">
 
               {/* Desktop Trigger */}
-              <div className="hidden lg:flex items-center gap-1 py-1.5 px-2 hover:text-[#0C3823] cursor-pointer transition-colors font-bold text-[#0C3823]">
+              <div 
+                className="hidden lg:flex items-center gap-1 py-1.5 px-2 hover:text-[#0C3823] cursor-pointer transition-colors font-bold text-[#0C3823]"
+                onMouseEnter={() => setForceClose(false)}
+              >
                 <span>Brands</span>
                 <FiChevronDown size={14} className="text-slate-400 group-hover:text-[#0C3823] transition-transform duration-300 group-hover:rotate-180" />
               </div>
@@ -164,7 +199,7 @@ const Navbar = () => {
               </div>
 
               {/* Desktop Brands Logo Grid Dropdown */}
-              <div className="hidden lg:block absolute top-[100%] left-1/2 -translate-x-1/2 w-[1000px] xl:w-[1080px] bg-white border border-slate-100 shadow-2xl rounded-3xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 mt-1 p-8">
+              <div className={`hidden lg:block absolute top-[100%] left-1/2 -translate-x-1/2 w-[1000px] xl:w-[1080px] bg-white border border-slate-100 shadow-2xl rounded-3xl transition-all duration-300 z-50 mt-1 p-8 ${forceClose ? 'opacity-0 invisible' : 'opacity-0 invisible group-hover:opacity-100 group-hover:visible'}`}>
                 <div className="grid grid-cols-4 sm:grid-cols-6 gap-4">
                   {navData.brands.map((brand, idx) => (
                     <Link
