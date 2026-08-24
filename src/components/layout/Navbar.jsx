@@ -44,13 +44,13 @@ const Navbar = () => {
         setIsMobileMenuOpen(false);
       }
     };
-    
+
     document.addEventListener('click', handleClick);
     return () => document.removeEventListener('click', handleClick);
   }, []);
 
   const location = useLocation();
-  
+
   useEffect(() => {
     setIsMobileMenuOpen(false);
     setOpenAccordion(null);
@@ -107,7 +107,7 @@ const Navbar = () => {
             <li className="group lg:border-none border-b border-slate-100">
 
               {/* Desktop Trigger */}
-              <div 
+              <div
                 className="hidden lg:flex items-center gap-1 py-1.5 px-2 hover:text-[#0C3823] cursor-pointer transition-colors font-bold text-[#0C3823]"
                 onMouseEnter={() => setForceClose(false)}
               >
@@ -181,7 +181,7 @@ const Navbar = () => {
             <li className="group lg:border-none border-b border-slate-100">
 
               {/* Desktop Trigger */}
-              <div 
+              <div
                 className="hidden lg:flex items-center gap-1 py-1.5 px-2 hover:text-[#0C3823] cursor-pointer transition-colors font-bold text-[#0C3823]"
                 onMouseEnter={() => setForceClose(false)}
               >
@@ -287,9 +287,9 @@ const Navbar = () => {
 
           {/* Right Links & Email Support Button */}
           <div className="flex flex-col lg:flex-row lg:items-center gap-4 mt-3 lg:mt-0 w-full lg:w-auto justify-end">
-            <Link to={ROUTES.SUPPORT || ROUTES.CONTACT} className="text-slate-600 hover:text-[#0C3823] transition-colors">
+            {/* <Link to={ROUTES.SUPPORT || ROUTES.CONTACT} className="text-slate-600 hover:text-[#0C3823] transition-colors">
               Returns
-            </Link>
+            </Link> */}
             <Link to={ROUTES.SUPPORT || ROUTES.CONTACT} className="text-slate-600 hover:text-[#0C3823] transition-colors">
               FAQs
             </Link>

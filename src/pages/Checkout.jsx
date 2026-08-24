@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { 
-  FiCheck, 
-  FiMapPin, 
-  FiClock, 
-  FiCreditCard, 
+import {
+  FiCheck,
+  FiMapPin,
+  FiClock,
+  FiCreditCard,
   FiFileText,
   FiCircle,
   FiCheckCircle,
@@ -13,7 +13,7 @@ import {
   FiPackage,
   FiAward
 } from 'react-icons/fi';
-import { FaCcStripe, FaPaypal, FaGooglePay } from 'react-icons/fa';
+import { FaCcStripe } from 'react-icons/fa';
 import { useCart } from '../context/CartContext';
 import { getData, postData } from '../services/webservices';
 import { useToast } from '../context/ToastContext';
@@ -23,7 +23,7 @@ const Checkout = () => {
   const { showToast } = useToast();
   const navigate = useNavigate();
   const { cartItems, cartTotal, cartDetails, clearCart } = useCart();
-  
+
   const [shippingAddress, setShippingAddress] = useState({
     firstName: 'Priya',
     lastName: 'Sharma',
@@ -47,6 +47,13 @@ const Checkout = () => {
   useEffect(() => {
     const validateCheckout = async () => {
       const token = sessionStorage.getItem('sessionToken');
+
+      if (!token || token === 'demo_token') {
+        showToast('Please login to place an order', 'error');
+        navigate('/login');
+        return;
+      }
+
       if (!cartItems || cartItems.length === 0) {
         return;
       }
@@ -60,18 +67,13 @@ const Checkout = () => {
         navigate('/cart');
       }
     };
-    
+
     const fetchPaymentMethods = async () => {
       try {
         const token = sessionStorage.getItem('sessionToken');
-        const res = await getData('website/checkout/payment-methods', {}, token);
-        if (res && res.success !== false && res.data) {
-          const methods = Array.isArray(res.data) ? res.data : (res.data.paymentMethods || ['credit_card', 'paypal', 'stripe']);
-          setPaymentMethods(methods);
-          if (methods.length > 0) {
-            setSelectedPaymentMethod(typeof methods[0] === 'string' ? methods[0] : methods[0].id);
-          }
-        }
+        await getData('website/checkout/payment-methods', {}, token);
+        setPaymentMethods(['stripe']);
+        setSelectedPaymentMethod('stripe');
       } catch (e) {
         console.error(e);
       }
@@ -132,7 +134,7 @@ const Checkout = () => {
 
   return (
     <div className="bg-[#F8F9FA] pb-24 min-h-screen">
-      
+
       {/* Breadcrumb Area */}
       <div className="bg-white border-b border-slate-100 py-3">
         <div className="container flex items-center justify-between">
@@ -149,59 +151,59 @@ const Checkout = () => {
       {/* Step Indicator Bar */}
       <div className="bg-white border-b border-slate-100 py-6">
         <div className="container max-w-3xl flex items-center justify-center">
-          
+
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-[#124827] text-white flex items-center justify-center font-bold text-xs">
               <FiCheck size={16} />
             </div>
             <span className="text-[#124827] font-bold text-xs">Cart</span>
           </div>
-          
+
           <div className="flex-1 h-0.5 bg-[#124827] mx-3"></div>
-          
+
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-[#124827] text-white flex items-center justify-center font-bold text-xs">
               2
             </div>
             <span className="text-[#124827] font-bold text-xs">Address</span>
           </div>
-          
+
           <div className="flex-1 h-0.5 bg-slate-200 mx-3"></div>
-          
+
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-[#fafcfb] border-2 border-slate-200 text-slate-400 flex items-center justify-center font-bold text-xs">
               3
             </div>
             <span className="text-slate-400 font-bold text-xs">Delivery</span>
           </div>
-          
+
           <div className="flex-1 h-0.5 bg-slate-200 mx-3"></div>
-          
+
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-[#fafcfb] border-2 border-slate-200 text-slate-400 flex items-center justify-center font-bold text-xs">
               4
             </div>
             <span className="text-slate-400 font-bold text-xs">Payment</span>
           </div>
-          
+
           <div className="flex-1 h-0.5 bg-slate-200 mx-3"></div>
-          
+
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-[#fafcfb] border-2 border-slate-200 text-slate-400 flex items-center justify-center font-bold text-xs">
               5
             </div>
             <span className="text-slate-400 font-bold text-xs">Review</span>
           </div>
-          
+
         </div>
       </div>
 
       <div className="container pt-8">
         <div className="flex flex-col lg:flex-row gap-8">
-          
+
           {/* Left Column - Checkout Steps */}
           <div className="lg:w-2/3 flex flex-col gap-6">
-            
+
             {/* Step 2: Shipping Address */}
             <div className="border border-slate-200/80 rounded-2xl bg-white overflow-hidden shadow-sm">
               <div className="p-5 flex items-center justify-between border-b border-slate-100">
@@ -213,7 +215,7 @@ const Checkout = () => {
                 </div>
                 <span className="text-[#124827] text-xs font-extrabold bg-[#e8f5ed] px-3 py-1 rounded-full border border-[#124827]/20">Step 2</span>
               </div>
-              
+
               <div className="p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div className="flex flex-col gap-1.5">
@@ -253,11 +255,11 @@ const Checkout = () => {
                     <input type="text" name="postcode" value={shippingAddress.postcode} onChange={handleInputChange} className="border border-slate-200 bg-[#fafcfb] rounded-xl px-4 py-2.5 text-xs font-semibold outline-none focus:border-[#124827]" />
                   </div>
                 </div>
-                
+
                 <div className="flex flex-col gap-1.5 mb-4">
                   <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Delivery Instructions</label>
-                  <textarea 
-                    rows="2" 
+                  <textarea
+                    rows="2"
                     value={deliveryNotes}
                     onChange={(e) => setDeliveryNotes(e.target.value)}
                     className="border border-slate-200 bg-[#fafcfb] rounded-xl px-4 py-2.5 text-xs font-medium outline-none focus:border-[#124827] resize-none"
@@ -267,13 +269,13 @@ const Checkout = () => {
                 <div className="flex flex-col gap-2">
                   <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Address Tag</label>
                   <div className="flex items-center gap-4">
-                    <button 
+                    <button
                       onClick={() => setShippingAddress(prev => ({ ...prev, addressType: 'Home' }))}
                       className={`flex-1 border font-bold text-xs py-2.5 rounded-xl transition-colors ${shippingAddress.addressType === 'Home' ? 'border-[#124827] bg-[#e8f5ed] text-[#124827]' : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'}`}
                     >
                       Home
                     </button>
-                    <button 
+                    <button
                       onClick={() => setShippingAddress(prev => ({ ...prev, addressType: 'Work' }))}
                       className={`flex-1 border font-bold text-xs py-2.5 rounded-xl transition-colors ${shippingAddress.addressType === 'Work' ? 'border-[#124827] bg-[#e8f5ed] text-[#124827]' : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'}`}
                     >
@@ -295,7 +297,7 @@ const Checkout = () => {
                 </div>
                 <span className="text-[#124827] text-xs font-extrabold bg-[#e8f5ed] px-3 py-1 rounded-full border border-[#124827]/20">Step 3</span>
               </div>
-              
+
               <div className="p-6">
                 <p className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-4">Select preferred slot for tomorrow:</p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -303,7 +305,7 @@ const Checkout = () => {
                     const times = { 'Morning': '9:00 AM - 12:00 PM', 'Afternoon': '12:00 PM - 5:00 PM', 'Evening': '5:00 PM - 8:00 PM' };
                     const isSelected = deliverySlot === slot;
                     return (
-                      <div 
+                      <div
                         key={slot}
                         onClick={() => setDeliverySlot(slot)}
                         className={`border rounded-2xl p-4 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all ${isSelected ? 'border-[#124827] bg-[#e8f5ed] shadow-sm' : 'border-slate-200 bg-white hover:border-slate-300'}`}
@@ -328,23 +330,21 @@ const Checkout = () => {
                 </div>
                 <span className="text-[#124827] text-xs font-extrabold bg-[#e8f5ed] px-3 py-1 rounded-full border border-[#124827]/20">Step 4</span>
               </div>
-              
+
               <div className="p-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                   {paymentMethods.map((method) => {
                     const id = typeof method === 'string' ? method : method.id;
                     const name = typeof method === 'string' ? method.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()) : method.name;
                     const isSelected = selectedPaymentMethod === id;
-                    
+
                     const getIcon = () => {
                       if (id.toLowerCase().includes('stripe')) return <div className="w-8 h-8 bg-[#635BFF] rounded-xl flex items-center justify-center text-white shadow-sm"><FaCcStripe size={20} /></div>;
-                      if (id.toLowerCase().includes('paypal')) return <div className="w-8 h-8 bg-[#00457C] rounded-xl flex items-center justify-center text-white shadow-sm"><FaPaypal size={18} /></div>;
-                      if (id.toLowerCase().includes('google')) return <div className="w-8 h-8 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-slate-900 shadow-sm"><FaGooglePay size={24} /></div>;
                       return <div className={`w-8 h-8 ${isSelected ? 'bg-[#124827] text-white' : 'bg-slate-100 text-slate-600'} rounded-xl flex items-center justify-center shadow-sm`}><FiCreditCard size={18} /></div>;
                     };
 
                     return (
-                      <div 
+                      <div
                         key={id}
                         onClick={() => setSelectedPaymentMethod(id)}
                         className={`border rounded-2xl p-4 flex items-center justify-between cursor-pointer transition-all ${isSelected ? 'border-[#124827] bg-[#e8f5ed] shadow-sm' : 'border-slate-200 bg-white hover:bg-slate-50'}`}
@@ -380,7 +380,7 @@ const Checkout = () => {
                 </div>
                 <span className="text-[#124827] text-xs font-extrabold bg-[#e8f5ed] px-3 py-1 rounded-full border border-[#124827]/20">Step 5</span>
               </div>
-              
+
               <div className="p-6 flex flex-col gap-4">
                 {cartItems?.map((item, index) => {
                   const product = item.product || {};
@@ -410,9 +410,9 @@ const Checkout = () => {
                     </div>
                   );
                 })}
-                
+
                 <div className="h-[1px] bg-slate-200 w-full mt-2"></div>
-                
+
                 <div className="flex items-center justify-between pt-2">
                   <span className="text-base font-black text-slate-900">Total Order Amount:</span>
                   <span className="text-2xl font-black text-[#124827]">£{grandTotal.toFixed(2)}</span>
@@ -425,13 +425,13 @@ const Checkout = () => {
           {/* Right Column - Order Summary Sticky */}
           <div className="lg:w-1/3">
             <div className="sticky top-24">
-              
+
               <div className="border border-slate-200/80 rounded-2xl bg-white overflow-hidden shadow-sm mb-6">
                 <div className="bg-[#124827] text-white p-5 flex items-center justify-between">
                   <h3 className="text-base font-bold">Summary</h3>
                   <span className="text-xs font-bold text-[#eb5b27] bg-white px-2.5 py-0.5 rounded-full">{cartItems?.length || 0} items</span>
                 </div>
-                
+
                 <div className="p-6">
                   {/* Totals */}
                   <div className="flex flex-col gap-3 mb-6 text-xs font-semibold">
@@ -466,7 +466,7 @@ const Checkout = () => {
                     <PaymentWrapper clientSecret={clientSecret} publishableKey={publishableKey} clearCart={clearCart} navigate={navigate} />
                   ) : (
                     <>
-                      <button 
+                      <button
                         onClick={handlePlaceOrder}
                         disabled={isLoading}
                         className="w-full bg-[#eb5b27] hover:bg-[#ca4313] text-white font-extrabold py-4 rounded-xl transition-all shadow-lg shadow-[#eb5b27]/30 text-sm mb-3 disabled:opacity-50 flex justify-center items-center gap-2 active:scale-[0.98]"
@@ -474,7 +474,7 @@ const Checkout = () => {
                         {isLoading ? <FiClock className="animate-spin" /> : null}
                         {isLoading ? 'Placing Order...' : 'Place Order Securely'}
                       </button>
-                      
+
                       <div className="text-center">
                         <span className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">256-bit SSL Encrypted Payment</span>
                       </div>

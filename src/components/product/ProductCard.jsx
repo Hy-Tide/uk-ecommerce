@@ -8,14 +8,22 @@ import { getProductUrl, resolveProductImageUrl } from '../../utils/constants';
 const ProductCard = ({ product, showStockProgress = false, removeImagePadding = false }) => {
   const { addToCart } = useCart();
   const [added, setAdded] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
   const [imgError, setImgError] = useState(false);
 
-  const handleAddToCart = (e) => {
+  const handleAddToCart = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    addToCart(product);
-    setAdded(true);
-    setTimeout(() => setAdded(false), 1500);
+    if (isAdding || added) return;
+    
+    setIsAdding(true);
+    const success = await addToCart(product);
+    setIsAdding(false);
+    
+    if (success) {
+      setAdded(true);
+      setTimeout(() => setAdded(false), 1500);
+    }
   };
 
   // Sample stock info if not present
@@ -114,13 +122,20 @@ const ProductCard = ({ product, showStockProgress = false, removeImagePadding = 
 
           <button
             onClick={handleAddToCart}
-            className={`w-9 h-9 rounded-full flex items-center justify-center transition-all shadow-md active:scale-95 ${added
+            disabled={isAdding}
+            className={`w-9 h-9 rounded-full flex items-center justify-center transition-all shadow-md active:scale-95 disabled:opacity-70 ${added
                 ? 'bg-[#008851] text-white'
                 : 'bg-[#0C3823] hover:bg-[#008851] text-white'
               }`}
             title="Add to Cart"
           >
-            {added ? <FiCheck size={16} /> : <FiPlus size={18} />}
+            {isAdding ? (
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+            ) : added ? (
+              <FiCheck size={16} />
+            ) : (
+              <FiPlus size={18} />
+            )}
           </button>
         </div>
 

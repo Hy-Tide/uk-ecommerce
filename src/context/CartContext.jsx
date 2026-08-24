@@ -60,7 +60,9 @@ export const CartProvider = ({ children }) => {
         for (const item of items) {
           const productId = item.productId || (item.product && (item.product._id || item.product.id)) || item.id;
           const variationId = item.variationId || (item.variation && (item.variation._id || item.variation.id)) || null;
-          await postData('website/cart/items', { productId, quantity: item.quantity, variationId }, token);
+          const payload = { productId, quantity: item.quantity };
+          if (variationId) payload.variationId = variationId;
+          await postData('website/cart/items', payload, token);
         }
         sessionStorage.removeItem('guestCart');
       } catch (e) {
@@ -77,8 +79,8 @@ export const CartProvider = ({ children }) => {
   const addToCart = async (product, variation = null, quantity = 1) => {
     const selectedVariation = variation || (product.variations && product.variations.length > 0 ? product.variations[0] : null);
     const token = sessionStorage.getItem('sessionToken');
-    const productId = product._id || product.id;
-    const variationId = selectedVariation ? (selectedVariation._id || selectedVariation.id) : null;
+    const productId = product._id || product.id || product.productId;
+    const variationId = selectedVariation ? (selectedVariation._id || selectedVariation.id || selectedVariation.variationId) : null;
     if (!token) {
       const guestCartStr = sessionStorage.getItem('guestCart');
       let guestCart = guestCartStr ? JSON.parse(guestCartStr) : { items: [] };
@@ -107,19 +109,24 @@ export const CartProvider = ({ children }) => {
       sessionStorage.setItem('guestCart', JSON.stringify(guestCart));
       showToast('Added to cart', 'success');
       await fetchCart();
-      return;
+      return true;
     }
 
     try {
-      const response = await postData('website/cart/items', { productId, quantity, variationId }, token);
+      const payload = { productId, quantity };
+      if (variationId) payload.variationId = variationId;
+      const response = await postData('website/cart/items', payload, token);
       if (response && response.success !== false) {
         showToast('Added to cart', 'success');
         await fetchCart();
+        return true;
       } else {
         showToast(response?.error || 'Failed to add to cart', 'error');
+        return false;
       }
     } catch (e) {
       showToast('Error adding to cart', 'error');
+      return false;
     }
   };
 
