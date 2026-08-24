@@ -7,15 +7,17 @@ export default function PaymentWrapper({ clientSecret, publishableKey, clearCart
   const [stripePromise, setStripePromise] = useState(null);
 
   useEffect(() => {
-    if (publishableKey) {
-      setStripePromise(loadStripe(publishableKey));
+    const key = publishableKey || import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_TYooMQauvdEDq54NiTphI7jx';
+    if (key) {
+      setStripePromise(loadStripe(key));
     }
   }, [publishableKey]);
 
   if (!clientSecret || !stripePromise) {
     return (
-      <div className="flex justify-center items-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#124827]"></div>
+      <div className="flex flex-col justify-center items-center p-12 text-center gap-3">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#124827]"></div>
+        <span className="text-xs font-bold text-slate-500">Connecting to Stripe Gateway...</span>
       </div>
     );
   }

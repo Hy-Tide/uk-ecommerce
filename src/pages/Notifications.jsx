@@ -5,6 +5,7 @@ import { FiBox, FiTag, FiGift, FiHeart, FiMoreVertical, FiChevronRight, FiUser, 
 import { getData, patchData } from '../services/webservices';
 import { useToast } from '../context/ToastContext';
 import { ROUTES } from '../utils/constants';
+import NotificationSkeleton from '../components/skeletons/NotificationSkeleton';
 
 const getIconForType = (type) => {
   switch (type) {
@@ -106,7 +107,7 @@ const Notifications = () => {
 
           <div className="divide-y divide-slate-100">
             {loading ? (
-              <div className="p-8 text-center text-slate-500 font-medium text-xs">Loading notifications...</div>
+              <NotificationSkeleton />
             ) : notifications.length === 0 ? (
               <div className="p-8 text-center text-slate-500 font-medium text-xs">No notifications yet.</div>
             ) : (

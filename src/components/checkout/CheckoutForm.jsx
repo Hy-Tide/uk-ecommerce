@@ -28,8 +28,8 @@ export default function CheckoutForm({ clientSecret, clearCart, navigate }) {
     });
 
     if (error) {
-      setErrorMessage(error.message);
       setIsLoading(false);
+      navigate(`/order-failure?reason=${encodeURIComponent(error.message || 'Payment failed or was cancelled.')}`);
     } else if (paymentIntent && paymentIntent.status === 'succeeded') {
       try {
         const token = sessionStorage.getItem('sessionToken');
@@ -38,14 +38,14 @@ export default function CheckoutForm({ clientSecret, clearCart, navigate }) {
         if (verifyRes && verifyRes.success !== false) {
           showToast(verifyRes.message || 'Payment successful! Order placed.', 'success');
           clearCart();
-          navigate(`/order-success?orderId=${verifyRes.data?.orderId || ''}`);
+          navigate(`/order-success?orderId=${verifyRes.data?.orderId || paymentIntent.id}`);
         } else {
-          setErrorMessage(verifyRes.error || 'Payment was successful but order creation failed. Please contact support.');
           setIsLoading(false);
+          navigate(`/order-failure?reason=${encodeURIComponent(verifyRes?.error || 'Payment verification failed. Please contact support.')}`);
         }
       } catch (err) {
-        setErrorMessage('Failed to verify payment with server. Please contact support.');
         setIsLoading(false);
+        navigate(`/order-failure?reason=${encodeURIComponent('Failed to verify payment with server. Please contact support.')}`);
       }
     }
   };

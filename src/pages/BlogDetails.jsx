@@ -12,6 +12,7 @@ import BlogComments from '../components/blog/BlogComments';
 import BlogShareBar from '../components/blog/BlogShareBar';
 import BlogNav from '../components/blog/BlogNav';
 import BlogNewsletter from '../components/blog/BlogNewsletter';
+import BlogDetailsSkeleton from '../components/skeletons/BlogDetailsSkeleton';
 
 import { blogAuthors, blogArticles, recipeIngredientsDummy, blogCommentsDummy } from '../data/blogData';
 import { getData } from '../services/webservices';
@@ -58,7 +59,7 @@ const BlogDetails = () => {
   };
 
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    return <BlogDetailsSkeleton />;
   }
 
   if (!article) {

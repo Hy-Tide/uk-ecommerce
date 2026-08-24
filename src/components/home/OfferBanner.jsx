@@ -3,10 +3,12 @@ import { Link } from 'react-router-dom';
 import { ROUTES } from '../../utils/constants';
 import { FiArrowRight } from 'react-icons/fi';
 import { FaHeart } from 'react-icons/fa';
+import { OfferBannerSkeleton } from '../skeletons/BannerSkeleton';
 
-const OfferBanner = ({ data }) => {
-  const offerData = data?.data || [];
-  if (!data || offerData.length === 0) return null;
+const OfferBanner = ({ data, isLoading = false }) => {
+  if (isLoading || (!data && !data?.data)) {
+    return <OfferBannerSkeleton />;
+  }
 
   return (
     <section className="bg-[#F8F9FA] py-8">

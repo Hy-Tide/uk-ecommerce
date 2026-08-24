@@ -1,20 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { FiArrowRight } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../../utils/constants';
-import { getData } from '../../services/webservices';
+import { PromoBannersSkeleton } from '../skeletons/BannerSkeleton';
+import ImageWithSkeleton from '../common/ImageWithSkeleton';
 
-const PromoBanners = ({ data }) => {
+const PromoBanners = ({ data, isLoading = false }) => {
+  if (isLoading || (!data && !data?.items)) {
+    return <PromoBannersSkeleton />;
+  }
+
   const offersData = data?.items || [];
 
-  // Use fallback empty objects if data is not loaded yet
+  // Use fallback banner objects if API items are missing
   const banner1 = offersData[0] || {};
   const banner2 = offersData[1] || {};
   const banner3 = offersData[2] || {};
   const banner4 = offersData[3] || {};
 
   return (
-    <section className="bg-[#F8F9FA] py-8">
+    <section className="bg-[#F8F9FA] py-8 transition-opacity duration-500">
       <div className="container flex flex-col gap-6">
 
         {/* Top Row: Green Large Banner (7 cols) + Orange Big Offer Banner (5 cols) */}
@@ -36,12 +41,14 @@ const PromoBanners = ({ data }) => {
                 {banner1.buttonText || "Shop Now"} <FiArrowRight size={14} />
               </Link>
             </div>
-            {/* Bell Peppers Graphic */}
+            {/* Bell Peppers Graphic with Skeleton */}
             <div className="absolute right-0 bottom-0 top-0 w-1/2 flex items-center justify-end overflow-hidden pointer-events-none">
-              <img
+              <ImageWithSkeleton
                 src="https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?w=500&q=80"
                 alt="Fresh Bell Peppers"
+                containerClassName="w-full h-full"
                 className="w-full h-full object-cover rounded-r-3xl opacity-95 scale-105"
+                dark={true}
               />
             </div>
           </div>
@@ -56,12 +63,14 @@ const PromoBanners = ({ data }) => {
                 {banner2.description || "Open Your Box"}
               </p>
             </div>
-            {/* Gift Box Graphic */}
+            {/* Gift Box Graphic with Skeleton */}
             <div className="absolute right-4 bottom-2 w-48 h-48 flex items-center justify-center">
-              <img
+              <ImageWithSkeleton
                 src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=500&q=80"
                 alt="Big Offer Gift Box"
+                containerClassName="w-full h-full"
                 className="w-full h-full object-contain drop-shadow-xl hover:scale-105 transition-transform"
+                dark={true}
               />
             </div>
           </div>
@@ -87,12 +96,14 @@ const PromoBanners = ({ data }) => {
                 {banner3.buttonText || "Shop Now"} <FiArrowRight size={14} />
               </Link>
             </div>
-            {/* Meat Cut Graphic */}
+            {/* Meat Cut Graphic with Skeleton */}
             <div className="absolute right-0 top-0 bottom-0 w-1/2 flex items-center justify-end overflow-hidden pointer-events-none">
-              <img
+              <ImageWithSkeleton
                 src="https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=500&q=80"
                 alt="Delicious Beef Meat"
+                containerClassName="w-full h-full"
                 className="w-full h-full object-cover rounded-r-3xl opacity-95"
+                dark={true}
               />
             </div>
           </div>
@@ -113,11 +124,12 @@ const PromoBanners = ({ data }) => {
                 {banner4.buttonText || "Grab The Offer"} <FiArrowRight size={14} />
               </Link>
             </div>
-            {/* Fresh Apples Graphic */}
+            {/* Fresh Apples Graphic with Skeleton */}
             <div className="absolute right-0 top-0 bottom-0 w-1/2 flex items-center justify-end overflow-hidden pointer-events-none">
-              <img
+              <ImageWithSkeleton
                 src="https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=500&q=80"
                 alt="Fresh Apples Offer"
+                containerClassName="w-full h-full"
                 className="w-full h-full object-cover rounded-r-3xl opacity-95"
               />
             </div>

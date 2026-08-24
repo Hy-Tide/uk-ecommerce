@@ -5,9 +5,10 @@ import { FiHeart, FiSearch, FiChevronRight, FiUser, FiShoppingBag } from 'react-
 import { useWishlist } from '../context/WishlistContext';
 import ShopProductCard from '../components/shop/ShopProductCard';
 import { ROUTES } from '../utils/constants';
+import WishlistSkeleton from '../components/skeletons/WishlistSkeleton';
 
 const Wishlist = () => {
-  const { wishlistItems } = useWishlist();
+  const { wishlistItems, isLoading } = useWishlist();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -42,7 +43,9 @@ const Wishlist = () => {
 
       <div className="container px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto -mt-12 sm:-mt-14 relative z-10">
 
-        {wishlistProducts.length === 0 ? (
+        {isLoading ? (
+          <WishlistSkeleton />
+        ) : wishlistProducts.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}

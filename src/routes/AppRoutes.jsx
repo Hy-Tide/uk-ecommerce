@@ -22,6 +22,7 @@ const Wishlist = lazy(() => import('../pages/Wishlist'));
 const Cart = lazy(() => import('../pages/Cart'));
 const Checkout = lazy(() => import('../pages/Checkout'));
 const OrderSuccess = lazy(() => import('../pages/OrderSuccess'));
+const OrderFailure = lazy(() => import('../pages/OrderFailure'));
 const Login = lazy(() => import('../pages/Login'));
 const Register = lazy(() => import('../pages/Register'));
 const ForgotPassword = lazy(() => import('../pages/ForgotPassword'));
@@ -38,12 +39,10 @@ const TrackOrder = lazy(() => import('../pages/TrackOrder'));
 const NotFound = lazy(() => import('../pages/NotFound'));
 const Rewards = lazy(() => import('../pages/Rewards'));
 const ComingSoon = lazy(() => import('../pages/ComingSoon'));
+const Explore = lazy(() => import('../pages/Explore'));
+import PageLayoutSkeleton from '../components/skeletons/PageLayoutSkeleton';
 
-const Loader = () => (
-  <div className="flex h-screen items-center justify-center">
-    <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-  </div>
-);
+const Loader = () => <PageLayoutSkeleton />;
 
 const AppRoutes = () => {
   const isComingSoon = false; // Toggle this to false to reveal the full website
@@ -84,7 +83,9 @@ const AppRoutes = () => {
           <Route path={ROUTES.CART} element={<Cart />} />
           <Route path={ROUTES.CHECKOUT} element={<Checkout />} />
           <Route path={ROUTES.ORDER_SUCCESS} element={<OrderSuccess />} />
+          <Route path={ROUTES.ORDER_FAILURE} element={<OrderFailure />} />
           <Route path={ROUTES.SEARCH} element={<Search />} />
+          <Route path={ROUTES.EXPLORE} element={<Explore />} />
 
           {/* Standalone Account Pages (MainLayout) */}
           <Route path={ROUTES.PROFILE} element={<Profile />} />

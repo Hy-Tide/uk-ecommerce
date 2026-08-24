@@ -13,12 +13,15 @@ import Recipes from '../components/home/Recipes';
 import Testimonials from '../components/home/Testimonials';
 import Newsletter from '../components/home/Newsletter';
 import { getData } from '../services/webservices';
+import HomeSkeleton from '../components/skeletons/HomeSkeleton';
 
 const Home = () => {
   const [homeData, setHomeData] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchHomeData = async () => {
+      setLoading(true);
       try {
         const response = await getData('website/home');
         if (response?.success && response.data) {
@@ -26,31 +29,36 @@ const Home = () => {
         }
       } catch (error) {
         console.error('Error fetching home data:', error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchHomeData();
   }, []);
 
+  const safeHomeData = homeData || {};
+
   return (
     <div className="flex flex-col min-h-screen">
-      <HeroBanner data={homeData.banners} />
-      <FeaturesSection data={homeData.features} />
-      <PromoBanners data={homeData.offers} />
+      <HeroBanner data={safeHomeData.banners} isLoading={loading} />
+      <FeaturesSection data={safeHomeData.features} />
+      <PromoBanners data={safeHomeData.offers} isLoading={loading} />
       
-      <CategorySection data={homeData.categories} />
-      <FeaturedProducts bestDealsData={homeData.bestDeals} limitedProductsData={homeData.limitedProducts} />
-      <OfferBanner data={homeData.subscriptionBanner} />
-      <RecommendedProducts data={{}} /> {/* No recommended products in API currently */}
-      <Brands data={homeData.brands} />
-      <NewArrivals data={homeData.newArrivals} />
+      <CategorySection data={safeHomeData.categories} />
+      <FeaturedProducts bestDealsData={safeHomeData.bestDeals} limitedProductsData={safeHomeData.limitedProducts} isLoading={loading} />
+      <OfferBanner data={safeHomeData.subscriptionBanner} isLoading={loading} />
+      <RecommendedProducts data={{}} />
+      <Brands data={safeHomeData.brands} />
+      <NewArrivals data={safeHomeData.newArrivals} />
       
       <RecentlyViewed />
       
-      <Recipes data={homeData.popularRecipes} />
-      <Testimonials data={homeData.testimonials} />
+      <Recipes data={safeHomeData.popularRecipes} />
+      <Testimonials data={safeHomeData.testimonials} />
       <Newsletter />
     </div>
   );
 };
 
 export default Home;
+

@@ -6,6 +6,7 @@ import BlogCategories from '../components/blog/BlogCategories';
 import BlogTrending from '../components/blog/BlogTrending';
 import BlogList from '../components/blog/BlogList';
 import BlogNewsletter from '../components/blog/BlogNewsletter';
+import BlogSkeleton from '../components/skeletons/BlogSkeleton';
 
 import { blogAuthors, blogArticles } from '../data/blogData';
 import { getData } from '../services/webservices';
@@ -159,7 +160,7 @@ const Blog = () => {
   };
 
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    return <BlogSkeleton />;
   }
 
   return (

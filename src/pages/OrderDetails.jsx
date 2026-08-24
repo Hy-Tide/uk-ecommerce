@@ -6,6 +6,7 @@ import AccountPageHeader from '../components/account/AccountPageHeader';
 import { ROUTES } from '../utils/constants';
 import { getData, postData } from '../services/webservices';
 import { useToast } from '../context/ToastContext';
+import OrderDetailsSkeleton from '../components/skeletons/OrderDetailsSkeleton';
 
 const OrderDetails = () => {
   const { showToast } = useToast();
@@ -173,7 +174,7 @@ const OrderDetails = () => {
   };
 
   if (loading) {
-    return <div className="bg-[#fcfbf9] min-h-screen pt-32 text-center text-slate-500">Loading order details...</div>;
+    return <OrderDetailsSkeleton />;
   }
 
   if (!order) return null;

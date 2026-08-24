@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { FiBookOpen, FiArrowRight, FiShield, FiStar, FiZap } from 'react-icons/fi';
 import floatingSpicesHero from '../../assets/floating-spices-hero.png';
 import { getData } from '../../services/webservices';
+import Skeleton from '../common/Skeleton';
 
 const RecipeHero = () => {
   const [banner, setBanner] = useState(null);
@@ -26,8 +27,16 @@ const RecipeHero = () => {
 
   if (loading) {
     return (
-      <section className="relative w-full min-h-[520px] md:min-h-[640px] bg-[#0c2415] flex items-center justify-center">
-        <div className="w-16 h-16 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin"></div>
+      <section className="relative w-full min-h-[520px] md:min-h-[640px] bg-[#0c2415] flex items-center justify-center p-8">
+        <div className="container max-w-6xl mx-auto flex flex-col gap-4">
+          <Skeleton className="h-6 w-36 rounded-full bg-white/10" />
+          <Skeleton className="h-14 w-3/4 bg-white/10" />
+          <Skeleton className="h-4 w-1/2 bg-white/10 mb-4" />
+          <div className="flex gap-4">
+            <Skeleton className="h-12 w-36 rounded-full bg-white/10" />
+            <Skeleton className="h-12 w-36 rounded-full bg-white/10" />
+          </div>
+        </div>
       </section>
     );
   }

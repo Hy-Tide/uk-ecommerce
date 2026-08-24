@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FiTag, FiCalendar, FiArrowRight } from 'react-icons/fi';
 import { getData } from '../services/webservices';
+import OfferSkeleton from '../components/skeletons/OfferSkeleton';
 
 const Offers = () => {
   const [offers, setOffers] = useState([]);
@@ -34,6 +35,10 @@ const Offers = () => {
     };
     fetchData();
   }, []);
+
+  if (loading) {
+    return <OfferSkeleton />;
+  }
 
   return (
     <div className="bg-[#fcfbf9] min-h-screen pb-20">

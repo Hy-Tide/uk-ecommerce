@@ -5,6 +5,7 @@ import { FiSearch, FiFilter, FiMapPin, FiRefreshCw, FiEye, FiChevronRight, FiUse
 import { getData, postData } from '../services/webservices';
 import { useToast } from '../context/ToastContext';
 import { ROUTES } from '../utils/constants';
+import OrderSkeleton from '../components/skeletons/OrderSkeleton';
 
 const getStatusColor = (status) => {
   const s = (status || '').toLowerCase();
@@ -137,8 +138,10 @@ const MyOrders = () => {
         {/* Order Cards */}
         <div className="space-y-6">
           {loading ? (
-            <div className="text-center py-12 text-slate-500 font-bold text-sm bg-white rounded-3xl p-8 border border-slate-100 shadow-xs">
-              Loading your orders...
+            <div className="space-y-6">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <OrderSkeleton key={i} />
+              ))}
             </div>
           ) : filteredOrders.length === 0 ? (
             <div className="text-center py-12 text-slate-500 font-bold text-sm bg-white rounded-3xl p-8 border border-slate-100 shadow-xs">

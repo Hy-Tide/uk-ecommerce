@@ -20,6 +20,7 @@ export const ROUTES = {
   CART: '/cart',
   CHECKOUT: '/checkout',
   ORDER_SUCCESS: '/order-success',
+  ORDER_FAILURE: '/order-failure',
   TRACK_ORDER: '/track-order',
   LOGIN: '/login',
   REGISTER: '/register',
@@ -34,6 +35,7 @@ export const ROUTES = {
   SUPPORT: '/support',
   REWARDS: '/rewards',
   COMING_SOON: '/coming-soon',
+  EXPLORE: '/explore',
 };
 
 export const getProductUrl = (product) => {

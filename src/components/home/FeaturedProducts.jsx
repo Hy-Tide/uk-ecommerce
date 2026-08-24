@@ -5,9 +5,28 @@ import { ROUTES } from '../../utils/constants';
 import { FiArrowRight } from 'react-icons/fi';
 import { getData } from '../../services/webservices';
 
-const FeaturedProducts = ({ bestDealsData, limitedProductsData }) => {
+import ProductCardSkeleton from '../skeletons/ProductCardSkeleton';
+
+const FeaturedProducts = ({ bestDealsData, limitedProductsData, isLoading }) => {
   const topDeals = bestDealsData?.data || [];
   const limitedProducts = limitedProductsData?.data || [];
+
+  if (isLoading || (!bestDealsData && !limitedProductsData)) {
+    return (
+      <div className="bg-[#F8F9FA] py-12">
+        <section className="container mb-16">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl md:text-3xl font-black text-[#0C3823] tracking-tight">Today best deals for you!</h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <ProductCardSkeleton key={i} />
+            ))}
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   if (topDeals.length === 0 && limitedProducts.length === 0) return null;
 

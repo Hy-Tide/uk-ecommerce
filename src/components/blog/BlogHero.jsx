@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { FiBookOpen, FiUsers, FiStar, FiArrowRight } from 'react-icons/fi';
 import floatingSpicesHero from '../../assets/floating-spices-hero.png';
 import { getData } from '../../services/webservices';
+import Skeleton from '../common/Skeleton';
 
 const BlogHero = () => {
   const [banner, setBanner] = useState(null);
@@ -26,8 +27,12 @@ const BlogHero = () => {
 
   if (loading) {
     return (
-      <section className="relative w-full min-h-[520px] md:min-h-[600px] bg-[#1D3B2A] flex items-center justify-center">
-        <div className="w-16 h-16 border-4 border-[#2E8B57]/20 border-t-[#2E8B57] rounded-full animate-spin"></div>
+      <section className="relative w-full min-h-[520px] md:min-h-[600px] bg-[#1D3B2A] flex items-center justify-center p-8">
+        <div className="container max-w-6xl mx-auto flex flex-col gap-4">
+          <Skeleton className="h-6 w-36 rounded-full bg-white/10" />
+          <Skeleton className="h-12 w-3/4 bg-white/10" />
+          <Skeleton className="h-4 w-1/2 bg-white/10" />
+        </div>
       </section>
     );
   }

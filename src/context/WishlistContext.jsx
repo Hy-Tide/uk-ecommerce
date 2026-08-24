@@ -9,12 +9,15 @@ export const useWishlist = () => useContext(WishlistContext);
 export const WishlistProvider = ({ children }) => {
   const { showToast } = useToast();
   const [wishlistItems, setWishlistItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchWishlist = async () => {
+    setIsLoading(true);
     const token = sessionStorage.getItem('sessionToken');
     if (!token) {
       const guestWishlist = sessionStorage.getItem('guestWishlist');
       setWishlistItems(guestWishlist ? JSON.parse(guestWishlist) : []);
+      setIsLoading(false);
       return;
     }
     
@@ -27,6 +30,8 @@ export const WishlistProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Failed to fetch wishlist', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -103,7 +108,7 @@ export const WishlistProvider = ({ children }) => {
   };
 
   return (
-    <WishlistContext.Provider value={{ wishlistItems, toggleWishlist, isInWishlist, clearWishlist, fetchWishlist, syncGuestWishlist }}>
+    <WishlistContext.Provider value={{ wishlistItems, isLoading, toggleWishlist, isInWishlist, clearWishlist, fetchWishlist, syncGuestWishlist }}>
       {children}
     </WishlistContext.Provider>
   );
