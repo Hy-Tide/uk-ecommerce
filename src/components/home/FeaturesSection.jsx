@@ -3,34 +3,6 @@ import { FiTruck, FiShield, FiLock } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import { getData } from '../../services/webservices';
 
-<<<<<<< HEAD
-const FeaturesSection = () => {
-  const features = [
-    {
-      icon: <FiTruck size={24} className="text-green-600" />,
-      bg: 'bg-green-50',
-      title: 'Free Delivery',
-      desc: 'On orders over £40'
-    },
-    {
-      icon: <FiShield size={24} className="text-orange-500" />,
-      bg: 'bg-orange-50',
-      title: '100% Authentic',
-      desc: 'Genuine Indian brands'
-    },
-    {
-      icon: <FiLock size={24} className="text-yellow-600" />,
-      bg: 'bg-yellow-50',
-      title: 'Secure Payment',
-      desc: 'Stripe'
-    },
-    {
-      icon: <FaWhatsapp size={24} className="text-green-500" />,
-      bg: 'bg-green-50',
-      title: 'WhatsApp Support',
-      desc: 'Chat with us anytime'
-    }
-=======
 const FeaturesSection = ({ data }) => {
   const featuresData = data?.items || [];
 
@@ -39,7 +11,6 @@ const FeaturesSection = ({ data }) => {
     { icon: <FiShield size={24} className="text-orange-500" />, bg: 'bg-orange-50' },
     { icon: <FiLock size={24} className="text-yellow-600" />, bg: 'bg-yellow-50' },
     { icon: <FaWhatsapp size={24} className="text-green-500" />, bg: 'bg-green-50' }
->>>>>>> main
   ];
 
   return (
