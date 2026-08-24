@@ -27,29 +27,6 @@ const FeaturedProducts = ({ bestDealsData, limitedProductsData }) => {
             </Link>
           </div>
 
-<<<<<<< HEAD
-        {/* Section Header */}
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl md:text-3xl font-black text-[#0C3823] tracking-tight">Today best deals for you!</h2>
-          <Link
-            to={ROUTES.SHOP}
-            className="text-[#FF6B00] hover:text-[#E05E00] font-bold text-xs md:text-sm inline-flex items-center gap-1.5 transition-colors"
-          >
-            View All <FiArrowRight size={16} />
-          </Link>
-        </div>
-
-        {/* 4-Column Product Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {topDeals.map((product, index) => (
-            <div key={product._id || product.id} data-aos="fade-up" data-aos-delay={(index % 4) * 100}>
-              <ProductCard product={product} removeImagePadding={true} />
-            </div>
-          ))}
-        </div>
-
-      </section>
-=======
           {/* 4-Column Product Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {topDeals.map((product, index) => (
@@ -60,7 +37,6 @@ const FeaturedProducts = ({ bestDealsData, limitedProductsData }) => {
           </div>
         </section>
       )}
->>>>>>> main
 
       {/* Limited products Section */}
       {limitedProducts.length > 0 && (
