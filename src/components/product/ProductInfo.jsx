@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { FiHeart, FiShare2, FiShield, FiTruck, FiMinus, FiPlus, FiCheckCircle, FiPackage, FiMapPin, FiCheck } from 'react-icons/fi';
 import { GiWheat } from 'react-icons/gi';
 import { FaStar, FaLeaf } from 'react-icons/fa';
@@ -10,11 +11,24 @@ const ProductInfo = ({ product }) => {
   const [selectedVarIdx, setSelectedVarIdx] = useState(0);
   const [added, setAdded] = useState(false);
   const { toggleWishlist, isInWishlist } = useWishlist();
-  const { addToCart } = useCart();
+  const { addToCart, cartItems, updateQuantity } = useCart();
 
   const currentVariation = product.variations && product.variations.length > selectedVarIdx 
     ? product.variations[selectedVarIdx] 
     : null;
+
+  const productId = product._id || product.id || product.productId;
+  const variationId = currentVariation ? (currentVariation._id || currentVariation.id || currentVariation.variationId) : null;
+  
+  const cartItem = cartItems?.find(item => {
+    const itemProductId = item.productId || (item.product && (item.product._id || item.product.id)) || item.id;
+    const itemVariationId = item.variationId || (item.variation && (item.variation._id || item.variation.id)) || null;
+    
+    const sameProduct = String(itemProductId) === String(productId);
+    const sameVariation = (!itemVariationId && !variationId) || String(itemVariationId) === String(variationId);
+    
+    return sameProduct && sameVariation;
+  });
 
   const displayPrice = currentVariation?.salePrice || product.discount_price || product.price || 0;
   const displayOldPrice = currentVariation?.regularPrice || product.base_price || product.oldPrice || null;
@@ -115,11 +129,11 @@ const ProductInfo = ({ product }) => {
         <div className="flex items-center gap-4">
           {/* Quantity Selector */}
           <div className="flex items-center bg-[#fafcfb] border border-slate-200 rounded-xl h-[48px]">
-            <button onClick={decreaseQuantity} className="w-10 h-full flex items-center justify-center text-slate-500 hover:text-[#124827] transition-colors">
+            <button onClick={cartItem ? (e) => { e.preventDefault(); updateQuantity(cartItem._id || cartItem.id, cartItem.quantity - 1) } : decreaseQuantity} className="w-10 h-full flex items-center justify-center text-slate-500 hover:text-[#124827] transition-colors">
               <FiMinus size={16} />
             </button>
-            <span className="w-10 text-center font-extrabold text-[#124827] text-sm">{quantity}</span>
-            <button onClick={increaseQuantity} className="w-10 h-full flex items-center justify-center text-slate-500 hover:text-[#124827] transition-colors">
+            <span className="w-10 text-center font-extrabold text-[#124827] text-sm">{cartItem ? cartItem.quantity : quantity}</span>
+            <button onClick={cartItem ? (e) => { e.preventDefault(); updateQuantity(cartItem._id || cartItem.id, cartItem.quantity + 1) } : increaseQuantity} className="w-10 h-full flex items-center justify-center text-slate-500 hover:text-[#124827] transition-colors">
               <FiPlus size={16} />
             </button>
           </div>
@@ -127,24 +141,32 @@ const ProductInfo = ({ product }) => {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3">
-          <button 
-            onClick={handleAddToCart} 
-            className={`flex-1 font-bold py-4 px-6 rounded-2xl transition-all shadow-lg active:scale-[0.98] text-sm flex items-center justify-center gap-2 ${
-              added ? 'bg-[#124827] text-white shadow-emerald-900/20' : 'bg-[#124827] hover:bg-[#1c6b3b] text-white shadow-[#124827]/20'
-            }`}
-          >
-            {added ? (
-              <>
-                <FiCheck size={18} className="text-emerald-300" /> Added to Cart!
-              </>
-            ) : (
-              'Add to Cart'
-            )}
-          </button>
-          <button 
-            onClick={handleAddToCart}
-            className="flex-1 bg-[#eb5b27] hover:bg-[#ca4313] text-white font-bold py-4 px-6 rounded-2xl transition-all active:scale-[0.98] text-sm shadow-lg shadow-[#eb5b27]/20"
-          >
+          {!cartItem ? (
+            <button 
+              onClick={handleAddToCart} 
+              className={`flex-1 font-bold py-4 px-6 rounded-2xl transition-all shadow-lg active:scale-[0.98] text-sm flex items-center justify-center gap-2 ${
+                added ? 'bg-[#124827] text-white shadow-emerald-900/20' : 'bg-[#124827] hover:bg-[#1c6b3b] text-white shadow-[#124827]/20'
+              }`}
+            >
+              {added ? (
+                <>
+                  <FiCheck size={18} className="text-emerald-300" /> Added to Cart!
+                </>
+              ) : (
+                <>
+                  <FiPackage size={18} /> Add to Basket
+                </>
+              )}
+            </button>
+          ) : (
+             <Link 
+               to="/cart" 
+               className="flex-1 font-bold py-4 px-6 rounded-2xl transition-all shadow-lg active:scale-[0.98] text-sm flex items-center justify-center gap-2 bg-[#124827] hover:bg-[#1c6b3b] text-white shadow-[#124827]/20"
+             >
+               View Cart
+             </Link>
+          )}
+          <button className="flex-1 bg-[#feeee8] hover:bg-[#fcdbc9] text-[#eb5b27] font-bold py-4 px-6 rounded-2xl transition-all text-sm flex items-center justify-center gap-2">
             Buy Now
           </button>
         </div>

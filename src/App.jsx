@@ -20,6 +20,7 @@ const AOSInitializer = () => {
 
   useEffect(() => {
     AOS.refresh();
+    window.scrollTo(0, 0);
   }, [location.pathname]);
 
   return null;

@@ -54,17 +54,31 @@ export const CartProvider = ({ children }) => {
     const guestCartStr = sessionStorage.getItem('guestCart');
     if (guestCartStr) {
       try {
-        debugger
         const guestCart = JSON.parse(guestCartStr);
-        const items = guestCart.items || [];
+        let items = guestCart.items || [];
+        let syncedItemsCount = 0;
+        let failedItems = [];
+
         for (const item of items) {
           const productId = item.productId || (item.product && (item.product._id || item.product.id)) || item.id;
           const variationId = item.variationId || (item.variation && (item.variation._id || item.variation.id)) || null;
           const payload = { productId, quantity: item.quantity };
           if (variationId) payload.variationId = variationId;
-          await postData('website/cart/items', payload, token);
+          const response = await postData('website/cart/items', payload, token);
+          if (response && response.success !== false) {
+             syncedItemsCount++;
+          } else {
+             failedItems.push(item);
+          }
         }
-        sessionStorage.removeItem('guestCart');
+
+        if (failedItems.length === 0) {
+          sessionStorage.removeItem('guestCart');
+        } else {
+          // Update the guest cart to only contain failed items
+          guestCart.items = failedItems;
+          sessionStorage.setItem('guestCart', JSON.stringify(guestCart));
+        }
       } catch (e) {
         console.error('Failed to sync guest cart', e);
       }
@@ -107,7 +121,7 @@ export const CartProvider = ({ children }) => {
       }
 
       sessionStorage.setItem('guestCart', JSON.stringify(guestCart));
-      showToast('Added to cart', 'success');
+      showToast('Added to cart', 'success', { label: 'View Cart', link: '/cart' });
       await fetchCart();
       return true;
     }
@@ -117,7 +131,7 @@ export const CartProvider = ({ children }) => {
       if (variationId) payload.variationId = variationId;
       const response = await postData('website/cart/items', payload, token);
       if (response && response.success !== false) {
-        showToast('Added to cart', 'success');
+        showToast('Added to cart', 'success', { label: 'View Cart', link: '/cart' });
         await fetchCart();
         return true;
       } else {

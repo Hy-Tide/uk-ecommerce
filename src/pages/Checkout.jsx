@@ -11,7 +11,9 @@ import {
   FiShield,
   FiTruck,
   FiPackage,
-  FiAward
+  FiAward,
+  FiPlus,
+  FiX
 } from 'react-icons/fi';
 import { FaCcStripe } from 'react-icons/fa';
 import { useCart } from '../context/CartContext';
@@ -23,20 +25,26 @@ const Checkout = () => {
   const { showToast } = useToast();
   const navigate = useNavigate();
   const { cartItems, cartTotal, cartDetails, clearCart } = useCart();
+  const [validatedCart, setValidatedCart] = useState(null);
 
-  const [shippingAddress, setShippingAddress] = useState({
-    firstName: 'Priya',
-    lastName: 'Sharma',
-    email: 'priya.sharma@email.com',
-    phone: '+44 7890 123456',
-    houseNumber: 'Flat 4B',
-    street: '142 Brick Lane',
-    city: 'London',
-    county: 'Greater London',
-    postcode: 'E1 6RF',
-    addressType: 'Home'
+  const [addresses, setAddresses] = useState([]);
+  const [selectedAddressId, setSelectedAddressId] = useState('');
+  const [isAddingAddress, setIsAddingAddress] = useState(false);
+  const [isSavingAddress, setIsSavingAddress] = useState(false);
+  const [addressForm, setAddressForm] = useState({
+    name: '',
+    phone: '',
+    house_number: '',
+    street_address: '',
+    city: '',
+    county: '',
+    postcode: '',
+    country: 'United Kingdom',
+    address_type: 'Home',
+    is_default: true
   });
-  const [deliveryNotes, setDeliveryNotes] = useState('Leave at door if no answer. Please ring bell first.');
+  const [user, setUser] = useState(null);
+  const [deliveryNotes, setDeliveryNotes] = useState('');
   const [deliverySlot, setDeliverySlot] = useState('Morning');
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
@@ -62,6 +70,8 @@ const Checkout = () => {
         if (res.success === false) {
           showToast(res.error || 'Cart validation failed', 'error');
           navigate('/cart');
+        } else if (res.data && res.data.cart) {
+          setValidatedCart(res.data.cart);
         }
       } catch (e) {
         navigate('/cart');
@@ -79,24 +89,134 @@ const Checkout = () => {
       }
     };
 
+    const fetchAddresses = async () => {
+      const token = sessionStorage.getItem('sessionToken');
+      if (!token) return;
+      try {
+        const res = await getData('website/users/addresses', {}, token);
+        let fetchedList = [];
+        if (res && res.success !== false) {
+          if (Array.isArray(res.data)) fetchedList = res.data;
+          else if (Array.isArray(res.data?.addresses)) fetchedList = res.data.addresses;
+          else if (Array.isArray(res.data?.data)) fetchedList = res.data.data;
+          else if (Array.isArray(res.addresses)) fetchedList = res.addresses;
+        }
+        setAddresses(fetchedList);
+        if (fetchedList.length > 0) {
+          const def = fetchedList.find(a => a.is_default);
+          setSelectedAddressId(def ? (def._id || def.id) : (fetchedList[0]._id || fetchedList[0].id));
+        } else {
+          setIsAddingAddress(true);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
+    const fetchUser = async () => {
+      const token = sessionStorage.getItem('sessionToken');
+      if (!token) return;
+      try {
+        const res = await getData('website/users/profile', {}, token);
+        if (res?.success && res?.data?.user) {
+          setUser(res.data.user);
+        } else {
+          const storedUser = sessionStorage.getItem('auth_user');
+          if (storedUser) setUser(JSON.parse(storedUser));
+        }
+      } catch (e) {
+        const storedUser = sessionStorage.getItem('auth_user');
+        if (storedUser) setUser(JSON.parse(storedUser));
+      }
+    };
+
     if (cartItems && cartItems.length > 0) {
       validateCheckout();
     }
     fetchPaymentMethods();
+    fetchAddresses();
+    fetchUser();
   }, [cartItems, navigate]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setShippingAddress(prev => ({ ...prev, [name]: value }));
+  const handleAddressInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setAddressForm(prev => ({ 
+      ...prev, 
+      [name]: type === 'checkbox' ? checked : value 
+    }));
+  };
+
+  const handleSaveAddress = async (e) => {
+    e.preventDefault();
+    if (!addressForm.house_number || !addressForm.street_address || !addressForm.city || !addressForm.postcode || !addressForm.name || !addressForm.phone) {
+      showToast('Please fill all required address fields', 'error');
+      return;
+    }
+    
+    setIsSavingAddress(true);
+    const token = sessionStorage.getItem('sessionToken');
+    try {
+      const response = await postData('website/users/addresses', addressForm, token);
+      
+      const newAddress = {
+        _id: response?.data?._id || response?.data?.id || `addr_${Date.now()}`,
+        id: `addr_${Date.now()}`,
+        ...addressForm
+      };
+      
+      let updatedList = [...addresses];
+      if (addressForm.is_default) {
+        updatedList = updatedList.map(a => ({ ...a, is_default: false }));
+      }
+      updatedList.push(newAddress);
+      
+      setAddresses(updatedList);
+      setSelectedAddressId(newAddress._id || newAddress.id);
+      setIsAddingAddress(false);
+      showToast('Address added successfully', 'success');
+      
+      setAddressForm({
+        name: '', phone: '', house_number: '', street_address: '', city: '', county: '', postcode: '', country: 'United Kingdom', address_type: 'Home', is_default: true
+      });
+    } catch (e) {
+      showToast('Failed to save address', 'error');
+    } finally {
+      setIsSavingAddress(false);
+    }
   };
 
   const handlePlaceOrder = async () => {
+    if (!selectedAddressId) {
+      showToast('Please select a delivery address', 'error');
+      return;
+    }
+    
+    const selectedAddress = addresses.find(a => (a._id === selectedAddressId || a.id === selectedAddressId));
+    if (!selectedAddress) {
+      showToast('Invalid address selected', 'error');
+      return;
+    }
+
     setIsLoading(true);
     try {
       const token = sessionStorage.getItem('sessionToken');
+      
+      const finalShippingAddress = {
+        firstName: selectedAddress.name?.split(' ')[0] || user?.first_name || '',
+        lastName: selectedAddress.name?.split(' ').slice(1).join(' ') || user?.last_name || '',
+        email: user?.email || '',
+        phone: selectedAddress.phone || user?.phone || '',
+        houseNumber: selectedAddress.house_number || selectedAddress.houseNumber || '',
+        street: selectedAddress.street_address || selectedAddress.street || '',
+        city: selectedAddress.city || '',
+        county: selectedAddress.county || '',
+        postcode: selectedAddress.postcode || '',
+        addressType: selectedAddress.address_type || selectedAddress.addressType || 'Home'
+      };
+
       const payload = {
-        shippingAddress,
-        billingAddress: shippingAddress,
+        shippingAddress: finalShippingAddress,
+        billingAddress: finalShippingAddress,
         deliveryNotes,
         deliverySlot,
         paymentMethod: selectedPaymentMethod
@@ -126,11 +246,13 @@ const Checkout = () => {
     }
   };
 
-  const discount = cartDetails?.discount || 0;
-  const subtotal = cartTotal || 0;
+  const discount = validatedCart ? (validatedCart.discountAmount || 0) : (cartDetails?.discount || 0);
+  const subtotal = validatedCart ? (validatedCart.subTotal || 0) : (cartTotal || 0);
   const deliveryCharge = 0;
   const tax = subtotal * 0.05;
   const grandTotal = subtotal - discount + deliveryCharge + tax;
+  
+  const displayItems = validatedCart ? validatedCart.items : cartItems;
 
   return (
     <div className="bg-[#F8F9FA] pb-24 min-h-screen">
@@ -217,71 +339,74 @@ const Checkout = () => {
               </div>
 
               <div className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">First Name <span className="text-[#eb5b27]">*</span></label>
-                    <input type="text" name="firstName" value={shippingAddress.firstName} onChange={handleInputChange} className="border border-slate-200 bg-[#fafcfb] rounded-xl px-4 py-2.5 text-xs font-semibold outline-none focus:border-[#124827]" />
+                {addresses.length === 0 ? (
+                  <div className="text-center py-6">
+                    <p className="text-slate-500 mb-4 font-medium text-sm">You have no saved delivery addresses.</p>
+                    <button
+                      onClick={() => setIsAddingAddress(true)}
+                      className="bg-[#124827] text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-colors shadow-sm"
+                    >
+                      + Add New Address
+                    </button>
                   </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Last Name <span className="text-[#eb5b27]">*</span></label>
-                    <input type="text" name="lastName" value={shippingAddress.lastName} onChange={handleInputChange} className="border border-slate-200 bg-[#fafcfb] rounded-xl px-4 py-2.5 text-xs font-semibold outline-none focus:border-[#124827]" />
+                ) : (
+                  <div className="flex flex-col gap-4">
+                    {addresses.map((addr, idx) => {
+                      const id = addr._id || addr.id || idx;
+                      const isSelected = selectedAddressId === id;
+                      const name = addr.name || (user ? `${user.first_name || ''} ${user.last_name || ''}` : '');
+                      const phone = addr.phone || user?.phone || '';
+                      
+                      return (
+                        <div 
+                          key={id} 
+                          onClick={() => setSelectedAddressId(id)}
+                          className={`relative border rounded-2xl p-5 cursor-pointer transition-all ${isSelected ? 'border-[#124827] bg-[#F4F9F5]' : 'border-slate-200 bg-white hover:border-slate-300'}`}
+                        >
+                          <div className="flex items-start gap-4">
+                            <div className={`mt-1 w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${isSelected ? 'border-[#124827] bg-[#124827]' : 'border-slate-300'}`}>
+                              {isSelected && <div className="w-2 h-2 rounded-full bg-white"></div>}
+                            </div>
+                            
+                            <div className="flex-1">
+                              <div className="flex items-center gap-3 mb-2">
+                                <span className="font-extrabold text-slate-900">{name}</span>
+                                <span className="text-xs font-bold bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-md">{addr.address_type || 'Home'}</span>
+                                {addr.is_default && <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#0C3823] bg-white border border-[#0C3823]/20 px-2 py-0.5 rounded-md">Default</span>}
+                              </div>
+                              <p className="text-sm text-slate-600 font-medium mb-1">
+                                {addr.house_number}, {addr.street_address}
+                              </p>
+                              <p className="text-sm text-slate-600 font-medium mb-3">
+                                {addr.city}, {addr.county} {addr.postcode}
+                              </p>
+                              <p className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                                Mobile: <span className="font-extrabold">{phone}</span>
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                    
+                    <button
+                      onClick={() => setIsAddingAddress(true)}
+                      className="mt-2 w-full py-4 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center gap-2 text-slate-500 font-extrabold text-sm hover:border-[#124827] hover:text-[#124827] hover:bg-[#F4F9F5] transition-all cursor-pointer"
+                    >
+                      <FiPlus size={18} /> Add a New Address
+                    </button>
                   </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Mobile Number <span className="text-[#eb5b27]">*</span></label>
-                    <input type="text" name="phone" value={shippingAddress.phone} onChange={handleInputChange} className="border border-slate-200 bg-[#fafcfb] rounded-xl px-4 py-2.5 text-xs font-semibold outline-none focus:border-[#124827]" />
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Email Address <span className="text-[#eb5b27]">*</span></label>
-                    <input type="email" name="email" value={shippingAddress.email} onChange={handleInputChange} className="border border-slate-200 bg-[#fafcfb] rounded-xl px-4 py-2.5 text-xs font-semibold outline-none focus:border-[#124827]" />
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">House / Flat Number <span className="text-[#eb5b27]">*</span></label>
-                    <input type="text" name="houseNumber" value={shippingAddress.houseNumber} onChange={handleInputChange} className="border border-slate-200 bg-[#fafcfb] rounded-xl px-4 py-2.5 text-xs font-semibold outline-none focus:border-[#124827]" />
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Street Address <span className="text-[#eb5b27]">*</span></label>
-                    <input type="text" name="street" value={shippingAddress.street} onChange={handleInputChange} className="border border-slate-200 bg-[#fafcfb] rounded-xl px-4 py-2.5 text-xs font-semibold outline-none focus:border-[#124827]" />
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">City <span className="text-[#eb5b27]">*</span></label>
-                    <input type="text" name="city" value={shippingAddress.city} onChange={handleInputChange} className="border border-slate-200 bg-[#fafcfb] rounded-xl px-4 py-2.5 text-xs font-semibold outline-none focus:border-[#124827]" />
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">County</label>
-                    <input type="text" name="county" value={shippingAddress.county} onChange={handleInputChange} className="border border-slate-200 bg-[#fafcfb] rounded-xl px-4 py-2.5 text-xs font-semibold outline-none focus:border-[#124827]" />
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Postcode <span className="text-[#eb5b27]">*</span></label>
-                    <input type="text" name="postcode" value={shippingAddress.postcode} onChange={handleInputChange} className="border border-slate-200 bg-[#fafcfb] rounded-xl px-4 py-2.5 text-xs font-semibold outline-none focus:border-[#124827]" />
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-1.5 mb-4">
+                )}
+                
+                <div className="mt-6 flex flex-col gap-1.5 pt-6 border-t border-slate-100">
                   <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Delivery Instructions</label>
                   <textarea
                     rows="2"
                     value={deliveryNotes}
                     onChange={(e) => setDeliveryNotes(e.target.value)}
+                    placeholder="Leave at door if no answer. Please ring bell first..."
                     className="border border-slate-200 bg-[#fafcfb] rounded-xl px-4 py-2.5 text-xs font-medium outline-none focus:border-[#124827] resize-none"
                   ></textarea>
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Address Tag</label>
-                  <div className="flex items-center gap-4">
-                    <button
-                      onClick={() => setShippingAddress(prev => ({ ...prev, addressType: 'Home' }))}
-                      className={`flex-1 border font-bold text-xs py-2.5 rounded-xl transition-colors ${shippingAddress.addressType === 'Home' ? 'border-[#124827] bg-[#e8f5ed] text-[#124827]' : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'}`}
-                    >
-                      Home
-                    </button>
-                    <button
-                      onClick={() => setShippingAddress(prev => ({ ...prev, addressType: 'Work' }))}
-                      className={`flex-1 border font-bold text-xs py-2.5 rounded-xl transition-colors ${shippingAddress.addressType === 'Work' ? 'border-[#124827] bg-[#e8f5ed] text-[#124827]' : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'}`}
-                    >
-                      Work
-                    </button>
-                  </div>
                 </div>
               </div>
             </div>
@@ -382,13 +507,27 @@ const Checkout = () => {
               </div>
 
               <div className="p-6 flex flex-col gap-4">
-                {cartItems?.map((item, index) => {
+                {displayItems?.map((item, index) => {
                   const product = item.product || {};
-                  const variation = item.variation || {};
-                  const brandName = product.brand?.name || 'Grandma\'s Basket';
-                  const weightStr = variation.weight ? `${variation.weight}${variation.weightUnit || ''}` : '';
-                  const price = variation.salePrice || variation.regularPrice || product.price || 0;
-                  const imageUrl = product.images?.[0]?.url || product.image || '/images/placeholder.png';
+                  
+                  // Map variation from product.variations if it exists in the validated cart format
+                  let variation = item.variation || {};
+                  if (item.variationId && Array.isArray(product.variations)) {
+                    variation = product.variations.find(v => v._id === item.variationId || v.id === item.variationId) || variation;
+                  }
+
+                  const brandName = typeof product.brand === 'string' ? '' : (product.brand?.name || '');
+                  const weightStr = variation.displayWeight || (variation.weight ? `${variation.weight}${variation.weightUnit || ''}` : '');
+                  
+                  // item.price is the exact price sent from validate checkout
+                  const price = item.price || variation.salePrice || variation.regularPrice || product.price || 0;
+                  
+                  let imageUrl = '/images/placeholder.png';
+                  if (Array.isArray(product.images) && product.images.length > 0) {
+                    imageUrl = typeof product.images[0] === 'string' ? product.images[0] : (product.images[0].url || imageUrl);
+                  } else if (product.image) {
+                    imageUrl = typeof product.image === 'string' ? product.image : (product.image.url || imageUrl);
+                  }
 
                   return (
                     <div key={item._id || index}>
@@ -507,6 +646,78 @@ const Checkout = () => {
 
         </div>
       </div>
+
+      {/* Add Address Modal */}
+      {isAddingAddress && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white rounded-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-100">
+            <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white z-10">
+              <h3 className="font-extrabold text-lg text-slate-900">Add New Address</h3>
+              <button
+                onClick={() => setIsAddingAddress(false)}
+                className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center hover:bg-slate-200 transition-colors"
+              >
+                <FiX size={18} />
+              </button>
+            </div>
+            
+            <form onSubmit={handleSaveAddress} className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Full Name <span className="text-[#eb5b27]">*</span></label>
+                  <input required type="text" name="name" value={addressForm.name} onChange={handleAddressInputChange} className="border border-slate-200 bg-[#fafcfb] rounded-xl px-4 py-2.5 text-sm font-semibold outline-none focus:border-[#124827]" placeholder="John Doe" />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Mobile Number <span className="text-[#eb5b27]">*</span></label>
+                  <input required type="text" name="phone" value={addressForm.phone} onChange={handleAddressInputChange} className="border border-slate-200 bg-[#fafcfb] rounded-xl px-4 py-2.5 text-sm font-semibold outline-none focus:border-[#124827]" placeholder="+44 7700 900000" />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">House / Flat No. <span className="text-[#eb5b27]">*</span></label>
+                  <input required type="text" name="house_number" value={addressForm.house_number} onChange={handleAddressInputChange} className="border border-slate-200 bg-[#fafcfb] rounded-xl px-4 py-2.5 text-sm font-semibold outline-none focus:border-[#124827]" placeholder="Apt 4B" />
+                </div>
+                <div className="flex flex-col gap-1.5 md:col-span-2">
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Street Address <span className="text-[#eb5b27]">*</span></label>
+                  <input required type="text" name="street_address" value={addressForm.street_address} onChange={handleAddressInputChange} className="border border-slate-200 bg-[#fafcfb] rounded-xl px-4 py-2.5 text-sm font-semibold outline-none focus:border-[#124827]" placeholder="123 Example Street" />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">City <span className="text-[#eb5b27]">*</span></label>
+                  <input required type="text" name="city" value={addressForm.city} onChange={handleAddressInputChange} className="border border-slate-200 bg-[#fafcfb] rounded-xl px-4 py-2.5 text-sm font-semibold outline-none focus:border-[#124827]" placeholder="London" />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Postcode <span className="text-[#eb5b27]">*</span></label>
+                  <input required type="text" name="postcode" value={addressForm.postcode} onChange={handleAddressInputChange} className="border border-slate-200 bg-[#fafcfb] rounded-xl px-4 py-2.5 text-sm font-semibold outline-none focus:border-[#124827]" placeholder="SW1A 1AA" />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">County</label>
+                  <input type="text" name="county" value={addressForm.county} onChange={handleAddressInputChange} className="border border-slate-200 bg-[#fafcfb] rounded-xl px-4 py-2.5 text-sm font-semibold outline-none focus:border-[#124827]" placeholder="Greater London" />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-2 mb-6">
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Address Label</label>
+                <div className="flex items-center gap-3">
+                  <button type="button" onClick={() => setAddressForm(prev => ({ ...prev, address_type: 'Home' }))} className={`flex-1 border font-bold text-xs py-2.5 rounded-xl transition-colors ${addressForm.address_type === 'Home' ? 'border-[#124827] bg-[#F4F9F5] text-[#124827]' : 'border-slate-200 bg-white text-slate-600'}`}>Home</button>
+                  <button type="button" onClick={() => setAddressForm(prev => ({ ...prev, address_type: 'Work' }))} className={`flex-1 border font-bold text-xs py-2.5 rounded-xl transition-colors ${addressForm.address_type === 'Work' ? 'border-[#124827] bg-[#F4F9F5] text-[#124827]' : 'border-slate-200 bg-white text-slate-600'}`}>Work</button>
+                  <button type="button" onClick={() => setAddressForm(prev => ({ ...prev, address_type: 'Other' }))} className={`flex-1 border font-bold text-xs py-2.5 rounded-xl transition-colors ${addressForm.address_type === 'Other' ? 'border-[#124827] bg-[#F4F9F5] text-[#124827]' : 'border-slate-200 bg-white text-slate-600'}`}>Other</button>
+                </div>
+              </div>
+
+              <label className="flex items-center gap-3 cursor-pointer mb-6">
+                <input type="checkbox" name="is_default" checked={addressForm.is_default} onChange={handleAddressInputChange} className="w-4 h-4 rounded text-[#124827] focus:ring-[#124827] accent-[#124827]" />
+                <span className="text-sm font-semibold text-slate-700">Set as default delivery address</span>
+              </label>
+
+              <button
+                type="submit"
+                disabled={isSavingAddress}
+                className="w-full bg-[#0C3823] hover:bg-[#155a38] text-white font-extrabold py-3.5 rounded-xl transition-all shadow-lg shadow-[#0C3823]/20 disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {isSavingAddress ? <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span> : 'Save & Use This Address'}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
