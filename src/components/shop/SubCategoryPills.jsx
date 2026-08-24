@@ -55,7 +55,7 @@ const SubCategoryPills = ({ categories, activeCategoryId, onCategoryChange }) =>
           onClick={() => onCategoryChange && onCategoryChange(null)}
           className={`font-bold text-sm px-5 py-2 rounded-xl whitespace-nowrap flex-shrink-0 shadow-sm transition-transform active:scale-95 ${!activeCategoryId ? 'bg-[#e8f5ed] text-[#379c6b]' : 'bg-white border border-slate-200 text-slate-500 hover:text-dark hover:border-slate-300'}`}
         >
-          All Products
+          All Subcategories
         </button>
         {categories.map((sub, idx) => {
           const isActive = activeCategoryId === (sub._id || sub.id);

@@ -1,24 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useNavigate, Link } from 'react-router-dom';
 import { FiChevronDown } from 'react-icons/fi';
 import Breadcrumbs from '../components/common/Breadcrumbs';
 import ShopHero from '../components/shop/ShopHero';
 import ShopSidebar from '../components/shop/ShopSidebar';
 import ShopProductCard from '../components/shop/ShopProductCard';
 import ProductScroller from '../components/shop/ProductScroller';
-import { shopProducts } from '../data/dummyData';
+
 import Newsletter from '../components/home/Newsletter';
 import SubCategoryPills from '../components/shop/SubCategoryPills';
 import RecentlyViewed from '../components/home/RecentlyViewed';
 import RecommendedProducts from '../components/home/RecommendedProducts';
 import { getData } from '../services/webservices';
+import { ROUTES } from '../utils/constants';
 import ProductCardSkeleton from '../components/skeletons/ProductCardSkeleton';
 
 const Shop = () => {
-  const { category: categorySlug } = useParams();
+  const { category: categorySlugParam } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
+  const categorySlug = queryParams.get('category') || categorySlugParam;
   const brandSlug = queryParams.get('brand');
+  const subCategoryParam = queryParams.get('subcategoryId') || queryParams.get('subcategory');
 
   const [categoryData, setCategoryData] = useState(null);
   const [brandData, setBrandData] = useState(null);
@@ -43,6 +47,9 @@ const Shop = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+  }, [categorySlug]);
+
+  useEffect(() => {
     const fetchCategoryAndSub = async () => {
       if (categorySlug) {
         const response = await getData(`website/categories/${categorySlug}`);
@@ -58,10 +65,15 @@ const Shop = () => {
         setCategoryData(null);
         setSubCategoriesData([]);
       }
-      setActiveSubCategoryId(null);
+      
+      if (subCategoryParam) {
+        setActiveSubCategoryId(subCategoryParam);
+      } else {
+        setActiveSubCategoryId(null);
+      }
     };
     fetchCategoryAndSub();
-  }, [categorySlug]);
+  }, [categorySlug, subCategoryParam]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -101,7 +113,7 @@ const Shop = () => {
 
   const displayName = categoryData?.name || brandData?.name || 'All Products';
 
-  const breadcrumbPaths = [{ name: 'Shop', url: '/shop' }];
+  const breadcrumbPaths = [{ name: 'Shop', url: ROUTES.SHOP }];
   if (categoryData) {
     breadcrumbPaths.push({ name: categoryData.name });
   } else if (brandData) {
@@ -131,12 +143,18 @@ const Shop = () => {
           {/* Main Content */}
           <div className="w-full lg:flex-grow min-w-0">
 
-            {/* Sub Categories Pills */}
+            {/* Sub Categories Pills - Only show if a subcategory is active to allow switching, or if we want to show it always. Wait, if we are showing a grid, maybe we still show pills? Yes, but they can just use the grid. Let's keep pills. */}
             {subCategoriesData.length > 0 && (
               <SubCategoryPills
                 categories={subCategoriesData}
                 activeCategoryId={activeSubCategoryId}
-                onCategoryChange={setActiveSubCategoryId}
+                onCategoryChange={(subId) => {
+                  if (subId) {
+                    navigate(`${ROUTES.SHOP}?category=${categorySlug}&subcategoryId=${subId}`);
+                  } else {
+                    navigate(`${ROUTES.SHOP}?category=${categorySlug}`);
+                  }
+                }}
               />
             )}
 
@@ -167,15 +185,6 @@ const Shop = () => {
                 ))}
               </div>
             )}
-
-            {/* Pagination */}
-            {/* <div className="flex items-center justify-center gap-2 mt-8">
-              <button className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 text-slate-400 font-bold hover:bg-slate-200 transition-colors">&lt;</button>
-              <button className="w-10 h-10 flex items-center justify-center rounded-full bg-[#379c6b] text-white font-bold shadow-md">1</button>
-              <button className="w-10 h-10 flex items-center justify-center rounded-full bg-white text-slate-500 font-bold hover:bg-slate-50 border border-slate-100 transition-colors">2</button>
-              <button className="w-10 h-10 flex items-center justify-center rounded-full bg-white text-slate-500 font-bold hover:bg-slate-50 border border-slate-100 transition-colors">3</button>
-              <button className="w-10 h-10 flex items-center justify-center rounded-full bg-white text-slate-500 font-bold hover:bg-slate-50 border border-slate-100 transition-colors">&gt;</button>
-            </div> */}
           </div>
         </div>
 

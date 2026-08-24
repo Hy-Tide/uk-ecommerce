@@ -14,7 +14,6 @@ export const PostcodeProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Check localStorage on mount
     const savedPostcode = localStorage.getItem('validatedPostcode');
     const savedData = localStorage.getItem('validatedPostcodeData');
     if (savedPostcode && savedData) {
@@ -28,12 +27,12 @@ export const PostcodeProvider = ({ children }) => {
   const validatePostcode = async (inputPostcode) => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const normalized = inputPostcode.trim().toUpperCase();
       // Remove all spaces for the API call URL
       const urlSafePostcode = normalized.replace(/\s+/g, '');
-      
+
       const response = await fetch(`https://api.postcodes.io/postcodes/${urlSafePostcode}`);
       const data = await response.json();
 

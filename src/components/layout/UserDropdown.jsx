@@ -63,7 +63,7 @@ const UserDropdown = () => {
   const menuItems = [
     { name: 'My Profile', path: ROUTES.PROFILE, icon: <FiUser /> },
     { name: 'My Orders', path: ROUTES.ORDERS, icon: <FiShoppingBag /> },
-    { name: 'Track Order', path: ROUTES.TRACK_ORDER, icon: <FiMapPin /> },
+    // { name: 'Track Order', path: ROUTES.TRACK_ORDER, icon: <FiMapPin /> },
     { name: 'Wishlist', path: ROUTES.WISHLIST, icon: <FiHeart /> },
     { name: 'Saved Addresses', path: ROUTES.ADDRESSES, icon: <FiMapPin /> },
     { name: 'Notifications', path: ROUTES.NOTIFICATIONS, icon: <FiBell /> },
@@ -113,68 +113,66 @@ const UserDropdown = () => {
             <div className="rounded-2xl overflow-hidden relative z-20 bg-white">
               {/* User Profile Header */}
               <div className="p-4 bg-[#FAFAF8] border-b border-slate-100 flex items-center gap-3.5">
-              <div className="w-12 h-12 min-w-[48px] min-h-[48px] rounded-full bg-white shadow-xs border border-slate-200 flex items-center justify-center shrink-0 overflow-hidden">
-                {user?.avatar ? (
-                  <img src={user.avatar} alt={fullName} className="w-full h-full object-cover" />
-                ) : (
-                  <span className="font-extrabold text-[#2E8B57] text-xl">
-                    {initial}
-                  </span>
-                )}
+                <div className="w-12 h-12 min-w-[48px] min-h-[48px] rounded-full bg-white shadow-xs border border-slate-200 flex items-center justify-center shrink-0 overflow-hidden">
+                  {user?.avatar ? (
+                    <img src={user.avatar} alt={fullName} className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="font-extrabold text-[#2E8B57] text-xl">
+                      {initial}
+                    </span>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-bold text-slate-800 text-base truncate leading-snug">{fullName}</h4>
+                  <p className="text-xs text-slate-500 font-medium truncate mt-0.5">{userEmail}</p>
+                </div>
               </div>
-              <div className="flex-1 min-w-0">
-                <h4 className="font-bold text-slate-800 text-base truncate leading-snug">{fullName}</h4>
-                <p className="text-xs text-slate-500 font-medium truncate mt-0.5">{userEmail}</p>
-              </div>
-            </div>
 
-            {/* Menu Links */}
-            <div className="p-2 space-y-0.5">
-              {menuItems.map((item, index) => {
-                const isActive = location.pathname === item.path;
-                return (
-                  <Link
-                    key={index}
-                    to={item.path}
-                    onClick={() => setIsOpen(false)}
-                    className={`flex items-center gap-3.5 px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-150 group ${
-                      isActive
+              {/* Menu Links */}
+              <div className="p-2 space-y-0.5">
+                {menuItems.map((item, index) => {
+                  const isActive = location.pathname === item.path;
+                  return (
+                    <Link
+                      key={index}
+                      to={item.path}
+                      onClick={() => setIsOpen(false)}
+                      className={`flex items-center gap-3.5 px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-150 group ${isActive
                         ? 'bg-[#EBF5ED] text-[#124827] font-semibold'
                         : 'text-slate-600 hover:bg-[#FAFAF8] hover:text-[#124827]'
-                    }`}
-                  >
-                    <div
-                      className={`text-lg transition-colors ${
-                        isActive
+                        }`}
+                    >
+                      <div
+                        className={`text-lg transition-colors ${isActive
                           ? 'text-[#124827]'
                           : 'text-slate-400 group-hover:text-[#FF6B00]'
-                      }`}
-                    >
-                      {item.icon}
-                    </div>
-                    <span>{item.name}</span>
-                  </Link>
-                );
-              })}
+                          }`}
+                      >
+                        {item.icon}
+                      </div>
+                      <span>{item.name}</span>
+                    </Link>
+                  );
+                })}
 
-              <div className="h-px bg-slate-100 my-1.5 mx-3"></div>
+                <div className="h-px bg-slate-100 my-1.5 mx-3"></div>
 
-              {/* Logout Button */}
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center gap-3.5 px-4 py-2.5 rounded-xl hover:bg-rose-50 text-slate-600 hover:text-rose-600 font-medium transition-colors group text-sm"
-              >
-                <div className="text-slate-400 group-hover:text-rose-500 transition-colors text-lg">
-                  <FiLogOut />
-                </div>
-                Logout
-              </button>
+                {/* Logout Button */}
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-3.5 px-4 py-2.5 rounded-xl hover:bg-rose-50 text-slate-600 hover:text-rose-600 font-medium transition-colors group text-sm"
+                >
+                  <div className="text-slate-400 group-hover:text-rose-500 transition-colors text-lg">
+                    <FiLogOut />
+                  </div>
+                  Logout
+                </button>
+              </div>
             </div>
-          </div>
-        </motion.div>
-      )}
+          </motion.div>
+        )}
       </AnimatePresence>
-    </div>
+    </div >
   );
 };
 

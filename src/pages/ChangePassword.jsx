@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FiLock, FiCheckCircle, FiChevronRight, FiUser, FiShield, FiKey } from 'react-icons/fi';
-import { postData, showSnackbar } from '../services/webservices';
+import { postData } from '../services/webservices';
+import { useToast } from '../context/ToastContext';
 import { ROUTES } from '../utils/constants';
 
 const ChangePassword = () => {
+  const { showToast } = useToast();
   const [current, setCurrent] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -35,15 +37,15 @@ const ChangePassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!current) {
-      showSnackbar('Please enter your current password', 'error');
+      showToast('Please enter your current password', 'error');
       return;
     }
     if (password.length < 8) {
-      showSnackbar('Password must be at least 8 characters long', 'error');
+      showToast('Password must be at least 8 characters long', 'error');
       return;
     }
     if (password !== confirm) {
-      showSnackbar('New passwords do not match', 'error');
+      showToast('New passwords do not match', 'error');
       return;
     }
 
@@ -57,12 +59,12 @@ const ChangePassword = () => {
           new_password: password
         }, token);
       }
-      showSnackbar('Password updated successfully!', 'success');
+      showToast('Password updated successfully!', 'success');
       setCurrent('');
       setPassword('');
       setConfirm('');
     } catch (err) {
-      showSnackbar('Failed to update password', 'error');
+      showToast('Failed to update password', 'error');
     } finally {
       setIsUpdating(false);
     }
@@ -103,21 +105,21 @@ const ChangePassword = () => {
           <div className="w-14 h-14 bg-emerald-50 text-[#0C3823] rounded-2xl flex items-center justify-center mb-6 shadow-xs border border-emerald-100/60">
             <FiKey size={26} />
           </div>
-          
+
           <h2 className="text-xl font-extrabold text-slate-900 mb-1">Create New Password</h2>
           <p className="text-slate-500 text-xs font-medium mb-8 leading-relaxed">
             Your new password must be at least 8 characters long and contain uppercase letters, numbers, or symbols.
           </p>
 
           <form className="space-y-5" onSubmit={handleSubmit}>
-            
+
             <div>
               <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Current Password</label>
-              <input 
-                type="password" 
+              <input
+                type="password"
                 value={current}
                 onChange={(e) => setCurrent(e.target.value)}
-                placeholder="Enter current password" 
+                placeholder="Enter current password"
                 className="w-full bg-[#FAFBF9] border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-[#0C3823] focus:ring-2 focus:ring-[#0C3823]/15 transition-all text-xs font-bold text-slate-800"
                 required
               />
@@ -127,15 +129,15 @@ const ChangePassword = () => {
 
             <div>
               <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">New Password</label>
-              <input 
-                type="password" 
+              <input
+                type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter new password" 
+                placeholder="Enter new password"
                 className="w-full bg-[#FAFBF9] border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-[#0C3823] focus:ring-2 focus:ring-[#0C3823]/15 transition-all text-xs font-bold text-slate-800 mb-2"
                 required
               />
-              
+
               {/* Password Strength Indicator */}
               {password && (
                 <div className="flex items-center gap-3">
@@ -152,11 +154,11 @@ const ChangePassword = () => {
 
             <div>
               <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Confirm New Password</label>
-              <input 
-                type="password" 
+              <input
+                type="password"
                 value={confirm}
                 onChange={(e) => setConfirm(e.target.value)}
-                placeholder="Confirm new password" 
+                placeholder="Confirm new password"
                 className="w-full bg-[#FAFBF9] border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-[#0C3823] focus:ring-2 focus:ring-[#0C3823]/15 transition-all text-xs font-bold text-slate-800"
                 required
               />
@@ -167,8 +169,8 @@ const ChangePassword = () => {
               )}
             </div>
 
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               disabled={isUpdating}
               className="w-full bg-[#0C3823] hover:bg-[#FF6B00] text-white font-bold text-xs py-3.5 rounded-xl transition-all duration-200 shadow-md shadow-[#0C3823]/20 mt-4 disabled:opacity-70 flex justify-center items-center gap-2"
             >

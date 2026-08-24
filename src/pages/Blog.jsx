@@ -21,13 +21,15 @@ export const mapApiBlogToUi = (b, index = 0) => {
   return {
     ...b,
     id: b._id,
-    image: b.image || 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=1200&q=80',
+    image: b.featuredImage || b.image || 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=1200&q=80',
     category: categoryName,
     publishedDate: b.createdAt ? new Date(b.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : "Recently",
     excerpt: b.summary || b.excerpt || '',
     readTime: `${b.readingTime || 5} min read`,
-    likes: b.likes || 0,
-    authorId: b.author?._id
+    likes: b.likes || b.views || 0,
+    views: b.views || 0,
+    authorId: b.author?._id,
+    authorName: b.author?.name || "Admin"
   };
 };
 
@@ -95,40 +97,66 @@ const Blog = () => {
   const [blogs, setBlogs] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchBlogs();
   }, []);
 
-  const fetchBlogs = async () => {
-    setLoading(true);
+  const fetchBlogs = async (pageToFetch = 1, append = false) => {
+    if (pageToFetch === 1) setLoading(true);
+    else setIsLoadingMore(true);
+    
     try {
-      const [blogsRes, categoriesRes] = await Promise.all([
-        getData('website/blogs'),
-        getData('website/categories')
-      ]);
+      const limit = 6;
+      const blogsPromise = getData(`website/blogs?page=${pageToFetch}&limit=${limit}`);
+      const categoriesPromise = pageToFetch === 1 ? getData('website/categories') : Promise.resolve(null);
+      
+      const [blogsRes, categoriesRes] = await Promise.all([blogsPromise, categoriesPromise]);
 
-      const rawBlogs = (blogsRes.success && blogsRes.data && blogsRes.data.blogs) ? blogsRes.data.blogs : [];
-      const apiCategories = (categoriesRes.success && categoriesRes.data && categoriesRes.data.categories) ? categoriesRes.data.categories : [];
-
+      const rawBlogs = (blogsRes?.success && blogsRes?.data?.blogs) ? blogsRes.data.blogs : [];
       const mapped = rawBlogs.map((b, i) => mapApiBlogToUi(b, i));
-      setBlogs(mapped);
+      
+      setBlogs(prev => append ? [...prev, ...mapped] : mapped);
+      
+      if (pageToFetch === 1 && categoriesRes?.success && categoriesRes?.data?.categories) {
+        setCategories(extractRealBlogCategories(rawBlogs, categoriesRes.data.categories));
+      }
 
-      const realCategories = extractRealBlogCategories(rawBlogs, apiCategories);
-      setCategories(realCategories);
+      if (blogsRes?.data?.pagination) {
+        setHasMore(blogsRes.data.pagination.page < blogsRes.data.pagination.totalPages);
+      } else {
+        setHasMore(rawBlogs.length === limit);
+      }
     } catch (error) {
       console.error("Error fetching blogs:", error);
     } finally {
       setLoading(false);
+      setIsLoadingMore(false);
     }
   };
 
   const featuredArticle = blogs.find(a => a.isFeatured) || blogs[0];
-  const featuredAuthor = featuredArticle ? blogAuthors.find(a => a.id === featuredArticle.authorId) || featuredArticle.author : null;
+  const featuredAuthor = featuredArticle 
+    ? blogAuthors.find(a => a.id === featuredArticle.authorId) || { 
+        name: featuredArticle.authorName || 'Admin', 
+        avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(featuredArticle.authorName || 'Admin')}&background=random`,
+        role: 'Author'
+      }
+    : null;
 
   // Sort by views for trending, or fallback to first 3
   const trendingArticles = [...blogs].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 3);
+
+  const handleLoadMore = () => {
+    if (isLoadingMore) return;
+    const nextPage = page + 1;
+    setPage(nextPage);
+    fetchBlogs(nextPage, true);
+  };
 
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
@@ -141,7 +169,13 @@ const Blog = () => {
       {featuredArticle && <BlogFeatured article={featuredArticle} author={featuredAuthor} />}
       <BlogCategories categories={categories} />
       {trendingArticles.length > 0 && <BlogTrending articles={trendingArticles} />}
-      <BlogList articles={blogs} authors={blogAuthors} />
+      <BlogList 
+        articles={blogs} 
+        authors={blogAuthors} 
+        onLoadMore={handleLoadMore}
+        hasMore={hasMore}
+        isLoadingMore={isLoadingMore}
+      />
       <BlogNewsletter />
     </div>
   );

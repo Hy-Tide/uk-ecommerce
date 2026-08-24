@@ -19,6 +19,7 @@ export const ROUTES = {
   WISHLIST: '/wishlist',
   CART: '/cart',
   CHECKOUT: '/checkout',
+  ORDER_SUCCESS: '/order-success',
   TRACK_ORDER: '/track-order',
   LOGIN: '/login',
   REGISTER: '/register',

@@ -1,37 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { 
-  FiPlus, 
-  FiMapPin, 
-  FiEdit2, 
-  FiTrash2, 
-  FiHome, 
-  FiBriefcase, 
-  FiPhone, 
+import {
+  FiPlus,
+  FiMapPin,
+  FiEdit2,
+  FiTrash2,
+  FiHome,
+  FiBriefcase,
+  FiPhone,
   FiCheck,
   FiChevronRight,
   FiUser
 } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
-import { getData, putData, postData, deleteData, showSnackbar } from '../services/webservices';
+import { getData, putData, postData, deleteData } from '../services/webservices';
+import { useToast } from '../context/ToastContext';
 import { ROUTES } from '../utils/constants';
 
 const AddressBook = () => {
+  const { showToast } = useToast();
   const { user } = useAuth();
 
-  const getInitialAddresses = () => {
-    try {
-      const stored = localStorage.getItem('user_addresses');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed)) return parsed;
-      }
-    } catch (e) {}
-    return [];
-  };
-
-  const [addresses, setAddresses] = useState(getInitialAddresses);
+  const [addresses, setAddresses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingAddressId, setEditingAddressId] = useState(null);
@@ -50,7 +41,7 @@ const AddressBook = () => {
   const fetchAddresses = async () => {
     const token = sessionStorage.getItem('sessionToken') || localStorage.getItem('token');
     if (!token || token === 'demo_token') {
-      setAddresses(getInitialAddresses());
+      setAddresses([]);
       return;
     }
 
@@ -72,7 +63,6 @@ const AddressBook = () => {
       }
 
       setAddresses(fetchedList);
-      localStorage.setItem('user_addresses', JSON.stringify(fetchedList));
     } catch (e) {
       console.error(e);
     } finally {
@@ -133,7 +123,7 @@ const AddressBook = () => {
     const targetId = editingAddressId;
 
     if (targetId) {
-      updatedList = updatedList.map(a => 
+      updatedList = updatedList.map(a =>
         (a._id === targetId || a.id === targetId)
           ? { ...a, ...addressForm }
           : (addressForm.is_default ? { ...a, is_default: false } : a)
@@ -151,8 +141,7 @@ const AddressBook = () => {
     }
 
     setAddresses(updatedList);
-    localStorage.setItem('user_addresses', JSON.stringify(updatedList));
-    showSnackbar(targetId ? 'Address updated successfully!' : 'Address added successfully!', 'success');
+    showToast(targetId ? 'Address updated successfully!' : 'Address added successfully!', 'success');
     setIsModalOpen(false);
     setEditingAddressId(null);
   };
@@ -167,8 +156,7 @@ const AddressBook = () => {
 
     const updatedList = addresses.filter(a => (a._id || a.id) !== id);
     setAddresses(updatedList);
-    localStorage.setItem('user_addresses', JSON.stringify(updatedList));
-    showSnackbar('Address deleted successfully!', 'success');
+    showToast('Address deleted successfully!', 'success');
   };
 
   const handleSetDefault = (id) => {
@@ -177,8 +165,7 @@ const AddressBook = () => {
       is_default: (a._id === id || a.id === id)
     }));
     setAddresses(updatedList);
-    localStorage.setItem('user_addresses', JSON.stringify(updatedList));
-    showSnackbar('Default address updated!', 'success');
+    showToast('Default address updated!', 'success');
   };
 
   return (
@@ -208,9 +195,9 @@ const AddressBook = () => {
 
       {/* Addresses Grid Container */}
       <div className="container px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto -mt-12 sm:-mt-14 relative z-10">
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          
+
           {/* Add New Address Card */}
           <motion.button
             onClick={handleOpenAddModal}
@@ -235,9 +222,8 @@ const AddressBook = () => {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: (index + 1) * 0.08 }}
-                className={`relative bg-white rounded-3xl border transition-all duration-200 p-6 flex flex-col justify-between hover:shadow-md ${
-                  addr.is_default ? 'border-[#0C3823]/40 shadow-sm ring-1 ring-[#0C3823]/20 bg-gradient-to-b from-[#F4F9F5] to-white' : 'border-slate-100 shadow-xs'
-                }`}
+                className={`relative bg-white rounded-3xl border transition-all duration-200 p-6 flex flex-col justify-between hover:shadow-md ${addr.is_default ? 'border-[#0C3823]/40 shadow-sm ring-1 ring-[#0C3823]/20 bg-gradient-to-b from-[#F4F9F5] to-white' : 'border-slate-100 shadow-xs'
+                  }`}
               >
                 <div>
                   {/* Top Badge */}
@@ -303,85 +289,85 @@ const AddressBook = () => {
       {/* Add / Edit Address Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs overflow-y-auto py-10">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl border border-slate-100 my-auto"
           >
             <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-[#FAFBF9]">
               <h3 className="font-extrabold text-base text-slate-900">{editingAddressId ? 'Edit Address' : 'Add New Address'}</h3>
-              <button 
-                onClick={() => setIsModalOpen(false)} 
+              <button
+                onClick={() => setIsModalOpen(false)}
                 className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center transition-colors text-sm font-bold"
               >
                 ✕
               </button>
             </div>
-            
+
             <form onSubmit={handleSaveAddress} className="p-6 space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">House No.</label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={addressForm.house_number}
-                    onChange={(e) => setAddressForm({...addressForm, house_number: e.target.value})}
+                    onChange={(e) => setAddressForm({ ...addressForm, house_number: e.target.value })}
                     className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold focus:ring-2 focus:ring-[#0C3823]/20 focus:border-[#0C3823] outline-none"
                     required
                   />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Street</label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={addressForm.street_address}
-                    onChange={(e) => setAddressForm({...addressForm, street_address: e.target.value})}
+                    onChange={(e) => setAddressForm({ ...addressForm, street_address: e.target.value })}
                     className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold focus:ring-2 focus:ring-[#0C3823]/20 focus:border-[#0C3823] outline-none"
                     required
                   />
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">City</label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={addressForm.city}
-                    onChange={(e) => setAddressForm({...addressForm, city: e.target.value})}
+                    onChange={(e) => setAddressForm({ ...addressForm, city: e.target.value })}
                     className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold focus:ring-2 focus:ring-[#0C3823]/20 focus:border-[#0C3823] outline-none"
                     required
                   />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">County</label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={addressForm.county}
-                    onChange={(e) => setAddressForm({...addressForm, county: e.target.value})}
+                    onChange={(e) => setAddressForm({ ...addressForm, county: e.target.value })}
                     className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold focus:ring-2 focus:ring-[#0C3823]/20 focus:border-[#0C3823] outline-none"
                     required
                   />
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Postcode</label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={addressForm.postcode}
-                    onChange={(e) => setAddressForm({...addressForm, postcode: e.target.value})}
+                    onChange={(e) => setAddressForm({ ...addressForm, postcode: e.target.value })}
                     className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold focus:ring-2 focus:ring-[#0C3823]/20 focus:border-[#0C3823] outline-none"
                     required
                   />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Country</label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={addressForm.country}
-                    onChange={(e) => setAddressForm({...addressForm, country: e.target.value})}
+                    onChange={(e) => setAddressForm({ ...addressForm, country: e.target.value })}
                     className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold focus:ring-2 focus:ring-[#0C3823]/20 focus:border-[#0C3823] outline-none"
                     required
                   />
@@ -389,28 +375,28 @@ const AddressBook = () => {
               </div>
 
               <div className="flex items-center gap-2 pt-2">
-                <input 
-                  type="checkbox" 
+                <input
+                  type="checkbox"
                   id="is_default_addr_book"
                   checked={addressForm.is_default}
-                  onChange={(e) => setAddressForm({...addressForm, is_default: e.target.checked})}
+                  onChange={(e) => setAddressForm({ ...addressForm, is_default: e.target.checked })}
                   className="w-4 h-4 text-[#0C3823] rounded focus:ring-[#0C3823]"
                 />
                 <label htmlFor="is_default_addr_book" className="text-xs font-bold text-slate-700 cursor-pointer">
                   Set as default address
                 </label>
               </div>
-              
+
               <div className="pt-4 flex gap-3">
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   onClick={() => setIsModalOpen(false)}
                   className="flex-1 py-3 px-4 rounded-xl border border-slate-200 font-bold text-xs text-slate-600 hover:bg-slate-50 transition-colors"
                 >
                   Cancel
                 </button>
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   disabled={isSaving}
                   className="flex-1 py-3 px-4 rounded-xl bg-[#0C3823] hover:bg-[#FF6B00] text-white font-bold text-xs transition-colors disabled:opacity-70 flex justify-center items-center shadow-md shadow-[#0C3823]/20"
                 >

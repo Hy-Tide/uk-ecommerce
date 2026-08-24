@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FiBox, FiTag, FiGift, FiHeart, FiMoreVertical, FiChevronRight, FiUser, FiBell } from 'react-icons/fi';
-import { getData, patchData, showSnackbar } from '../services/webservices';
+import { getData, patchData } from '../services/webservices';
+import { useToast } from '../context/ToastContext';
 import { ROUTES } from '../utils/constants';
 
 const getIconForType = (type) => {
@@ -16,6 +17,7 @@ const getIconForType = (type) => {
 };
 
 const Notifications = () => {
+  const { showToast } = useToast();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -51,10 +53,10 @@ const Notifications = () => {
     if (token && token !== 'demo_token') {
       try {
         await patchData('website/notifications/read-all');
-      } catch (e) {}
+      } catch (e) { }
     }
     setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
-    showSnackbar('All notifications marked as read', 'success');
+    showToast('All notifications marked as read', 'success');
   };
 
   const markAsRead = async (id) => {
@@ -62,7 +64,7 @@ const Notifications = () => {
     if (token && token !== 'demo_token') {
       try {
         await patchData(`website/notifications/${id}/read`);
-      } catch (e) {}
+      } catch (e) { }
     }
     setNotifications(prev => prev.map(n => n._id === id ? { ...n, isRead: true } : n));
   };
@@ -94,7 +96,7 @@ const Notifications = () => {
 
       <div className="container px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto -mt-12 sm:-mt-14 relative z-10">
         <div className="bg-white rounded-3xl border border-slate-100 shadow-md overflow-hidden">
-          
+
           <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-[#FAFBF9]">
             <h3 className="font-extrabold text-slate-900 text-base">All Activity Notifications</h3>
             <button onClick={markAllAsRead} className="text-xs font-bold text-[#0C3823] hover:text-[#FF6B00] transition-colors">
@@ -122,9 +124,9 @@ const Notifications = () => {
                     {isUnread && (
                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#0C3823]"></div>
                     )}
-                    
+
                     {getIconForType((notif.type || '').toLowerCase())}
-                    
+
                     <div className="flex-1 min-w-0 pr-6">
                       <div className="flex items-center gap-2 mb-1">
                         <h4 className={`font-extrabold text-sm ${isUnread ? 'text-slate-900' : 'text-slate-700'}`}>{notif.title}</h4>

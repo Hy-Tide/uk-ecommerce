@@ -15,14 +15,8 @@ import Newsletter from '../components/home/Newsletter';
 import RecentlyViewed from '../components/home/RecentlyViewed';
 import RecommendedProducts from '../components/home/RecommendedProducts';
 import { getData } from '../services/webservices';
+import { ROUTES } from '../utils/constants';
 
-import { 
-  detailedProduct, 
-  frequentlyBought, 
-  productReviewsData, 
-  productFAQs, 
-  shopProducts 
-} from '../data/dummyData';
 import ProductCard from '../components/product/ProductCard';
 
 const RelatedProducts = ({ products }) => {
@@ -59,16 +53,6 @@ const ProductDetails = () => {
         if (response?.success && response?.data?.product) {
           const fetchedProduct = response.data.product;
           setProductData(fetchedProduct);
-          
-          // Track recently viewed
-          const productId = fetchedProduct._id || fetchedProduct.id;
-          if (productId) {
-            let recent = JSON.parse(localStorage.getItem('recentlyViewedProducts') || '[]');
-            recent = recent.filter(id => id !== productId);
-            recent.unshift(productId);
-            if (recent.length > 8) recent.pop();
-            localStorage.setItem('recentlyViewedProducts', JSON.stringify(recent));
-          }
         } else {
           setProductData(null);
         }
@@ -86,28 +70,27 @@ const ProductDetails = () => {
   }, [productSlug]);
 
   const currentProduct = useMemo(() => {
-    if (!productData) return detailedProduct;
+    if (!productData) return null;
 
     return {
-      ...detailedProduct,
       ...productData,
       id: productData.id || productData._id,
       name: productData.name || productData.title,
-      description: productData.description || detailedProduct.description,
-      image: productData.mainImage || (productData.images && productData.images.length > 0 ? productData.images[0] : detailedProduct.image),
-      images: productData.images && productData.images.length > 0 ? productData.images : (productData.mainImage ? [productData.mainImage] : [detailedProduct.image]),
+      description: productData.description || '',
+      image: productData.mainImage || (productData.images && productData.images.length > 0 ? productData.images[0] : ''),
+      images: productData.images && productData.images.length > 0 ? productData.images : (productData.mainImage ? [productData.mainImage] : []),
       category: typeof productData.category === 'object' ? productData.category?.name : (productData.category || 'Shop'),
       discountBadge: productData.badge?.text,
-      stockCount: productData.stockCount ?? detailedProduct.stockCount,
-      highlights: productData.highlights || detailedProduct.highlights,
-      features: productData.features || detailedProduct.features,
-      brand: productData.brand || detailedProduct.brand,
+      stockCount: productData.stockCount ?? 0,
+      highlights: productData.highlights || [],
+      features: productData.features || [],
+      brand: productData.brand || '',
       ingredients: productData.ingredients,
       nutritionalInfo: productData.nutritionalInfo,
     };
   }, [productData, productSlug]);
 
-  if (isLoading) {
+  if (isLoading || !currentProduct) {
     return <ProductDetailsSkeleton />;
   }
 
@@ -119,8 +102,8 @@ const ProductDetails = () => {
         <div className="mb-4">
           <Breadcrumbs 
             paths={[
-              { name: 'Shop', url: '/shop' }, 
-              { name: currentProduct.category ? currentProduct.category.charAt(0).toUpperCase() + currentProduct.category.slice(1) : 'Atta & Flour', url: '/shop' }, 
+              { name: 'Shop', url: ROUTES.SHOP }, 
+              { name: currentProduct.category ? currentProduct.category.charAt(0).toUpperCase() + currentProduct.category.slice(1) : 'Shop', url: `${ROUTES.SHOP}?category=${productData?.category?.slug || productData?.category || 'all'}` }, 
               { name: currentProduct.name }
             ]} 
           />
@@ -148,7 +131,7 @@ const ProductDetails = () => {
         </div>
 
         {/* Frequently Bought Together */}
-        <FrequentlyBought items={frequentlyBought} />
+        <FrequentlyBought items={[]} />
 
         {/* Recently Viewed */}
         <div className="mb-12">
@@ -156,7 +139,7 @@ const ProductDetails = () => {
         </div>
 
         {/* FAQ */}
-        <ProductFAQ faqs={productFAQs} />
+        <ProductFAQ faqs={[]} />
 
       </div>
 

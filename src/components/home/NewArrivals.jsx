@@ -5,22 +5,8 @@ import { ROUTES } from '../../utils/constants';
 import { FiArrowRight } from 'react-icons/fi';
 import { getData } from '../../services/webservices';
 
-const NewArrivals = () => {
-  const [newArrivals, setNewArrivals] = useState([]);
-
-  useEffect(() => {
-    const fetchNewArrivals = async () => {
-      try {
-        const res = await getData('website/products/new-arrivals');
-        if (res?.success && res?.data?.products) {
-          setNewArrivals(res.data.products);
-        }
-      } catch (err) {
-        console.error('Failed to fetch new arrivals', err);
-      }
-    };
-    fetchNewArrivals();
-  }, []);
+const NewArrivals = ({ data }) => {
+  const newArrivals = data?.data || [];
 
   if (newArrivals.length === 0) return null;
 
@@ -44,7 +30,7 @@ const NewArrivals = () => {
       {/* Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {newArrivals.slice(0, 5).map((product, index) => (
-          <div key={product._id || product.id} data-aos="fade-up" data-aos-delay={index * 100}>
+          <div key={product._id || product.id || product.productId || index} data-aos="fade-up" data-aos-delay={index * 100}>
             <ProductCard product={{...product, badge: { type: 'new' }}} />
           </div>
         ))}

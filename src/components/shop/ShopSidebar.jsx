@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { FiChevronDown, FiChevronUp, FiSliders } from 'react-icons/fi';
-import { shopFilters } from '../../data/dummyData';
 
 const CheckboxGroup = ({ title, options, initiallyOpen = true }) => {
   const [isOpen, setIsOpen] = useState(initiallyOpen);
@@ -78,10 +77,10 @@ const ShopSidebar = () => {
       </div>
 
       {/* Brand Filter */}
-      <CheckboxGroup title="Brand" options={shopFilters.brands} />
+      <CheckboxGroup title="Brand" options={[]} />
 
       {/* Weight Filter */}
-      <CheckboxGroup title="Weight" options={shopFilters.weights} />
+      <CheckboxGroup title="Weight" options={[]} />
 
       {/* Organic Filter */}
       <CheckboxGroup 

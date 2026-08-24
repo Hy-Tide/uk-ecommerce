@@ -3,49 +3,18 @@ import { Link } from 'react-router-dom';
 import { ROUTES } from '../../utils/constants';
 import { getData } from '../../services/webservices';
 
-const fallbackBrandList = [
-  { name: 'AASHIRVAAD', text: 'AASHIRVAAD', color: 'text-red-600', bg: 'bg-red-50' },
-  { name: 'DAAWAT', text: 'DAAWAT', color: 'text-blue-800', bg: 'bg-blue-50' },
-  { name: 'Suhana', text: 'Suhana', color: 'text-rose-700', bg: 'bg-rose-50' },
-  { name: 'Haldiram\'s', text: 'Haldiram\'s', color: 'text-red-700', bg: 'bg-red-50' },
-  { name: 'Coco Bliss', text: 'Coco Bliss', color: 'text-amber-900', bg: 'bg-amber-50' },
-  { name: 'Janvi', text: 'Janvi', color: 'text-emerald-700', bg: 'bg-emerald-50' },
-  { name: 'TRS', text: 'TRS', color: 'text-[#0C3823]', bg: 'bg-[#F3F4F6]' },
-  { name: 'UPHAAR', text: 'UPHAAR', color: 'text-blue-700', bg: 'bg-blue-50' },
-  { name: 'Zaitoon', text: 'Zaitoon', color: 'text-lime-700', bg: 'bg-lime-50' },
-  { name: 'Ingredion', text: 'Ingredion', color: 'text-emerald-800', bg: 'bg-emerald-50' },
-  { name: 'IFDA', text: 'IFDA', color: 'text-[#700B0B]', bg: 'bg-[#FFF3EB]' },
-  { name: 'Griffith Foods', text: 'Griffith', color: 'text-green-700', bg: 'bg-green-50' },
-];
+const Brands = ({ data }) => {
+  const brands = data?.data || [];
 
-const Brands = () => {
-  const [brands, setBrands] = useState([]);
+  if (brands.length === 0) return null;
 
-  useEffect(() => {
-    const fetchBrands = async () => {
-      const response = await getData('website/brands');
-      if (response && response.success !== false && response.data && response.data.brands) {
-        setBrands(response.data.brands);
-      }
-    };
-    fetchBrands();
-  }, []);
-
-  const displayBrands = brands.length > 0
-    ? brands.slice(0, 12).map((b, i) => ({
-      id: b._id || i,
-      name: b.name,
-      slug: b.slug,
-      image: b.image_url,
-      style: fallbackBrandList[i % fallbackBrandList.length]
-    }))
-    : fallbackBrandList.map((item, i) => ({
-      id: i,
-      name: item.name,
-      slug: item.name.toLowerCase().replace(/\s+/g, '-'),
-      image: null,
-      style: item
-    }));
+  const displayBrands = brands.slice(0, 12).map((b, i) => ({
+    id: b._id || i,
+    name: b.name,
+    slug: b.slug,
+    image: b.image_url,
+    style: { color: 'text-[#0C3823]' } // Default color if no image
+  }));
 
   return (
     <section className="bg-[#F8F9FA] py-10">

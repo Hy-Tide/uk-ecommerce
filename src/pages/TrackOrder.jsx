@@ -1,24 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
-import { 
-  FiSearch, 
-  FiCheckCircle, 
-  FiPackage, 
-  FiTruck, 
-  FiMapPin, 
-  FiSmile, 
-  FiClock, 
-  FiPhoneCall, 
+import {
+  FiSearch,
+  FiCheckCircle,
+  FiPackage,
+  FiTruck,
+  FiMapPin,
+  FiSmile,
+  FiClock,
+  FiPhoneCall,
   FiHelpCircle,
   FiChevronRight,
   FiUser
 } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
-import { getData, showSnackbar } from '../services/webservices';
+import { getData } from '../services/webservices';
+import { useToast } from '../context/ToastContext';
 import { ROUTES } from '../utils/constants';
 
 const TrackOrder = () => {
+  const { showToast } = useToast();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -83,11 +85,11 @@ const TrackOrder = () => {
   const handleTrackSubmit = async (e) => {
     e.preventDefault();
     if (!orderIdInput.trim()) {
-      showSnackbar('Please enter a valid Order ID', 'error');
+      showToast('Please enter a valid Order ID', 'error');
       return;
     }
     await fetchOrderDetails(orderIdInput.trim());
-    showSnackbar('Tracking updated', 'success');
+    showToast('Tracking updated', 'success');
   };
 
   return (
@@ -114,7 +116,7 @@ const TrackOrder = () => {
       </div>
 
       <div className="container px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto -mt-12 sm:-mt-14 relative z-10 space-y-8">
-        
+
         {/* Search Order Form */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
@@ -128,9 +130,9 @@ const TrackOrder = () => {
           <form onSubmit={handleTrackSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-4">
             <div className="md:col-span-5">
               <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Order ID</label>
-              <input 
-                type="text" 
-                placeholder="e.g. ORD-2026-8924"
+              <input
+                type="text"
+                placeholder="Enter your Order ID"
                 value={orderIdInput}
                 onChange={(e) => setOrderIdInput(e.target.value)}
                 className="w-full bg-[#FAFBF9] border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-[#0C3823] focus:ring-2 focus:ring-[#0C3823]/15 transition-all text-xs font-bold text-slate-800"
@@ -139,8 +141,8 @@ const TrackOrder = () => {
             </div>
             <div className="md:col-span-5">
               <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Email Address</label>
-              <input 
-                type="email" 
+              <input
+                type="email"
                 placeholder="you@example.com"
                 value={emailInput}
                 onChange={(e) => setEmailInput(e.target.value)}
@@ -149,8 +151,8 @@ const TrackOrder = () => {
               />
             </div>
             <div className="md:col-span-2 flex items-end">
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 disabled={isSearching}
                 className="w-full bg-[#0C3823] hover:bg-[#FF6B00] text-white font-bold text-xs py-3 px-5 rounded-xl transition-all duration-200 shadow-md shadow-[#0C3823]/20 flex items-center justify-center gap-2 h-[42px] disabled:opacity-70"
               >
@@ -193,23 +195,22 @@ const TrackOrder = () => {
             {/* Timeline Section */}
             <div className="p-6 sm:p-10">
               <div className="relative">
-                
+
                 {/* Connecting Lines */}
                 <div className="absolute top-6 left-8 right-8 h-1 bg-slate-100 -translate-y-1/2 z-0 rounded-full hidden md:block"></div>
                 <div className="absolute top-6 left-8 h-1 bg-[#0C3823] -translate-y-1/2 z-0 rounded-full hidden md:block transition-all duration-1000" style={{ width: '75%' }}></div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-6 relative z-10">
                   {trackResult.timeline.map((step, idx) => {
                     const Icon = step.icon;
                     return (
                       <div key={idx} className="flex md:flex-col items-center gap-3 md:text-center">
-                        <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 shadow-sm transition-all ${
-                          step.active
+                        <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 shadow-sm transition-all ${step.active
                             ? 'bg-[#FF6B00] text-white ring-4 ring-[#FF6B00]/20 shadow-md shadow-[#FF6B00]/30'
                             : step.completed
                               ? 'bg-[#0C3823] text-white'
                               : 'bg-slate-100 text-slate-400 border border-slate-200'
-                        }`}>
+                          }`}>
                           <Icon size={20} />
                         </div>
                         <div>

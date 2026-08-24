@@ -9,20 +9,8 @@ const RecentlyViewed = () => {
   const [recentProducts, setRecentProducts] = useState([]);
 
   useEffect(() => {
-    const fetchRecentlyViewed = async () => {
-      try {
-        const storedIds = JSON.parse(localStorage.getItem('recentlyViewedProducts') || '[]');
-        if (storedIds.length === 0) return;
-
-        const res = await postData('website/products/recently-viewed', { productIds: storedIds });
-        if (res?.success && res?.data?.products) {
-          setRecentProducts(res.data.products);
-        }
-      } catch (err) {
-        console.error('Failed to fetch recently viewed products', err);
-      }
-    };
-    fetchRecentlyViewed();
+    // Recently viewed is disabled as local storage was removed
+    setRecentProducts([]);
   }, []);
 
   if (recentProducts.length === 0) return null;

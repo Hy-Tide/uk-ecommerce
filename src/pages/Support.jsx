@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FiMessageSquare, FiPhoneCall, FiMail, FiChevronDown, FiExternalLink, FiChevronRight, FiUser, FiSend } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
-import { showSnackbar } from '../services/webservices';
+import { useToast } from '../context/ToastContext';
 import { ROUTES } from '../utils/constants';
 
 const faqs = [
@@ -14,6 +14,7 @@ const faqs = [
 ];
 
 const Support = () => {
+  const { showToast } = useToast();
   const [subject, setSubject] = useState('Order Issue');
   const [orderId, setOrderId] = useState('');
   const [message, setMessage] = useState('');
@@ -26,7 +27,7 @@ const Support = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!message.trim()) {
-      showSnackbar('Please enter your message', 'error');
+      showToast('Please enter your message', 'error');
       return;
     }
     setIsSubmitting(true);
@@ -34,7 +35,7 @@ const Support = () => {
       setIsSubmitting(false);
       setMessage('');
       setOrderId('');
-      showSnackbar('Message sent! Our support team will reply shortly.', 'success');
+      showToast('Message sent! Our support team will reply shortly.', 'success');
     }, 800);
   };
 
@@ -65,10 +66,10 @@ const Support = () => {
 
       <div className="container px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto -mt-12 sm:-mt-14 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
+
           {/* Main Support Area */}
           <div className="lg:col-span-2 space-y-8">
-            
+
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
@@ -82,7 +83,7 @@ const Support = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Subject</label>
-                    <select 
+                    <select
                       value={subject}
                       onChange={(e) => setSubject(e.target.value)}
                       className="w-full bg-[#FAFBF9] border border-slate-200 rounded-xl px-4 py-2.5 outline-none focus:border-[#0C3823] focus:ring-2 focus:ring-[#0C3823]/15 transition-all text-xs font-bold text-slate-800"
@@ -96,28 +97,28 @@ const Support = () => {
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Order ID (Optional)</label>
-                    <input 
-                      type="text" 
-                      placeholder="e.g. ORD-2026-8924" 
+                    <input
+                      type="text"
+                      placeholder="e.g. ORD-2026-8924"
                       value={orderId}
                       onChange={(e) => setOrderId(e.target.value)}
-                      className="w-full bg-[#FAFBF9] border border-slate-200 rounded-xl px-4 py-2.5 outline-none focus:border-[#0C3823] focus:ring-2 focus:ring-[#0C3823]/15 transition-all text-xs font-bold text-slate-800" 
+                      className="w-full bg-[#FAFBF9] border border-slate-200 rounded-xl px-4 py-2.5 outline-none focus:border-[#0C3823] focus:ring-2 focus:ring-[#0C3823]/15 transition-all text-xs font-bold text-slate-800"
                     />
                   </div>
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Message</label>
-                  <textarea 
-                    rows="4" 
-                    placeholder="Describe your question or issue in detail..." 
+                  <textarea
+                    rows="4"
+                    placeholder="Describe your question or issue in detail..."
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     className="w-full bg-[#FAFBF9] border border-slate-200 rounded-xl px-4 py-2.5 outline-none focus:border-[#0C3823] focus:ring-2 focus:ring-[#0C3823]/15 transition-all text-xs font-medium text-slate-800 resize-none"
                     required
                   ></textarea>
                 </div>
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   disabled={isSubmitting}
                   className="bg-[#0C3823] hover:bg-[#FF6B00] text-white font-bold text-xs py-3 px-7 rounded-xl transition-all duration-200 shadow-md shadow-[#0C3823]/20 flex items-center gap-2 disabled:opacity-70"
                 >
@@ -163,10 +164,10 @@ const Support = () => {
               </div>
               <h3 className="font-extrabold text-slate-900 text-base mb-1">WhatsApp Support</h3>
               <p className="text-slate-600 text-xs mb-3 font-medium">Fastest way to get help. Usually replies within 5 minutes.</p>
-              <a 
-                href="https://wa.me/447700900000" 
-                target="_blank" 
-                rel="noreferrer" 
+              <a
+                href="https://wa.me/447700900000"
+                target="_blank"
+                rel="noreferrer"
                 className="text-[#25D366] font-bold text-xs flex items-center gap-1 hover:underline"
               >
                 Chat Now <FiExternalLink size={12} />

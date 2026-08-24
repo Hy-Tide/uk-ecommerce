@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FiCheck, FiSend } from 'react-icons/fi';
-import { postData, showSnackbar } from '../../services/webservices';
+import { postData } from '../../services/webservices';
+import { useToast } from '../../context/ToastContext';
 
 const ContactFormSection = () => {
+  const { showToast } = useToast();
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   
@@ -44,10 +46,10 @@ const ContactFormSection = () => {
         });
         setTimeout(() => setSubmitted(false), 5000);
       } else {
-        showSnackbar(response?.error || 'Failed to submit form', 'error');
+        showToast(response?.error || 'Failed to submit form', 'error');
       }
     } catch (error) {
-      showSnackbar('Error submitting form', 'error');
+      showToast('Error submitting form', 'error');
     } finally {
       setLoading(false);
     }

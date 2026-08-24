@@ -6,50 +6,66 @@ import { getData } from '../services/webservices';
 
 const Offers = () => {
   const [offers, setOffers] = useState([]);
+  const [banner, setBanner] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    const fetchOffers = async () => {
+    const fetchData = async () => {
       setLoading(true);
       try {
-        const res = await getData('website/offers');
-        if (res?.success && res?.data?.offers) {
-          setOffers(res.data.offers);
+        const [offersRes, bannerRes] = await Promise.all([
+          getData('website/offers'),
+          getData('website/banners/offers')
+        ]);
+        
+        if (offersRes?.success && offersRes?.data?.offers) {
+          setOffers(offersRes.data.offers);
+        }
+        
+        if (bannerRes?.success && bannerRes?.data?.banners?.length > 0) {
+          setBanner(bannerRes.data.banners[0]);
         }
       } catch (err) {
-        console.error('Failed to fetch offers:', err);
+        console.error('Failed to fetch offers data:', err);
       } finally {
         setLoading(false);
       }
     };
-    fetchOffers();
+    fetchData();
   }, []);
 
   return (
     <div className="bg-[#fcfbf9] min-h-screen pb-20">
       {/* Header Banner */}
-      <div className="bg-[#FFE57F] pt-32 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
-          <div className="absolute top-[-50px] right-[-50px] w-64 h-64 bg-[#FFD54F] rounded-full opacity-50 blur-3xl"></div>
-          <div className="absolute bottom-[-50px] left-[-50px] w-64 h-64 bg-[#FFCA28] rounded-full opacity-50 blur-3xl"></div>
+      <div className="relative w-full min-h-[400px] md:min-h-[500px] flex flex-col justify-center overflow-hidden bg-[#1D3B2A]">
+        <div className="absolute inset-0 w-full h-full">
+          <img 
+            src={banner?.image_url || 'https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&q=80&w=2000'}
+            alt={banner?.title || 'Offers'}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20"></div>
         </div>
-        <div className="container px-4 lg:px-8 mx-auto relative z-10 text-center max-w-2xl">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="inline-flex items-center gap-2 bg-white px-4 py-1.5 rounded-full text-[#FF8A00] font-bold text-sm mb-6 shadow-sm border border-[#FF8A00]/20">
-              <FiTag /> Special Deals
-            </div>
-            <h1 className="text-4xl md:text-5xl font-black text-[#0C3823] mb-4">
-              Current Offers & Promotions
-            </h1>
-            <p className="text-[#0C3823]/80 text-lg font-medium">
-              Save big on your favorite groceries. Browse our latest discounts and limited-time deals below.
-            </p>
-          </motion.div>
+        <div className="container px-4 lg:px-8 mx-auto relative z-10 pt-20 pb-16">
+          <div className="max-w-2xl">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="inline-flex items-center gap-2 bg-[#FF8A00]/20 backdrop-blur-md border border-[#FF8A00]/30 text-[#FF8A00] px-4 py-1.5 rounded-full font-bold text-sm mb-6 shadow-sm">
+                <FiTag /> Special Deals
+              </div>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
+                {banner?.title || "Current Offers & Promotions"}
+              </h1>
+              <p className="text-white/85 text-lg md:text-xl font-medium leading-relaxed">
+                {banner?.description || "Save big on your favorite groceries. Browse our latest discounts and limited-time deals below."}
+              </p>
+            </motion.div>
+          </div>
         </div>
       </div>
 
@@ -85,9 +101,13 @@ const Offers = () => {
                       alt={offer.title} 
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                    {offer.discountValue > 0 && (
+                    {offer.discountValue > 0 ? (
                       <div className="absolute top-4 left-4 bg-red-600 text-white font-black text-lg px-4 py-1.5 rounded-xl shadow-lg">
                         {offer.discountType === 'percentage' ? `${offer.discountValue}% OFF` : `£${offer.discountValue} OFF`}
+                      </div>
+                    ) : (
+                      <div className="absolute top-4 left-4 bg-[#FF8A00] text-white font-black text-sm px-4 py-1.5 rounded-xl shadow-lg uppercase tracking-wider">
+                        {offer.productCount ? `${offer.productCount} Items Inside` : 'Special Deal'}
                       </div>
                     )}
                   </div>
@@ -100,7 +120,7 @@ const Offers = () => {
                     
                     <Link 
                       to={`/offers/${offer._id || offer.id}`}
-                      className="inline-flex items-center justify-center gap-2 w-full bg-slate-50 hover:bg-[#2E8B57] text-[#2E8B57] hover:text-white border border-slate-200 hover:border-transparent font-bold py-3.5 rounded-xl transition-all"
+                      className="inline-flex items-center justify-center gap-2 w-full bg-[#FF8A00] hover:bg-[#e67a00] text-white font-bold py-3.5 rounded-full shadow-[0_4px_15px_rgba(255,138,0,0.3)] hover:shadow-[0_6px_20px_rgba(255,138,0,0.5)] transition-all duration-300"
                     >
                       Shop This Offer <FiArrowRight />
                     </Link>

@@ -2,15 +2,16 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FiMail, FiArrowLeft, FiCheckCircle } from 'react-icons/fi';
 import { ROUTES } from '../utils/constants';
-import { showSnackbar } from '../services/webservices';
+import { useToast } from '../context/ToastContext';
 
 const ForgotPassword = () => {
+  const { showToast } = useToast();
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setSubmitted(true);
-    showSnackbar('Password reset link sent to your email!', 'success');
+    showToast('Password reset link sent to your email!', 'success');
   };
 
   return (

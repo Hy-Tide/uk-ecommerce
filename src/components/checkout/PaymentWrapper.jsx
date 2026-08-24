@@ -3,7 +3,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from './CheckoutForm';
 
-export default function PaymentWrapper({ clientSecret, publishableKey }) {
+export default function PaymentWrapper({ clientSecret, publishableKey, clearCart, navigate }) {
   const [stripePromise, setStripePromise] = useState(null);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function PaymentWrapper({ clientSecret, publishableKey }) {
 
   return (
     <Elements stripe={stripePromise} options={options}>
-      <CheckoutForm />
+      <CheckoutForm clearCart={clearCart} navigate={navigate} />
     </Elements>
   );
 }

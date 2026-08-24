@@ -8,7 +8,7 @@ const SmallProductCard = ({ product }) => {
 
   return (
     <Link 
-      to={`${ROUTES.SHOP}?category=${typeof product.category === 'object' ? product.category?.slug : product.category}&product=${product.id || product._id}`}
+      to={getProductUrl(product)}
       className="flex items-center gap-4 bg-white border border-slate-100 p-3 rounded-2xl hover:border-[#379c6b]/50 hover:shadow-md transition-all min-w-[260px] md:min-w-[300px] snap-start"
     >
       <div className="w-16 h-16 bg-[#f9fafb] rounded-xl flex items-center justify-center p-1.5 flex-shrink-0">

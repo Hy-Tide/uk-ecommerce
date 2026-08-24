@@ -1,15 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FiCheckCircle, FiClock, FiStar, FiMessageCircle } from 'react-icons/fi';
+import axios from 'axios';
 
 const ContactHero = () => {
+  const [banner, setBanner] = useState(null);
+
+  useEffect(() => {
+    const fetchBanner = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}website/banners/contact-us`);
+        if (response.data.success && response.data.data.banners.length > 0) {
+          setBanner(response.data.data.banners[0]);
+        }
+      } catch (error) {
+        console.error("Error fetching contact-us banner:", error);
+      }
+    };
+    fetchBanner();
+  }, []);
   return (
     <section className="relative w-full min-h-[500px] md:min-h-[600px] flex flex-col justify-center overflow-hidden">
       {/* Background Image & Overlay */}
       <div className="absolute inset-0 w-full h-full">
-        <img 
-          src="https://images.unsplash.com/photo-1534452203293-494d7ddbf7e0?auto=format&fit=crop&q=80&w=2000" 
-          alt="Customer Support & Grocery Delivery" 
+        <img
+          src={banner?.image_url || "https://images.unsplash.com/photo-1534452203293-494d7ddbf7e0?auto=format&fit=crop&q=80&w=2000"}
+          alt={banner?.title || "Customer Support & Grocery Delivery"}
           className="w-full h-full object-cover"
         />
         {/* Premium Dark Gradient Overlay */}
@@ -32,23 +48,23 @@ const ContactHero = () => {
 
             {/* Large Heading */}
             <h1 className="text-4xl md:text-6xl font-black text-white leading-[1.1] mb-6">
-              Contact Grandma's Basket
+              {banner?.title || "Contact Grandma's Basket"}
             </h1>
 
             {/* Description */}
             <p className="text-lg md:text-xl text-white/90 leading-relaxed mb-10 max-w-xl font-medium">
-              Have questions about your order, delivery, products, or account? Our friendly support team is available to help you every step of the way.
+              {banner?.description || "Have questions about your order, delivery, products, or account? Our friendly support team is available to help you every step of the way."}
             </p>
 
             {/* Buttons */}
             <div className="flex flex-wrap items-center gap-4">
-              <a 
+              <a
                 href="#contact-form"
                 className="bg-[#2E8B57] hover:bg-[#236b43] text-white font-bold text-base px-8 py-4 rounded-[16px] shadow-[0_8px_20px_rgba(46,139,87,0.3)] hover:-translate-y-1 transition-all duration-300"
               >
                 Contact Support
               </a>
-              <a 
+              <a
                 href="/track-order"
                 className="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 text-white font-bold text-base px-8 py-4 rounded-[16px] hover:-translate-y-1 transition-all duration-300"
               >
@@ -59,7 +75,7 @@ const ContactHero = () => {
         </div>
 
         {/* Trust Badges */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}

@@ -1,9 +1,9 @@
 import React from 'react';
 import { API_URL } from './url';
 
-// Helper to show snackbars from any place
-export const showSnackbar = (message, type = 'error') => {
-  window.dispatchEvent(new CustomEvent('snack', { detail: { message, type } }));
+// Helper to dispatch global toast for non-react components
+export const dispatchToast = (message, type = 'error') => {
+  window.dispatchEvent(new CustomEvent('GLOBAL_TOAST', { detail: { message, type } }));
 };
 
 let isRefreshing = false;
@@ -56,7 +56,7 @@ const handleTokenRefresh = async () => {
         return newToken;
       }
     }
-    
+
     isRefreshing = false;
     return null;
   } catch (error) {
@@ -101,7 +101,7 @@ const getData = async (route, params = {}, token = null) => {
 
       const currentToken = sessionStorage.getItem('sessionToken');
       if (currentToken && currentToken !== 'demo_token') {
-        showSnackbar('Session timed out. Please login to continue.', 'error');
+        dispatchToast('Session timed out. Please login to continue.', 'error');
         sessionStorage.removeItem('auth_user');
         sessionStorage.removeItem('sessionToken');
         sessionStorage.removeItem('refreshToken');
@@ -115,7 +115,7 @@ const getData = async (route, params = {}, token = null) => {
     const responseData = await response.json();
 
     if (!response.ok) {
-      showSnackbar(`Response Error: ${JSON.stringify(responseData)}`, 'error');
+      dispatchToast(`Response Error: ${JSON.stringify(responseData)}`, 'error');
       return { success: false, error: Array.isArray(responseData?.errors) ? responseData.errors[0] : Array.isArray(responseData?.error) ? responseData.error[0] : responseData?.error || responseData.message, data: responseData };
     }
 
@@ -161,7 +161,7 @@ const postData = async (route, data, token) => {
 
       const currentToken = sessionStorage.getItem('sessionToken');
       if (currentToken && currentToken !== 'demo_token') {
-        showSnackbar('Session timed out. Please login to continue.', 'error');
+        dispatchToast('Session timed out. Please login to continue.', 'error');
         sessionStorage.removeItem('auth_user');
         sessionStorage.removeItem('sessionToken');
         sessionStorage.removeItem('refreshToken');
@@ -221,7 +221,7 @@ const patchData = async (route, body = {}, token = null) => {
 
       const currentToken = sessionStorage.getItem('sessionToken');
       if (currentToken && currentToken !== 'demo_token') {
-        showSnackbar('Session timed out. Please login to continue.', 'error');
+        dispatchToast('Session timed out. Please login to continue.', 'error');
         sessionStorage.removeItem('auth_user');
         sessionStorage.removeItem('sessionToken');
         sessionStorage.removeItem('refreshToken');
@@ -280,7 +280,7 @@ const putData = async (route, data, token) => {
         return retryData;
       }
 
-      showSnackbar('Session timed out. Please login to continue.', 'error');
+      dispatchToast('Session timed out. Please login to continue.', 'error');
       sessionStorage.removeItem('auth_user');
       sessionStorage.removeItem('sessionToken');
       sessionStorage.removeItem('refreshToken');
@@ -332,7 +332,7 @@ const deleteData = async (route, token) => {
         return retryData;
       }
 
-      showSnackbar('Session timed out. Please login to continue.', 'error');
+      dispatchToast('Session timed out. Please login to continue.', 'error');
       sessionStorage.removeItem('auth_user');
       sessionStorage.removeItem('sessionToken');
       sessionStorage.removeItem('refreshToken');
@@ -392,7 +392,7 @@ const uploadFile = async (route, file, token) => {
         return retryData;
       }
 
-      showSnackbar('Session timed out. Please login to continue.', 'error');
+      dispatchToast('Session timed out. Please login to continue.', 'error');
       sessionStorage.removeItem('auth_user');
       sessionStorage.removeItem('sessionToken');
       sessionStorage.removeItem('refreshToken');

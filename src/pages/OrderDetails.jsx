@@ -4,9 +4,11 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { FiPackage, FiTruck, FiCheckCircle, FiDownload, FiRefreshCw, FiMapPin, FiCreditCard } from 'react-icons/fi';
 import AccountPageHeader from '../components/account/AccountPageHeader';
 import { ROUTES } from '../utils/constants';
-import { getData, postData, showSnackbar } from '../services/webservices';
+import { getData, postData } from '../services/webservices';
+import { useToast } from '../context/ToastContext';
 
 const OrderDetails = () => {
+  const { showToast } = useToast();
   const { id } = useParams();
   const navigate = useNavigate();
   const [order, setOrder] = useState(null);
@@ -22,11 +24,11 @@ const OrderDetails = () => {
       if (res?.success && res?.data?.order) {
         setOrder(res.data.order);
       } else {
-        showSnackbar('Order not found', 'error');
+        showToast('Order not found', 'error');
         navigate('/orders');
       }
     } catch (err) {
-      showSnackbar('Failed to fetch order details', 'error');
+      showToast('Failed to fetch order details', 'error');
     } finally {
       setLoading(false);
     }
@@ -43,13 +45,13 @@ const OrderDetails = () => {
     try {
       const res = await postData(`website/orders/${id}/cancel`, {});
       if (res?.success) {
-        showSnackbar('Order cancelled successfully', 'success');
+        showToast('Order cancelled successfully', 'success');
         fetchOrderDetails();
       } else {
-        showSnackbar(res?.error || 'Failed to cancel order', 'error');
+        showToast(res?.error || 'Failed to cancel order', 'error');
       }
     } catch (err) {
-      showSnackbar('Error cancelling order', 'error');
+      showToast('Error cancelling order', 'error');
     } finally {
       setCancelling(false);
     }
@@ -60,13 +62,13 @@ const OrderDetails = () => {
     try {
       const res = await postData(`website/orders/${id}/reorder`, {});
       if (res?.success) {
-        showSnackbar('Items added to cart for reorder', 'success');
+        showToast('Items added to cart for reorder', 'success');
         navigate('/cart');
       } else {
-        showSnackbar(res?.error || 'Failed to reorder', 'error');
+        showToast(res?.error || 'Failed to reorder', 'error');
       }
     } catch (err) {
-      showSnackbar('Error during reorder', 'error');
+      showToast('Error during reorder', 'error');
     } finally {
       setReordering(false);
     }
@@ -161,10 +163,10 @@ const OrderDetails = () => {
         printWindow.document.write(htmlContent);
         printWindow.document.close();
       } else {
-        showSnackbar('Invoice not found', 'error');
+        showToast('Invoice not found', 'error');
       }
     } catch (err) {
-      showSnackbar('Failed to download invoice', 'error');
+      showToast('Failed to download invoice', 'error');
     } finally {
       setDownloading(false);
     }
