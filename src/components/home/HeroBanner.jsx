@@ -4,8 +4,6 @@ import { ROUTES } from '../../utils/constants';
 import { FiArrowRight, FiTruck, FiShield, FiStar, FiZap } from 'react-icons/fi';
 import floatingSpicesHero from '../../assets/floating-spices-hero.png';
 import grandmasBasketBg from '../../assets/grandmas_basket_bg.png';
-<<<<<<< HEAD
-=======
 import { getData } from '../../services/webservices';
 import { API_URL } from '../../services/url';
 
@@ -27,20 +25,14 @@ const HeroBanner = ({ data: cmsData }) => {
   const secondaryButtonUrl = cmsData?.secondaryButtonUrl;
 
   const bgImage = resolveImageUrl(cmsData?.backgroundImage, grandmasBasketBg);
->>>>>>> main
 
   return (
     <section className="relative w-full min-h-[520px] md:min-h-[600px] flex flex-col justify-center overflow-hidden bg-[#1D3B2A]">
       {/* Background Image & Editorial Overlay */}
       <div className="absolute inset-0 w-full h-full">
         <img
-<<<<<<< HEAD
-          src={grandmasBasketBg}
-          alt="Grandma's Basket - Authentic Indian Groceries"
-=======
           src={bgImage}
           alt="Background"
->>>>>>> main
           className="w-full h-full object-cover"
         />
         {/* Editorial Dark Forest Green Gradient Overlays */}
@@ -101,21 +93,6 @@ const HeroBanner = ({ data: cmsData }) => {
             )}
 
           </div>
-<<<<<<< HEAD
-
-          {/* Right Hero Column - Single Floating Premium Spices PNG Graphic */}
-          {/* <div className="lg:col-span-5 relative flex items-center justify-center" data-aos="fade-left" data-aos-delay="150">
-            <div className="relative z-10 w-full max-w-lg h-full flex items-center justify-center animate-[bounce_6s_easeInOut_infinite]">
-              <img
-                src={floatingSpicesHero}
-                alt="Authentic Indian Floating Spices & Herbs"
-                className="w-full max-h-[440px] object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.6)] transition-transform duration-700 hover:scale-105"
-              />
-            </div>
-          </div> */}
-
-=======
->>>>>>> main
         </div>
       </div>
     </section>
