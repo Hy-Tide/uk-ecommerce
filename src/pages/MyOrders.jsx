@@ -211,13 +211,21 @@ const MyOrders = () => {
                       >
                         <FiMapPin size={14} /> Track Order
                       </Link>
-                      <button
-                        onClick={() => handleReorder(orderId)}
-                        disabled={reorderingId === orderId}
-                        className="w-full bg-[#FAFBF9] border border-slate-200 hover:border-[#0C3823] text-slate-700 hover:text-[#0C3823] font-bold text-xs py-2.5 rounded-xl flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
-                      >
-                        <FiRefreshCw size={13} className={reorderingId === orderId ? 'animate-spin' : ''} /> {reorderingId === orderId ? 'Reordering...' : 'Buy Again'}
-                      </button>
+                      <div className="flex gap-2 w-full">
+                        <Link
+                          to={`/orders/${order._id}`}
+                          className="flex-1 bg-[#FAFBF9] border border-slate-200 hover:border-[#0C3823] text-slate-700 hover:text-[#0C3823] font-bold text-xs py-2.5 rounded-xl flex items-center justify-center gap-1.5 transition-colors"
+                        >
+                          <FiEye size={13} /> Details
+                        </Link>
+                        <button
+                          onClick={() => handleReorder(orderId)}
+                          disabled={reorderingId === orderId}
+                          className="flex-1 bg-[#FAFBF9] border border-slate-200 hover:border-[#0C3823] text-slate-700 hover:text-[#0C3823] font-bold text-xs py-2.5 rounded-xl flex items-center justify-center gap-1.5 transition-colors disabled:opacity-50"
+                        >
+                          <FiRefreshCw size={13} className={reorderingId === orderId ? 'animate-spin' : ''} /> {reorderingId === orderId ? 'Reordering...' : 'Buy Again'}
+                        </button>
+                      </div>
                     </div>
 
                   </div>

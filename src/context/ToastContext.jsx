@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiCheckCircle, FiXCircle, FiAlertTriangle, FiInfo, FiX } from 'react-icons/fi';
 
@@ -11,10 +12,10 @@ export const ToastProvider = ({ children }) => {
     setToasts((currentToasts) => currentToasts.filter((t) => t.id !== id));
   }, []);
 
-  const showToast = useCallback((message, type = 'info') => {
+  const showToast = useCallback((message, type = 'info', action = null) => {
     setToasts((currentToasts) => {
       // Deduping: Don't add a toast if an exact same message is currently active
-      if (currentToasts.some((t) => t.message === message)) {
+      if (typeof message === 'string' && currentToasts.some((t) => t.message === message)) {
         return currentToasts;
       }
 
@@ -24,7 +25,7 @@ export const ToastProvider = ({ children }) => {
         removeToast(id);
       }, 4000); // Auto-dismiss after 4 seconds
 
-      return [...currentToasts, { id, message, type, timer }];
+      return [...currentToasts, { id, message, type, timer, action }];
     });
   }, [removeToast]);
 
@@ -73,7 +74,20 @@ export const ToastProvider = ({ children }) => {
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl border shadow-lg max-w-sm w-full pointer-events-auto ${bgClasses}`}
               >
                 <Icon className={`text-xl flex-shrink-0 ${iconColor}`} />
-                <p className="text-sm font-bold flex-1 leading-tight">{toast.message}</p>
+                <div className="flex-1 flex items-center justify-between gap-3">
+                  <p className="text-sm font-bold leading-tight">{toast.message}</p>
+                  {toast.action && (
+                    <Link 
+                      to={toast.action.link} 
+                      className={`flex-shrink-0 text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1.5 rounded-lg transition-colors border shadow-xs ${
+                        isSuccess ? 'bg-emerald-600 border-emerald-700 text-white hover:bg-emerald-700' : 'bg-slate-800 border-slate-900 text-white hover:bg-black'
+                      }`}
+                      onClick={() => removeToast(toast.id)}
+                    >
+                      {toast.action.label}
+                    </Link>
+                  )}
+                </div>
                 <button 
                   onClick={() => {
                     clearTimeout(toast.timer);

@@ -1,15 +1,32 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FiPlus, FiCheck } from 'react-icons/fi';
+import { FiPlus, FiCheck, FiMinus } from 'react-icons/fi';
 import { FaStar } from 'react-icons/fa';
 import { useCart } from '../../context/CartContext';
 import { getProductUrl, resolveProductImageUrl } from '../../utils/constants';
 
 const ProductCard = ({ product, showStockProgress = false, removeImagePadding = false }) => {
-  const { addToCart } = useCart();
+  const { addToCart, cartItems, updateQuantity } = useCart();
   const [added, setAdded] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [imgError, setImgError] = useState(false);
+
+  const productId = product._id || product.id || product.productId;
+  const selectedVariation = product.variations && product.variations.length > 0 ? product.variations[0] : null;
+  const variationId = selectedVariation ? (selectedVariation._id || selectedVariation.id || selectedVariation.variationId) : null;
+
+  const cartItem = cartItems?.find(item => {
+    const itemProductId = item.productId || (item.product && (item.product._id || item.product.id)) || item.id;
+    const itemVariationId = item.variationId || (item.variation && (item.variation._id || item.variation.id)) || null;
+    
+    const sameProduct = String(itemProductId) === String(productId);
+    
+    // If the local product object (e.g. from bestDeals) has no variationId, we assume it's the default variation
+    // and match just by productId. Otherwise, we enforce variationId matching.
+    const sameVariation = !variationId || String(itemVariationId) === String(variationId);
+    
+    return sameProduct && sameVariation;
+  });
 
   const handleAddToCart = async (e) => {
     e.preventDefault();
@@ -108,35 +125,58 @@ const ProductCard = ({ product, showStockProgress = false, removeImagePadding = 
         </div>
 
         {/* Price & Add Button Row */}
-        <div className="mt-auto flex items-center justify-between pt-1">
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-lg md:text-xl font-extrabold text-[#0C3823]">
-              £{(product.variations?.[0]?.salePrice || product.discount_price || product.base_price || product.price || 0).toFixed(2)}
-            </span>
-            {(product.variations?.[0]?.regularPrice > product.variations?.[0]?.salePrice || product.oldPrice) && (
-              <span className="text-xs text-slate-400 line-through font-medium">
-                £{(product.variations?.[0]?.regularPrice || product.oldPrice || 0).toFixed(2)}
+        <div className="mt-auto flex flex-col gap-2 pt-1">
+          <div className="flex items-center justify-between">
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-lg md:text-xl font-extrabold text-[#0C3823]">
+                £{(product.variations?.[0]?.salePrice || product.discount_price || product.base_price || product.price || 0).toFixed(2)}
               </span>
+              {(product.variations?.[0]?.regularPrice > product.variations?.[0]?.salePrice || product.oldPrice) && (
+                <span className="text-xs text-slate-400 line-through font-medium">
+                  £{(product.variations?.[0]?.regularPrice || product.oldPrice || 0).toFixed(2)}
+                </span>
+              )}
+            </div>
+
+            {!cartItem ? (
+              <button
+                onClick={handleAddToCart}
+                disabled={isAdding}
+                className={`w-9 h-9 rounded-full flex items-center justify-center transition-all shadow-md active:scale-95 disabled:opacity-70 ${added
+                    ? 'bg-[#008851] text-white'
+                    : 'bg-[#0C3823] hover:bg-[#008851] text-white'
+                  }`}
+                title="Add to Cart"
+              >
+                {isAdding ? (
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                ) : added ? (
+                  <FiCheck size={16} />
+                ) : (
+                  <FiPlus size={18} />
+                )}
+              </button>
+            ) : (
+              <div className="flex items-center border border-slate-200 rounded-full h-8 bg-white overflow-hidden shadow-xs">
+                <button 
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); updateQuantity(cartItem._id || cartItem.id, cartItem.quantity - 1); }}
+                  className="w-7 h-full flex items-center justify-center text-slate-500 hover:text-[#0C3823] hover:bg-slate-50 transition-colors"
+                >
+                  <FiMinus size={12} />
+                </button>
+                <span className="w-6 flex flex-col justify-center items-center text-center text-xs font-bold text-[#0C3823]">
+                  {cartItem.quantity}
+                </span>
+                <button 
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); updateQuantity(cartItem._id || cartItem.id, cartItem.quantity + 1); }}
+                  className="w-7 h-full flex items-center justify-center text-slate-500 hover:text-[#0C3823] hover:bg-slate-50 transition-colors"
+                >
+                  <FiPlus size={12} />
+                </button>
+              </div>
             )}
           </div>
-
-          <button
-            onClick={handleAddToCart}
-            disabled={isAdding}
-            className={`w-9 h-9 rounded-full flex items-center justify-center transition-all shadow-md active:scale-95 disabled:opacity-70 ${added
-                ? 'bg-[#008851] text-white'
-                : 'bg-[#0C3823] hover:bg-[#008851] text-white'
-              }`}
-            title="Add to Cart"
-          >
-            {isAdding ? (
-              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-            ) : added ? (
-              <FiCheck size={16} />
-            ) : (
-              <FiPlus size={18} />
-            )}
-          </button>
+          
         </div>
 
         {/* Limited Stock Progress Bar (Image 5 style) */}

@@ -29,12 +29,15 @@ const AddressBook = () => {
   const [isSaving, setIsSaving] = useState(false);
 
   const [addressForm, setAddressForm] = useState({
+    name: '',
+    phone: '',
     house_number: '',
     street_address: '',
     city: '',
     county: '',
     postcode: '',
     country: 'United Kingdom',
+    address_type: 'Home',
     is_default: false
   });
 
@@ -77,12 +80,15 @@ const AddressBook = () => {
 
   const handleOpenAddModal = () => {
     setAddressForm({
+      name: '',
+      phone: '',
       house_number: '',
       street_address: '',
       city: '',
       county: '',
       postcode: '',
       country: 'United Kingdom',
+      address_type: 'Home',
       is_default: addresses.length === 0
     });
     setEditingAddressId(null);
@@ -91,12 +97,15 @@ const AddressBook = () => {
 
   const handleEditClick = (addr) => {
     setAddressForm({
+      name: addr.name || addr.firstName ? `${addr.firstName || ''} ${addr.lastName || ''}`.trim() : '',
+      phone: addr.phone || '',
       house_number: addr.house_number || '',
       street_address: addr.street_address || '',
       city: addr.city || '',
       county: addr.county || '',
       postcode: addr.postcode || '',
       country: addr.country || 'United Kingdom',
+      address_type: addr.address_type || addr.type || 'Home',
       is_default: addr.is_default || false
     });
     setEditingAddressId(addr._id || addr.id);
@@ -306,8 +315,28 @@ const AddressBook = () => {
 
             <form onSubmit={handleSaveAddress} className="p-6 space-y-4">
               <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-2">
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Full Name</label>
+                  <input
+                    type="text"
+                    value={addressForm.name}
+                    onChange={(e) => setAddressForm({ ...addressForm, name: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold focus:ring-2 focus:ring-[#0C3823]/20 focus:border-[#0C3823] outline-none"
+                    required
+                  />
+                </div>
+                <div className="col-span-2">
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Mobile Number</label>
+                  <input
+                    type="text"
+                    value={addressForm.phone}
+                    onChange={(e) => setAddressForm({ ...addressForm, phone: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold focus:ring-2 focus:ring-[#0C3823]/20 focus:border-[#0C3823] outline-none"
+                    required
+                  />
+                </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">House No.</label>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">House / Flat No.</label>
                   <input
                     type="text"
                     value={addressForm.house_number}
@@ -371,6 +400,15 @@ const AddressBook = () => {
                     className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold focus:ring-2 focus:ring-[#0C3823]/20 focus:border-[#0C3823] outline-none"
                     required
                   />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-2 pt-2 pb-1">
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Address Label</label>
+                <div className="flex items-center gap-3">
+                  <button type="button" onClick={() => setAddressForm(prev => ({ ...prev, address_type: 'Home' }))} className={`flex-1 border font-bold text-xs py-2.5 rounded-xl transition-colors ${addressForm.address_type === 'Home' ? 'border-[#0C3823] bg-[#EBF5ED] text-[#0C3823]' : 'border-slate-200 bg-white text-slate-600'}`}>Home</button>
+                  <button type="button" onClick={() => setAddressForm(prev => ({ ...prev, address_type: 'Work' }))} className={`flex-1 border font-bold text-xs py-2.5 rounded-xl transition-colors ${addressForm.address_type === 'Work' ? 'border-[#0C3823] bg-[#EBF5ED] text-[#0C3823]' : 'border-slate-200 bg-white text-slate-600'}`}>Work</button>
+                  <button type="button" onClick={() => setAddressForm(prev => ({ ...prev, address_type: 'Other' }))} className={`flex-1 border font-bold text-xs py-2.5 rounded-xl transition-colors ${addressForm.address_type === 'Other' ? 'border-[#0C3823] bg-[#EBF5ED] text-[#0C3823]' : 'border-slate-200 bg-white text-slate-600'}`}>Other</button>
                 </div>
               </div>
 

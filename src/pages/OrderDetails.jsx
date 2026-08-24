@@ -17,6 +17,7 @@ const OrderDetails = () => {
   const [cancelling, setCancelling] = useState(false);
   const [reordering, setReordering] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  const [paymentDetails, setPaymentDetails] = useState(null);
 
   const fetchOrderDetails = async () => {
     setLoading(true);
@@ -24,6 +25,9 @@ const OrderDetails = () => {
       const res = await getData(`website/orders/${id}`);
       if (res?.success && res?.data?.order) {
         setOrder(res.data.order);
+        if (res.data.order.paymentMethod === 'stripe') {
+          fetchPaymentDetails();
+        }
       } else {
         showToast('Order not found', 'error');
         navigate('/orders');
@@ -35,18 +39,45 @@ const OrderDetails = () => {
     }
   };
 
+  const fetchPaymentDetails = async () => {
+    try {
+      const res = await getData(`website/payments/${id}`);
+      if (res?.success && res?.data?.payment) {
+        setPaymentDetails(res.data.payment);
+      }
+    } catch (err) {
+      console.error('Failed to fetch payment details', err);
+    }
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchOrderDetails();
   }, [id]);
 
+  useEffect(() => {
+    // Setup polling for refund status if it's pending
+    let intervalId;
+    if (paymentDetails?.status === 'Refund_Pending') {
+      intervalId = setInterval(() => {
+        fetchPaymentDetails();
+      }, 5000); // Check every 5 seconds
+    }
+    return () => clearInterval(intervalId);
+  }, [id, paymentDetails?.status]);
+
   const handleCancelOrder = async () => {
     if (!window.confirm('Are you sure you want to cancel this order?')) return;
     setCancelling(true);
     try {
-      const res = await postData(`website/orders/${id}/cancel`, {});
+      const sessionToken = sessionStorage.getItem('sessionToken');
+      const res = await postData(`website/orders/${id}/cancel`, {}, sessionToken);
       if (res?.success) {
-        showToast('Order cancelled successfully', 'success');
+        if (order.paymentMethod === 'stripe' && order.paymentStatus !== 'pending') {
+          showToast('Cancellation successful, refund initiated', 'success');
+        } else {
+          showToast('Order cancelled successfully', 'success');
+        }
         fetchOrderDetails();
       } else {
         showToast(res?.error || 'Failed to cancel order', 'error');
@@ -61,7 +92,8 @@ const OrderDetails = () => {
   const handleReorder = async () => {
     setReordering(true);
     try {
-      const res = await postData(`website/orders/${id}/reorder`, {});
+      const sessionToken = sessionStorage.getItem('sessionToken');
+      const res = await postData(`website/orders/${id}/reorder`, {}, sessionToken);
       if (res?.success) {
         showToast('Items added to cart for reorder', 'success');
         navigate('/cart');
@@ -82,7 +114,7 @@ const OrderDetails = () => {
       if (res?.success && res?.data?.invoice) {
         const invoice = res.data.invoice;
         const printWindow = window.open('', '_blank');
-        
+
         let itemsHtml = '';
         if (invoice.items && Array.isArray(invoice.items)) {
           invoice.items.forEach(item => {
@@ -160,7 +192,7 @@ const OrderDetails = () => {
             </body>
           </html>
         `;
-        
+
         printWindow.document.write(htmlContent);
         printWindow.document.close();
       } else {
@@ -189,10 +221,10 @@ const OrderDetails = () => {
 
       <div className="container px-4 lg:px-8 max-w-5xl mx-auto">
         <div className="flex flex-col lg:flex-row gap-8">
-          
+
           {/* Main Content */}
           <div className="w-full lg:flex-1 space-y-8">
-            
+
             {/* Status Tracker */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
@@ -215,7 +247,7 @@ const OrderDetails = () => {
               <div className="relative">
                 <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-slate-100"></div>
                 <div className="space-y-8 relative z-10">
-                  
+
                   <div className="flex gap-4 items-start">
                     <div className="w-12 h-12 rounded-full bg-[#2E8B57] text-white flex items-center justify-center flex-shrink-0 shadow-sm">
                       <FiCheckCircle size={20} />
@@ -292,7 +324,7 @@ const OrderDetails = () => {
 
           {/* Sidebar */}
           <div className="w-full lg:w-96 flex-shrink-0 space-y-6">
-            
+
             {/* Actions */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
@@ -323,7 +355,7 @@ const OrderDetails = () => {
               className="bg-white rounded-[24px] border border-slate-100 shadow-sm p-6"
             >
               <h3 className="font-bold text-slate-800 text-lg mb-6 border-b pb-4">Order Summary</h3>
-              
+
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between text-slate-600 font-medium text-sm">
                   <span>Subtotal</span>
@@ -352,8 +384,8 @@ const OrderDetails = () => {
                     <FiMapPin className="text-[#FF8A00]" /> Shipping Address
                   </div>
                   <p className="text-slate-600 text-sm">
-                    {order.shippingAddress?.firstName} {order.shippingAddress?.lastName}<br/>
-                    {order.shippingAddress?.houseNumber} {order.shippingAddress?.street}<br/>
+                    {order.shippingAddress?.firstName} {order.shippingAddress?.lastName}<br />
+                    {order.shippingAddress?.houseNumber} {order.shippingAddress?.street}<br />
                     {order.shippingAddress?.city}, {order.shippingAddress?.postcode}
                   </p>
                 </div>
@@ -362,9 +394,41 @@ const OrderDetails = () => {
                   <div className="flex items-center gap-2 mb-2 text-slate-800 font-bold text-sm">
                     <FiCreditCard className="text-blue-500" /> Payment Method
                   </div>
-                  <p className="text-slate-600 text-sm capitalize">{order.paymentMethod || 'N/A'}<br/>
-                  <span className="text-xs text-slate-400">Status: {order.paymentStatus || 'Pending'}</span></p>
+                  <p className="text-slate-600 text-sm capitalize">{order.paymentMethod || 'N/A'}<br />
+                    <span className="text-xs text-slate-400">Status: {paymentDetails?.status || order.paymentStatus || 'Pending'}</span></p>
+
+                  {paymentDetails?.status === 'Refund_Pending' && (
+                    <div className="mt-2 text-xs font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded w-fit border border-orange-100 animate-pulse">
+                      Refund Initiated...
+                    </div>
+                  )}
+                  {paymentDetails?.status === 'Refunded' && (
+                    <div className="mt-2 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded w-fit border border-emerald-100">
+                      Refund Completed
+                    </div>
+                  )}
+                  {paymentDetails?.status === 'Refund_Failed' && (
+                    <div className="mt-2 text-xs font-bold text-rose-600 bg-rose-50 px-2 py-1 rounded w-fit border border-rose-100">
+                      Refund Failed
+                    </div>
+                  )}
                 </div>
+
+                {status.toLowerCase() === 'cancelled' && (
+                  <div className="p-4 bg-rose-50 rounded-xl border border-rose-100">
+                    <div className="flex items-center gap-2 mb-2 text-rose-700 font-bold text-sm">
+                      <span className="w-2 h-2 rounded-full bg-rose-500"></span> Cancellation Details
+                    </div>
+                    <p className="text-slate-600 text-sm mb-1">
+                      <span className="font-semibold text-slate-700">Reason:</span> {order.cancellationReason || order.cancellationDescription || 'Customer requested cancellation'}
+                    </p>
+                    {order.cancelledAt && (
+                      <p className="text-slate-500 text-xs">
+                        <span className="font-semibold text-slate-600">Date:</span> {new Date(order.cancelledAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
 
             </motion.div>
