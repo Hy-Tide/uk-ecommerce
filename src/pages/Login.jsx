@@ -136,7 +136,6 @@ const Login = () => {
                   required
                   className="block w-full pl-11 pr-4 py-3.5 text-sm border border-slate-200 bg-[#fafcfb] rounded-xl focus:bg-white focus:ring-2 focus:ring-[#124827]/20 focus:border-[#124827] transition-all outline-none"
                   placeholder="name@example.com"
-                  defaultValue="user@example.com"
                 />
               </div>
             </div>
@@ -157,7 +156,6 @@ const Login = () => {
                   required
                   className="block w-full pl-11 pr-11 py-3.5 text-sm border border-slate-200 bg-[#fafcfb] rounded-xl focus:bg-white focus:ring-2 focus:ring-[#124827]/20 focus:border-[#124827] transition-all outline-none"
                   placeholder="••••••••"
-                  defaultValue="password123"
                 />
                 <button
                   type="button"
