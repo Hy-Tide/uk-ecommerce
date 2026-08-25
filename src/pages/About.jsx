@@ -62,9 +62,20 @@ const About = () => {
           </h2>
 
           {/* Description */}
-          <p className="text-[#6B7280] text-[16px] lg:text-[20px] leading-[1.8] max-w-[620px] mb-[40px]">
-            We are your premier destination for authentic Grandma's Basket. From premium flours and pure rice to traditional spices, vibrant sweets, and farm-fresh produce, we deliver quality food directly to your doorstep anywhere in the UK.
-          </p>
+          <div className="text-[#6B7280] text-[16px] lg:text-[18px] leading-[1.8] max-w-[620px] mb-[40px] space-y-4">
+            <p>
+              We grew up in a joint family where Grandma was always in the kitchen — hand-roasting masalas, making snacks from scratch and cooking with a love that only a grandmother can give.
+            </p>
+            <p>
+              When we moved to the UK, we missed that feeling. Not just the food — but the warmth, the taste, the home feeling. So we decided to bring it.
+            </p>
+            <p>
+              Grandma's Basket sources authentic Indian groceries directly from villages in South India — rice, dal, spices, oils, pickles and snacks — all with Paatti's touch. So when you order from us, cook at home and eat with your family, that missing note of your Grandma will never come.
+            </p>
+            <p className="font-medium text-[#234B35]">
+              Because home is just one basket away. 🧺
+            </p>
+          </div>
 
           {/* Feature Card */}
           <motion.div
