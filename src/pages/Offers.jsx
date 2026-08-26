@@ -108,7 +108,7 @@ const Offers = () => {
                     />
                     {offer.discountValue > 0 ? (
                       <div className="absolute top-4 left-4 bg-red-600 text-white font-black text-lg px-4 py-1.5 rounded-xl shadow-lg">
-                        {offer.discountType === 'percentage' ? `${offer.discountValue}% OFF` : `£${offer.discountValue} OFF`}
+                        {offer.discountType === 'percentage' ? `${offer.discountValue}% OFF` : `€${offer.discountValue} OFF`}
                       </div>
                     ) : (
                       <div className="absolute top-4 left-4 bg-[#FF8A00] text-white font-black text-sm px-4 py-1.5 rounded-xl shadow-lg uppercase tracking-wider">

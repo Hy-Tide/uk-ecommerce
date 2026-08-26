@@ -152,7 +152,7 @@ const MyOrders = () => {
               const orderId = order._id;
               const status = order.orderStatus || 'Pending';
               const statusColor = getStatusColor(status);
-              const total = `£${(order.totalAmount || 0).toFixed(2)}`;
+              const total = `€${(order.totalAmount || 0).toFixed(2)}`;
               const itemsCount = Array.isArray(order.items) ? order.items.reduce((acc, item) => acc + (item.quantity || 1), 0) : 0;
               const date = new Date(order.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
               const shipTo = order.shippingAddress ? `${order.shippingAddress.firstName} ${order.shippingAddress.lastName}` : 'Customer';

@@ -110,7 +110,7 @@ const Register = () => {
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/15">
               <p className="text-xl font-extrabold text-[#eb5b27]">Free Shipping</p>
-              <p className="text-xs text-slate-300">On orders over £40</p>
+              <p className="text-xs text-slate-300">On orders over €40</p>
             </div>
             <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/15">
               <p className="text-xl font-extrabold text-[#eb5b27]">Fresh Promise</p>

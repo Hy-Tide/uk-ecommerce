@@ -112,11 +112,11 @@ const ShopProductCard = ({ product }) => {
         <div className="mt-auto flex items-center justify-between pt-1">
           <div className="flex items-baseline gap-1.5">
             <span className="text-lg font-extrabold text-[#0C3823]">
-              £{(currentVariation?.salePrice || product.discount_price || product.base_price || product.price || 0).toFixed(2)}
+              €{(currentVariation?.salePrice || product.discount_price || product.base_price || product.price || 0).toFixed(2)}
             </span>
             {((currentVariation?.regularPrice > currentVariation?.salePrice) || (product.base_price && product.discount_price && product.base_price > product.discount_price) || product.oldPrice) && (
               <span className="text-xs text-slate-400 line-through font-medium">
-                £{(currentVariation?.regularPrice || product.base_price || product.oldPrice).toFixed(2)}
+                €{(currentVariation?.regularPrice || product.base_price || product.oldPrice).toFixed(2)}
               </span>
             )}
           </div>

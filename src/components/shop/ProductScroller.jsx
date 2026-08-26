@@ -30,7 +30,7 @@ const SmallProductCard = ({ product }) => {
       <div className="flex flex-col flex-grow overflow-hidden">
         <span className="text-dark font-bold text-sm truncate mb-0.5">{product.name || product.title}</span>
         <span className="text-slate-400 text-[11px] font-medium mb-1.5">{product.weight || '1kg'} • {typeof product.brand === 'object' ? product.brand?.name : (product.brand || "Grandma's Basket")}</span>
-        <span className="text-dark font-black text-sm leading-none">£{(product.price || product.base_price || 0).toFixed(2)}</span>
+        <span className="text-dark font-black text-sm leading-none">€{(product.price || product.base_price || 0).toFixed(2)}</span>
       </div>
     </Link>
   );

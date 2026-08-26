@@ -25,7 +25,7 @@ const FrequentlyBought = ({ items }) => {
                 <div className="flex flex-col overflow-hidden">
                   <h4 className="text-dark font-bold text-sm truncate mb-1">{item.name}</h4>
                   <span className="text-slate-400 text-xs font-medium mb-1">10kg</span>
-                  <span className="text-dark font-black text-sm">£{item.price.toFixed(2)}</span>
+                  <span className="text-dark font-black text-sm">€{item.price.toFixed(2)}</span>
                 </div>
               </div>
               
@@ -42,7 +42,7 @@ const FrequentlyBought = ({ items }) => {
         {/* Total Price & Button */}
         <div className="flex flex-col items-center lg:items-start lg:ml-auto bg-white p-5 rounded-2xl shadow-sm border border-slate-100 min-w-[200px]">
           <span className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Total price:</span>
-          <span className="text-3xl font-black text-dark mb-4">£{totalPrice.toFixed(2)}</span>
+          <span className="text-3xl font-black text-dark mb-4">€{totalPrice.toFixed(2)}</span>
           <button className="w-full bg-[#279c66] hover:bg-[#1f7e52] text-white text-sm font-bold py-3 px-6 rounded-xl transition-colors shadow-lg shadow-green-900/20 active:scale-95">
             Add all to cart
           </button>

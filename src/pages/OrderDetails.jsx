@@ -122,8 +122,8 @@ const OrderDetails = () => {
               <tr>
                 <td style="padding: 10px; border-bottom: 1px solid #ddd;">${item.name}</td>
                 <td style="padding: 10px; border-bottom: 1px solid #ddd;">${item.quantity}</td>
-                <td style="padding: 10px; border-bottom: 1px solid #ddd;">£${item.price.toFixed(2)}</td>
-                <td style="padding: 10px; border-bottom: 1px solid #ddd;">£${(item.quantity * item.price).toFixed(2)}</td>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;">€${item.price.toFixed(2)}</td>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;">€${(item.quantity * item.price).toFixed(2)}</td>
               </tr>
             `;
           });
@@ -179,10 +179,10 @@ const OrderDetails = () => {
                 </tbody>
               </table>
               <div class="summary">
-                <p>Subtotal: £${(invoice.subTotal || 0).toFixed(2)}</p>
-                <p>Shipping: £${(invoice.shippingFee || 0).toFixed(2)}</p>
-                <p>Discount: £${(invoice.discount || 0).toFixed(2)}</p>
-                <h3>Total: £${(invoice.total || 0).toFixed(2)}</h3>
+                <p>Subtotal: €${(invoice.subTotal || 0).toFixed(2)}</p>
+                <p>Shipping: €${(invoice.shippingFee || 0).toFixed(2)}</p>
+                <p>Discount: €${(invoice.discount || 0).toFixed(2)}</p>
+                <h3>Total: €${(invoice.total || 0).toFixed(2)}</h3>
               </div>
               <script>
                 window.onload = function() {
@@ -313,7 +313,7 @@ const OrderDetails = () => {
                       <p className="text-slate-500 text-sm font-medium">Qty: {item.quantity}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-slate-800">£{(item.price || 0).toFixed(2)}</p>
+                      <p className="font-bold text-slate-800">€{(item.price || 0).toFixed(2)}</p>
                     </div>
                   </div>
                 ))}
@@ -359,22 +359,22 @@ const OrderDetails = () => {
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between text-slate-600 font-medium text-sm">
                   <span>Subtotal</span>
-                  <span className="font-bold text-slate-800">£{(order.subTotal || 0).toFixed(2)}</span>
+                  <span className="font-bold text-slate-800">€{(order.subTotal || 0).toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-slate-600 font-medium text-sm">
                   <span>Shipping</span>
-                  <span className="font-bold text-slate-800">£{(order.shippingFee || 0).toFixed(2)}</span>
+                  <span className="font-bold text-slate-800">€{(order.shippingFee || 0).toFixed(2)}</span>
                 </div>
                 {order.discountAmount > 0 && (
                   <div className="flex justify-between text-slate-600 font-medium text-sm">
                     <span>Discount</span>
-                    <span className="font-bold text-emerald-600">-£{(order.discountAmount || 0).toFixed(2)}</span>
+                    <span className="font-bold text-emerald-600">-€{(order.discountAmount || 0).toFixed(2)}</span>
                   </div>
                 )}
                 <div className="h-px bg-slate-100 my-2"></div>
                 <div className="flex justify-between items-center">
                   <span className="font-bold text-slate-800">Total</span>
-                  <span className="font-black text-xl text-[#2E8B57]">£{(order.totalAmount || 0).toFixed(2)}</span>
+                  <span className="font-black text-xl text-[#2E8B57]">€{(order.totalAmount || 0).toFixed(2)}</span>
                 </div>
               </div>
 

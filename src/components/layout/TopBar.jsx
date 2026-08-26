@@ -11,7 +11,7 @@ const TopBar = () => {
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-2 text-white">
             <FiTruck className="text-[#eb5b27]" size={14} />
-            <span><span className="font-bold">Free delivery</span> on orders over £40</span>
+            <span><span className="font-bold">Free delivery</span> on orders over €40</span>
           </div>
           <div className="w-[1px] h-3 bg-white/20"></div>
           <div className="flex items-center gap-2">

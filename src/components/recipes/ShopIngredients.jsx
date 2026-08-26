@@ -20,7 +20,7 @@ const ingredientsData = [
     rating: 4.8,
     reviews: 320,
     image: basmatiImg,
-    discountAmount: 'Save £3.51',
+    discountAmount: 'Save €3.51',
     badge: { type: 'hot', text: 'Best Seller' }
   },
   {

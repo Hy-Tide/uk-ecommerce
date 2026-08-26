@@ -6,7 +6,7 @@ import AccountPageHeader from '../components/account/AccountPageHeader';
 const dummyHistory = [
   { id: 1, action: 'Order #ORD-2026-8924', date: '12 Jul 2026', points: '+45', type: 'earned' },
   { id: 2, action: 'Product Review (Turmeric)', date: '10 Jul 2026', points: '+15', type: 'earned' },
-  { id: 3, action: 'Redeemed £5 Voucher', date: '01 Jul 2026', points: '-500', type: 'redeemed' },
+  { id: 3, action: 'Redeemed €5 Voucher', date: '01 Jul 2026', points: '-500', type: 'redeemed' },
   { id: 4, action: 'Order #ORD-2026-8901', date: '02 Jul 2026', points: '+112', type: 'earned' },
 ];
 
@@ -56,7 +56,7 @@ const Rewards = () => {
               </div>
               
               <div className="bg-black/20 p-6 flex items-center justify-between backdrop-blur-md">
-                <p className="text-white/90 font-medium">Value: <strong className="text-xl">£12.45</strong></p>
+                <p className="text-white/90 font-medium">Value: <strong className="text-xl">€12.45</strong></p>
                 <button className="bg-white text-[#2E8B57] font-bold px-6 py-2.5 rounded-xl hover:bg-slate-50 transition-colors shadow-md">
                   Redeem Now
                 </button>
@@ -114,7 +114,7 @@ const Rewards = () => {
                   </div>
                   <div>
                     <h4 className="font-bold text-slate-800 text-sm">Shop Groceries</h4>
-                    <p className="text-slate-500 text-xs">Earn 1 point for every £1 spent on any order.</p>
+                    <p className="text-slate-500 text-xs">Earn 1 point for every €1 spent on any order.</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">

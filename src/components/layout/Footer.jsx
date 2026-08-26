@@ -28,7 +28,7 @@ const Footer = () => {
             </div>
             <div>
               <h5 className="font-bold text-[#0C3823] text-xs md:text-sm">Free UK Express Shipping</h5>
-              <p className="text-[11px] text-slate-500">On all orders over £45</p>
+              <p className="text-[11px] text-slate-500">On all orders over €45</p>
             </div>
           </div>
 

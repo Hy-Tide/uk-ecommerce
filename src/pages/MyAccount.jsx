@@ -76,8 +76,8 @@ const MyAccount = () => {
                 </thead>
                 <tbody className="text-sm">
                   {[
-                    { id: '#UK-294182', date: 'Oct 12, 2024', total: '£45.99', status: 'Delivered', statusColor: 'bg-green-100 text-green-700' },
-                    { id: '#UK-294183', date: 'Oct 15, 2024', total: '£12.50', status: 'Processing', statusColor: 'bg-blue-100 text-blue-700' },
+                    { id: '#UK-294182', date: 'Oct 12, 2024', total: '€45.99', status: 'Delivered', statusColor: 'bg-green-100 text-green-700' },
+                    { id: '#UK-294183', date: 'Oct 15, 2024', total: '€12.50', status: 'Processing', statusColor: 'bg-blue-100 text-blue-700' },
                   ].map((order, idx) => (
                     <tr key={idx} className="border-b border-slate-50 hover:bg-slate-50 transition-colors">
                       <td className="py-4 font-medium text-dark">{order.id}</td>
@@ -107,7 +107,7 @@ const MyAccount = () => {
                   <h4 className="font-bold text-sm text-dark truncate">Organic Apples</h4>
                   <p className="text-xs text-slate-500 mb-2">500g</p>
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-primary text-sm">£2.99</span>
+                    <span className="font-bold text-primary text-sm">€2.99</span>
                     <button className="w-8 h-8 rounded-full bg-primary-50 text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
                       <FiShoppingBag className="w-4 h-4" />
                     </button>

@@ -13,12 +13,14 @@ import {
   FiPackage,
   FiAward,
   FiPlus,
-  FiX
+  FiX,
+  FiEdit2
 } from 'react-icons/fi';
 import { FaCcStripe } from 'react-icons/fa';
 import { useCart } from '../context/CartContext';
-import { getData, postData } from '../services/webservices';
+import { getData, postData, putData } from '../services/webservices';
 import { useToast } from '../context/ToastContext';
+import { CURRENCY_SYMBOL } from '../utils/constants';
 import PaymentWrapper from '../components/checkout/PaymentWrapper';
 
 const Checkout = () => {
@@ -30,6 +32,7 @@ const Checkout = () => {
   const [addresses, setAddresses] = useState([]);
   const [selectedAddressId, setSelectedAddressId] = useState('');
   const [isAddingAddress, setIsAddingAddress] = useState(false);
+  const [editingAddressId, setEditingAddressId] = useState(null);
   const [isSavingAddress, setIsSavingAddress] = useState(false);
   const [addressForm, setAddressForm] = useState({
     name: '',
@@ -146,6 +149,32 @@ const Checkout = () => {
     }));
   };
 
+  const handleOpenAddModal = () => {
+    setAddressForm({
+      name: '', phone: '', house_number: '', street_address: '', city: '', county: '', postcode: '', country: 'United Kingdom', address_type: 'Home', is_default: true
+    });
+    setEditingAddressId(null);
+    setIsAddingAddress(true);
+  };
+
+  const handleEditClick = (e, addr) => {
+    e.stopPropagation();
+    setAddressForm({
+      name: addr.name || (user ? `${user.first_name || ''} ${user.last_name || ''}`.trim() : ''),
+      phone: addr.phone || user?.phone || '',
+      house_number: addr.house_number || '',
+      street_address: addr.street_address || '',
+      city: addr.city || '',
+      county: addr.county || '',
+      postcode: addr.postcode || '',
+      country: addr.country || 'United Kingdom',
+      address_type: addr.address_type || addr.type || 'Home',
+      is_default: addr.is_default || false
+    });
+    setEditingAddressId(addr._id || addr.id);
+    setIsAddingAddress(true);
+  };
+
   const handleSaveAddress = async (e) => {
     e.preventDefault();
     if (!addressForm.house_number || !addressForm.street_address || !addressForm.city || !addressForm.postcode || !addressForm.name || !addressForm.phone) {
@@ -156,24 +185,39 @@ const Checkout = () => {
     setIsSavingAddress(true);
     const token = sessionStorage.getItem('sessionToken');
     try {
-      const response = await postData('website/users/addresses', addressForm, token);
-      
-      const newAddress = {
-        _id: response?.data?._id || response?.data?.id || `addr_${Date.now()}`,
-        id: `addr_${Date.now()}`,
-        ...addressForm
-      };
+      let response = null;
+      if (editingAddressId) {
+        response = await putData(`website/users/addresses/${editingAddressId}`, addressForm, token);
+      } else {
+        response = await postData('website/users/addresses', addressForm, token);
+      }
       
       let updatedList = [...addresses];
-      if (addressForm.is_default) {
-        updatedList = updatedList.map(a => ({ ...a, is_default: false }));
+      
+      if (editingAddressId) {
+        updatedList = updatedList.map(a =>
+          (a._id === editingAddressId || a.id === editingAddressId)
+            ? { ...a, ...addressForm }
+            : (addressForm.is_default ? { ...a, is_default: false } : a)
+        );
+      } else {
+        const newAddress = {
+          _id: response?.data?._id || response?.data?.id || `addr_${Date.now()}`,
+          id: `addr_${Date.now()}`,
+          ...addressForm
+        };
+        
+        if (addressForm.is_default) {
+          updatedList = updatedList.map(a => ({ ...a, is_default: false }));
+        }
+        updatedList.push(newAddress);
+        setSelectedAddressId(newAddress._id || newAddress.id);
       }
-      updatedList.push(newAddress);
       
       setAddresses(updatedList);
-      setSelectedAddressId(newAddress._id || newAddress.id);
       setIsAddingAddress(false);
-      showToast('Address added successfully', 'success');
+      setEditingAddressId(null);
+      showToast(editingAddressId ? 'Address updated successfully' : 'Address added successfully', 'success');
       
       setAddressForm({
         name: '', phone: '', house_number: '', street_address: '', city: '', county: '', postcode: '', country: 'United Kingdom', address_type: 'Home', is_default: true
@@ -343,7 +387,7 @@ const Checkout = () => {
                   <div className="text-center py-6">
                     <p className="text-slate-500 mb-4 font-medium text-sm">You have no saved delivery addresses.</p>
                     <button
-                      onClick={() => setIsAddingAddress(true)}
+                      onClick={handleOpenAddModal}
                       className="bg-[#124827] text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-colors shadow-sm"
                     >
                       + Add New Address
@@ -384,13 +428,21 @@ const Checkout = () => {
                                 Mobile: <span className="font-extrabold">{phone}</span>
                               </p>
                             </div>
+                            
+                            <button
+                              onClick={(e) => handleEditClick(e, addr)}
+                              className="text-slate-400 hover:text-[#124827] p-2 transition-colors flex shrink-0 bg-white hover:bg-slate-50 rounded-lg border border-transparent hover:border-slate-200"
+                              title="Edit Address"
+                            >
+                              <FiEdit2 size={16} />
+                            </button>
                           </div>
                         </div>
                       );
                     })}
                     
                     <button
-                      onClick={() => setIsAddingAddress(true)}
+                      onClick={handleOpenAddModal}
                       className="mt-2 w-full py-4 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center gap-2 text-slate-500 font-extrabold text-sm hover:border-[#124827] hover:text-[#124827] hover:bg-[#F4F9F5] transition-all cursor-pointer"
                     >
                       <FiPlus size={18} /> Add a New Address
@@ -542,7 +594,7 @@ const Checkout = () => {
                         </div>
                         <div className="flex flex-col items-end text-right">
                           <span className="text-xs font-semibold text-slate-500 mb-1">Qty: {item.quantity}</span>
-                          <span className="text-sm font-black text-[#124827]">┬뿯½{(price * item.quantity).toFixed(2)}</span>
+                          <span className="text-sm font-black text-[#124827]">{CURRENCY_SYMBOL}{(price * item.quantity).toFixed(2)}</span>
                         </div>
                       </div>
                       {index < cartItems.length - 1 && <div className="h-[1px] bg-slate-100 w-full mt-4"></div>}
@@ -554,7 +606,7 @@ const Checkout = () => {
 
                 <div className="flex items-center justify-between pt-2">
                   <span className="text-base font-black text-slate-900">Total Order Amount:</span>
-                  <span className="text-2xl font-black text-[#124827]">┬뿯½{grandTotal.toFixed(2)}</span>
+                  <span className="text-2xl font-black text-[#124827]">{CURRENCY_SYMBOL}{grandTotal.toFixed(2)}</span>
                 </div>
               </div>
             </div>
@@ -576,28 +628,28 @@ const Checkout = () => {
                   <div className="flex flex-col gap-3 mb-6 text-xs font-semibold">
                     <div className="flex justify-between text-slate-600">
                       <span>Subtotal</span>
-                      <span className="text-slate-900 font-bold">┬뿯½{subtotal.toFixed(2)}</span>
+                      <span className="text-slate-900 font-bold">{CURRENCY_SYMBOL}{subtotal.toFixed(2)}</span>
                     </div>
                     {discount > 0 && (
                       <div className="flex justify-between text-[#eb5b27]">
                         <span>Discount</span>
-                        <span className="font-extrabold">- ┬뿯½{discount.toFixed(2)}</span>
+                        <span className="font-extrabold">- {CURRENCY_SYMBOL}{discount.toFixed(2)}</span>
                       </div>
                     )}
                     <div className="flex justify-between text-[#124827]">
                       <span>Delivery Charge</span>
-                      <span className="font-bold">{deliveryCharge === 0 ? 'FREE' : `┬뿯½${deliveryCharge.toFixed(2)}`}</span>
+                      <span className="font-bold">{deliveryCharge === 0 ? 'FREE' : `${CURRENCY_SYMBOL}${deliveryCharge.toFixed(2)}`}</span>
                     </div>
                     <div className="flex justify-between text-slate-600">
                       <span>Tax (VAT 5%)</span>
-                      <span className="text-slate-900 font-bold">┬뿯½{tax.toFixed(2)}</span>
+                      <span className="text-slate-900 font-bold">{CURRENCY_SYMBOL}{tax.toFixed(2)}</span>
                     </div>
                   </div>
 
                   <div className="border-t border-slate-100 pt-4 mb-6">
                     <div className="flex justify-between items-end">
                       <span className="text-slate-900 font-extrabold text-base">Grand Total</span>
-                      <span className="text-[#124827] font-black text-3xl">┬뿯½{grandTotal.toFixed(2)}</span>
+                      <span className="text-[#124827] font-black text-3xl">{CURRENCY_SYMBOL}{grandTotal.toFixed(2)}</span>
                     </div>
                   </div>
 
@@ -652,7 +704,7 @@ const Checkout = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
           <div className="bg-white rounded-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-100">
             <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white z-10">
-              <h3 className="font-extrabold text-lg text-slate-900">Add New Address</h3>
+              <h3 className="font-extrabold text-lg text-slate-900">{editingAddressId ? 'Edit Address' : 'Add New Address'}</h3>
               <button
                 onClick={() => setIsAddingAddress(false)}
                 className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center hover:bg-slate-200 transition-colors"
@@ -712,7 +764,7 @@ const Checkout = () => {
                 disabled={isSavingAddress}
                 className="w-full bg-[#0C3823] hover:bg-[#155a38] text-white font-extrabold py-3.5 rounded-xl transition-all shadow-lg shadow-[#0C3823]/20 disabled:opacity-50 flex items-center justify-center gap-2"
               >
-                {isSavingAddress ? <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span> : 'Save & Use This Address'}
+                {isSavingAddress ? <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span> : (editingAddressId ? 'Update & Use This Address' : 'Save & Use This Address')}
               </button>
             </form>
           </div>

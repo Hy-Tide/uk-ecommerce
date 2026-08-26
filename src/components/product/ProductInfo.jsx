@@ -33,7 +33,7 @@ const ProductInfo = ({ product }) => {
   const displayPrice = currentVariation?.salePrice || product.discount_price || product.price || 0;
   const displayOldPrice = currentVariation?.regularPrice || product.base_price || product.oldPrice || null;
   const showOldPrice = displayOldPrice && displayOldPrice > displayPrice;
-  const displaySavings = showOldPrice ? `You Save £${(displayOldPrice - displayPrice).toFixed(2)}` : null;
+  const displaySavings = showOldPrice ? `You Save €${(displayOldPrice - displayPrice).toFixed(2)}` : null;
 
   const inWishlist = isInWishlist(product._id || product.id);
 
@@ -88,10 +88,10 @@ const ProductInfo = ({ product }) => {
 
       {/* Price Area */}
       <div className="flex items-end gap-4 mb-6">
-        <span className="text-4xl font-black text-[#124827] leading-none">£{displayPrice.toFixed(2)}</span>
+        <span className="text-4xl font-black text-[#124827] leading-none">€{displayPrice.toFixed(2)}</span>
         {showOldPrice && (
           <div className="flex flex-col mb-1">
-            <span className="text-sm text-slate-400 line-through font-medium">£{displayOldPrice.toFixed(2)}</span>
+            <span className="text-sm text-slate-400 line-through font-medium">€{displayOldPrice.toFixed(2)}</span>
             <span className="text-[#eb5b27] text-xs font-bold">{displaySavings}</span>
           </div>
         )}

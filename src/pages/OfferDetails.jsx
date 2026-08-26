@@ -66,7 +66,7 @@ const OfferDetails = () => {
           </Link>
           <div className="flex items-center gap-3 mb-4">
             <span className="bg-red-600 text-white font-black text-sm px-3 py-1 rounded-lg">
-              {offer.discountValue > 0 ? (offer.discountType === 'percentage' ? `${offer.discountValue}% OFF` : `£${offer.discountValue} OFF`) : 'SPECIAL OFFER'}
+              {offer.discountValue > 0 ? (offer.discountType === 'percentage' ? `${offer.discountValue}% OFF` : `€${offer.discountValue} OFF`) : 'SPECIAL OFFER'}
             </span>
           </div>
           <h1 className="text-4xl md:text-5xl font-black text-white mb-4 max-w-3xl">

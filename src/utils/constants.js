@@ -1,5 +1,5 @@
-export const CURRENCY_SYMBOL = '£';
-export const CURRENCY_CODE = 'GBP';
+export const CURRENCY_SYMBOL = '€';
+export const CURRENCY_CODE = 'EUR';
 
 export const ROUTES = {
   HOME: '/',
@@ -39,9 +39,10 @@ export const ROUTES = {
 };
 
 export const getProductUrl = (product) => {
-  const cat = typeof product.category === 'object' ? product.category?.slug : (product.category || 'all');
-  const sub = typeof product.subCategory === 'object' ? product.subCategory?.slug : (product.subCategory || 'all');
-  return `/category/${cat}/${sub}/${product.slug || 'product'}`;
+  if (!product) return '/';
+  const cat = typeof product.category === 'object' ? product.category?.slug || 'all' : (product.category || 'all');
+  const sub = typeof product.subCategory === 'object' ? product.subCategory?.slug || 'all' : (product.subCategory || 'all');
+  return `/category/${cat}/${sub}/${product.slug || product._id || product.id || product.productId || 'product'}`;
 };
 
 export const resolveProductImageUrl = (product) => {

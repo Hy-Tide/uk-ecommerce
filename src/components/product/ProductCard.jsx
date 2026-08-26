@@ -129,11 +129,11 @@ const ProductCard = ({ product, showStockProgress = false, removeImagePadding = 
           <div className="flex items-center justify-between">
             <div className="flex items-baseline gap-1.5">
               <span className="text-lg md:text-xl font-extrabold text-[#0C3823]">
-                £{(product.variations?.[0]?.salePrice || product.discount_price || product.base_price || product.price || 0).toFixed(2)}
+                €{(product.variations?.[0]?.salePrice || product.discount_price || product.base_price || product.price || 0).toFixed(2)}
               </span>
               {(product.variations?.[0]?.regularPrice > product.variations?.[0]?.salePrice || product.oldPrice) && (
                 <span className="text-xs text-slate-400 line-through font-medium">
-                  £{(product.variations?.[0]?.regularPrice || product.oldPrice || 0).toFixed(2)}
+                  €{(product.variations?.[0]?.regularPrice || product.oldPrice || 0).toFixed(2)}
                 </span>
               )}
             </div>

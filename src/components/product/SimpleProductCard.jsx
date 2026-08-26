@@ -79,9 +79,9 @@ const SimpleProductCard = ({ product }) => {
         <div className="text-xs text-slate-500 mb-2 font-medium">{product.weight}</div>
 
         <div className="flex items-center gap-1.5 mb-3 mt-auto">
-          <span className="text-[16px] font-black text-dark">£{product.price.toFixed(2)}</span>
+          <span className="text-[16px] font-black text-dark">€{product.price.toFixed(2)}</span>
           {product.oldPrice && (
-            <span className="text-[11px] text-slate-400 line-through font-medium">£{product.oldPrice.toFixed(2)}</span>
+            <span className="text-[11px] text-slate-400 line-through font-medium">€{product.oldPrice.toFixed(2)}</span>
           )}
         </div>
 

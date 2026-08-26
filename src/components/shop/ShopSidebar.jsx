@@ -66,12 +66,12 @@ const ShopSidebar = () => {
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
             <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Min Price</span>
-            <div className="border border-slate-200 rounded-xl px-3 py-1.5 w-20 text-xs font-extrabold text-[#124827] text-center bg-[#fafcfb]">£10.00</div>
+            <div className="border border-slate-200 rounded-xl px-3 py-1.5 w-20 text-xs font-extrabold text-[#124827] text-center bg-[#fafcfb]">€10.00</div>
           </div>
           <span className="text-slate-300 font-bold mt-4">-</span>
           <div className="flex flex-col text-right items-end">
             <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Max Price</span>
-            <div className="border border-slate-200 rounded-xl px-3 py-1.5 w-20 text-xs font-extrabold text-[#124827] text-center bg-[#fafcfb]">£120.00</div>
+            <div className="border border-slate-200 rounded-xl px-3 py-1.5 w-20 text-xs font-extrabold text-[#124827] text-center bg-[#fafcfb]">€120.00</div>
           </div>
         </div>
       </div>

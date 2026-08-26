@@ -139,7 +139,7 @@ const Cart = () => {
                               </div>
                             )}
                             <div className="text-2xl font-black text-[#124827] mb-3">
-                              £{price.toFixed(2)}
+                              €{price.toFixed(2)}
                             </div>
                             
                             {/* Stock Badge */}
@@ -177,7 +177,7 @@ const Cart = () => {
                             </div>
 
                             <div className="text-xs font-semibold text-slate-500 mb-4 text-right">
-                              Subtotal: <span className="text-[#124827] font-black text-sm">£{(price * item.quantity).toFixed(2)}</span>
+                              Subtotal: <span className="text-[#124827] font-black text-sm">€{(price * item.quantity).toFixed(2)}</span>
                             </div>
 
                             <button 
@@ -295,7 +295,7 @@ const Cart = () => {
                       {item.weight}
                     </div>
                     <div className="text-sm font-black text-[#124827] mb-3 mt-auto">
-                      £{item.price.toFixed(2)}
+                      €{item.price.toFixed(2)}
                     </div>
                     <Link to={ROUTES.SHOP} className="w-full bg-[#124827] hover:bg-[#1c6b3b] text-white font-bold text-xs py-2 rounded-xl transition-colors flex items-center justify-center">
                       View Item
@@ -321,30 +321,30 @@ const Cart = () => {
                   <div className="flex flex-col gap-4 mb-6 text-xs font-semibold">
                     <div className="flex justify-between text-slate-600">
                       <span>Subtotal ({cartItems.length} items)</span>
-                      <span className="text-slate-900 font-bold">£{subtotal.toFixed(2)}</span>
+                      <span className="text-slate-900 font-bold">€{subtotal.toFixed(2)}</span>
                     </div>
                     {discount > 0 && (
                       <div className="flex justify-between text-[#eb5b27]">
                         <span>Discount {appliedCoupon ? `(${appliedCoupon})` : ''}</span>
-                        <span className="font-extrabold">- £{discount.toFixed(2)}</span>
+                        <span className="font-extrabold">- €{discount.toFixed(2)}</span>
                       </div>
                     )}
                     <div className="flex justify-between text-[#124827]">
                       <span>Delivery Charge</span>
-                      <span className="font-bold">{delivery === 0 ? 'FREE' : `£${delivery.toFixed(2)}`}</span>
+                      <span className="font-bold">{delivery === 0 ? 'FREE' : `€${delivery.toFixed(2)}`}</span>
                     </div>
                   </div>
 
                   <div className="border-t border-slate-100 pt-4 mb-6">
                     <div className="flex justify-between items-end">
                       <span className="text-slate-900 font-extrabold text-base">Grand Total</span>
-                      <span className="text-[#124827] font-black text-3xl">£{total.toFixed(2)}</span>
+                      <span className="text-[#124827] font-black text-3xl">€{total.toFixed(2)}</span>
                     </div>
                   </div>
 
                   {discount > 0 && (
                     <div className="bg-[#e8f5ed] text-[#124827] text-xs font-bold p-3 rounded-xl flex items-center gap-2 mb-6 text-center justify-center border border-[#124827]/20">
-                      You're saving £{discount.toFixed(2)} on this order!
+                      You're saving €{discount.toFixed(2)} on this order!
                     </div>
                   )}
 

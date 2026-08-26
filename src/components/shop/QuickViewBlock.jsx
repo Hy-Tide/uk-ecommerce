@@ -39,9 +39,9 @@ const QuickViewBlock = () => {
 
           <div className="flex items-center gap-6">
             <div className="flex flex-col">
-              <span className="text-3xl font-black text-dark leading-none mb-1">£12.00</span>
+              <span className="text-3xl font-black text-dark leading-none mb-1">€12.00</span>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-slate-400 line-through font-medium">£13.50</span>
+                <span className="text-sm text-slate-400 line-through font-medium">€13.50</span>
                 <span className="text-[#379c6b] text-xs font-bold bg-[#e8f5ed] px-2 py-0.5 rounded-sm">Save 11%</span>
               </div>
             </div>

@@ -133,9 +133,9 @@ export const blogArticles = [
 ];
 
 export const recipeIngredientsDummy = [
-  { id: 'i1', name: 'Tilda Pure Basmati Rice 1kg', price: '£4.50', qty: '2 Cups', image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=200' },
-  { id: 'i2', name: 'Lakshmi Premium Ghee 500g', price: '£6.99', qty: '3 tbsp', image: 'https://images.unsplash.com/photo-1626082895617-2c6b484a0d9c?auto=format&fit=crop&q=80&w=200' },
-  { id: 'i3', name: 'MDH Garam Masala 100g', price: '£1.75', qty: '1 tsp', image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=200' }
+  { id: 'i1', name: 'Tilda Pure Basmati Rice 1kg', price: '€4.50', qty: '2 Cups', image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=200' },
+  { id: 'i2', name: 'Lakshmi Premium Ghee 500g', price: '€6.99', qty: '3 tbsp', image: 'https://images.unsplash.com/photo-1626082895617-2c6b484a0d9c?auto=format&fit=crop&q=80&w=200' },
+  { id: 'i3', name: 'MDH Garam Masala 100g', price: '€1.75', qty: '1 tsp', image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=200' }
 ];
 
 export const blogCommentsDummy = [

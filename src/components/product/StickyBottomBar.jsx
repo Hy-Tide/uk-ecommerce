@@ -40,9 +40,9 @@ const StickyBottomBar = ({ product }) => {
         {/* Right Side: Price & Action */}
         <div className="flex items-center justify-between w-full md:w-auto md:justify-end gap-6 ml-auto">
           <div className="flex flex-col items-start md:items-end">
-            <span className="text-xl font-black text-dark leading-none">£{product.price.toFixed(2)}</span>
-            {product.oldPrice && (
-              <span className="text-[10px] text-slate-400 line-through font-medium leading-none mt-1">£{product.oldPrice.toFixed(2)}</span>
+            <span className="text-xl font-black text-dark leading-none">€{Number(product?.price || 0).toFixed(2)}</span>
+            {product?.oldPrice && (
+              <span className="text-[10px] text-slate-400 line-through font-medium leading-none mt-1">€{Number(product.oldPrice || 0).toFixed(2)}</span>
             )}
           </div>
           <button className="bg-[#279c66] hover:bg-[#1f7e52] text-white text-sm font-bold py-3 px-8 rounded-xl flex items-center gap-2 transition-colors active:scale-95 shadow-md shadow-green-900/10">
