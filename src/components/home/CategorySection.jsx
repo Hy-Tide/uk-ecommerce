@@ -5,7 +5,7 @@ import { FiArrowRight } from 'react-icons/fi';
 import { getData } from '../../services/webservices';
 
 const bgColors = [
-  'bg-[#657D1B]', 'bg-[#6B1C88]', 'bg-[#00796B]', 
+  'bg-[#657D1B]', 'bg-[#6B1C88]', 'bg-[#00796B]',
   'bg-[#7B3F00]', 'bg-[#8A0B0B]', 'bg-[#0B4F9C]'
 ];
 

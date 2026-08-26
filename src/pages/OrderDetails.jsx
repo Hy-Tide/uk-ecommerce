@@ -306,7 +306,7 @@ const OrderDetails = () => {
                 {(order.items || []).map(item => (
                   <div key={item._id || item.id} className="flex items-center gap-4 py-4 first:pt-0 last:pb-0">
                     <div className="w-20 h-20 rounded-xl border border-slate-100 p-2 flex-shrink-0">
-                      <img src={item.product?.images?.[0] || 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=100'} alt={item.name} className="w-full h-full object-contain rounded-lg" />
+                      <img src={item.product?.images?.[0]} alt={item.name} className="w-full h-full object-contain rounded-lg" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="font-bold text-slate-800 truncate mb-1">{item.name}</h4>

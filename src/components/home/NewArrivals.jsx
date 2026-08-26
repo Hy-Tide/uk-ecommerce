@@ -12,7 +12,7 @@ const NewArrivals = ({ data }) => {
 
   return (
     <section className="container py-12 md:py-16">
-      
+
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 md:mb-10" data-aos="fade-up">
         <div>
@@ -31,7 +31,7 @@ const NewArrivals = ({ data }) => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {newArrivals.slice(0, 5).map((product, index) => (
           <div key={product._id || product.id || product.productId || index} data-aos="fade-up" data-aos-delay={index * 100}>
-            <ProductCard product={{...product, badge: { type: 'new' }}} />
+            <ProductCard product={{ ...product, badge: { type: 'new' } }} />
           </div>
         ))}
       </div>

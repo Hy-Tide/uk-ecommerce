@@ -43,16 +43,16 @@ const Home = () => {
       <HeroBanner data={safeHomeData.banners} isLoading={loading} />
       <FeaturesSection data={safeHomeData.features} />
       <PromoBanners data={safeHomeData.offers} isLoading={loading} />
-      
+
       <CategorySection data={safeHomeData.categories} />
       <FeaturedProducts bestDealsData={safeHomeData.bestDeals} limitedProductsData={safeHomeData.limitedProducts} isLoading={loading} />
       <OfferBanner data={safeHomeData.subscriptionBanner} isLoading={loading} />
       <RecommendedProducts data={{}} />
       <Brands data={safeHomeData.brands} />
       <NewArrivals data={safeHomeData.newArrivals} />
-      
+
       <RecentlyViewed />
-      
+
       <Recipes data={safeHomeData.popularRecipes} />
       <Testimonials data={safeHomeData.testimonials} />
       <Newsletter />
