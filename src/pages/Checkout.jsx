@@ -246,9 +246,9 @@ const Checkout = () => {
       const token = sessionStorage.getItem('sessionToken');
       
       const finalShippingAddress = {
-        firstName: selectedAddress.name?.split(' ')[0] || user?.first_name || '',
-        lastName: selectedAddress.name?.split(' ').slice(1).join(' ') || user?.last_name || '',
-        email: user?.email || '',
+        firstName: selectedAddress.name?.split(' ')[0] || user?.first_name || 'Customer',
+        lastName: selectedAddress.name?.split(' ').slice(1).join(' ') || user?.last_name || 'User',
+        email: user?.email || 'customer@example.com',
         phone: selectedAddress.phone || user?.phone || '',
         houseNumber: selectedAddress.house_number || selectedAddress.houseNumber || '',
         street: selectedAddress.street_address || selectedAddress.street || '',
@@ -257,6 +257,12 @@ const Checkout = () => {
         postcode: selectedAddress.postcode || '',
         addressType: selectedAddress.address_type || selectedAddress.addressType || 'Home'
       };
+
+      if (!finalShippingAddress.phone) {
+        showToast('Please edit your delivery address to add a mobile number before placing the order.', 'error');
+        setIsLoading(false);
+        return;
+      }
 
       const payload = {
         shippingAddress: finalShippingAddress,
