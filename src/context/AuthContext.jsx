@@ -6,17 +6,7 @@ const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => {
-    const storedUser = localStorage.getItem('user') || sessionStorage.getItem('auth_user');
-    if (storedUser) {
-      try {
-        return JSON.parse(storedUser);
-      } catch {
-        return null;
-      }
-    }
-    return null;
-  });
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const fetchUserProfile = async () => {
@@ -30,28 +20,26 @@ export const AuthProvider = ({ children }) => {
           localStorage.setItem('user', JSON.stringify(userData));
           sessionStorage.setItem('auth_user', JSON.stringify(userData));
           return userData;
+        } else {
+          logout();
         }
       } catch (err) {
         console.error("Failed to fetch user profile:", err);
+        logout();
       }
+    } else {
+      logout();
     }
     return null;
   };
 
   useEffect(() => {
     const initAuth = async () => {
-      const storedUser = localStorage.getItem('user') || sessionStorage.getItem('auth_user');
-      if (storedUser) {
-        try {
-          setUser(JSON.parse(storedUser));
-        } catch {
-          setUser(null);
-        }
-      }
-
       const token = sessionStorage.getItem('sessionToken');
       if (token && token !== 'demo_token') {
         await fetchUserProfile();
+      } else {
+        logout();
       }
       setLoading(false);
     };

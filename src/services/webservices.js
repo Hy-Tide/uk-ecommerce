@@ -102,6 +102,7 @@ const getData = async (route, params = {}, token = null) => {
       const currentToken = sessionStorage.getItem('sessionToken');
       if (currentToken && currentToken !== 'demo_token') {
         dispatchToast('Session timed out. Please login to continue.', 'error');
+        localStorage.removeItem('user');
         sessionStorage.removeItem('auth_user');
         sessionStorage.removeItem('sessionToken');
         sessionStorage.removeItem('refreshToken');
@@ -129,11 +130,12 @@ const getData = async (route, params = {}, token = null) => {
 const postData = async (route, data, token) => {
   try {
     const URL_ROUTE = `${API_URL}${route}`.replace(/\/+$/, '');
+    const sessionToken = token || sessionStorage.getItem('sessionToken');
     const response = await fetch(URL_ROUTE, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${sessionToken}`,
       },
       body: JSON.stringify(data),
     });
@@ -162,6 +164,7 @@ const postData = async (route, data, token) => {
       const currentToken = sessionStorage.getItem('sessionToken');
       if (currentToken && currentToken !== 'demo_token') {
         dispatchToast('Session timed out. Please login to continue.', 'error');
+        localStorage.removeItem('user');
         sessionStorage.removeItem('auth_user');
         sessionStorage.removeItem('sessionToken');
         sessionStorage.removeItem('refreshToken');
@@ -222,6 +225,7 @@ const patchData = async (route, body = {}, token = null) => {
       const currentToken = sessionStorage.getItem('sessionToken');
       if (currentToken && currentToken !== 'demo_token') {
         dispatchToast('Session timed out. Please login to continue.', 'error');
+        localStorage.removeItem('user');
         sessionStorage.removeItem('auth_user');
         sessionStorage.removeItem('sessionToken');
         sessionStorage.removeItem('refreshToken');
@@ -247,12 +251,13 @@ const patchData = async (route, body = {}, token = null) => {
 
 const putData = async (route, data, token) => {
   const URL_ROUTE = `${API_URL}${route}`.replace(/\/+$/, '');
+  const sessionToken = token || sessionStorage.getItem('sessionToken');
   try {
     const response = await fetch(URL_ROUTE, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${sessionToken}`,
       },
       body: JSON.stringify(data),
     });
@@ -281,6 +286,7 @@ const putData = async (route, data, token) => {
       }
 
       dispatchToast('Session timed out. Please login to continue.', 'error');
+      localStorage.removeItem('user');
       sessionStorage.removeItem('auth_user');
       sessionStorage.removeItem('sessionToken');
       sessionStorage.removeItem('refreshToken');
@@ -305,11 +311,12 @@ const putData = async (route, data, token) => {
 
 const deleteData = async (route, token) => {
   const URL_ROUTE = `${API_URL}${route}`.replace(/\/+$/, '');
+  const sessionToken = token || sessionStorage.getItem('sessionToken');
   try {
     const response = await fetch(URL_ROUTE, {
       method: 'DELETE',
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${sessionToken}`,
       },
     });
 
@@ -333,6 +340,7 @@ const deleteData = async (route, token) => {
       }
 
       dispatchToast('Session timed out. Please login to continue.', 'error');
+      localStorage.removeItem('user');
       sessionStorage.removeItem('auth_user');
       sessionStorage.removeItem('sessionToken');
       sessionStorage.removeItem('refreshToken');
@@ -357,14 +365,15 @@ const deleteData = async (route, token) => {
 
 const uploadFile = async (route, file, token) => {
   const URL_ROUTE = `${API_URL}${route}`.replace(/\/+$/, '');
+  const sessionToken = token || sessionStorage.getItem('sessionToken');
   try {
     if (!file) {
       return { success: false, message: 'No file selected' };
     }
 
     const headers = {};
-    if (token) {
-      headers.Authorization = `Bearer ${token}`;
+    if (sessionToken) {
+      headers.Authorization = `Bearer ${sessionToken}`;
     }
 
     const response = await fetch(URL_ROUTE, {
@@ -393,6 +402,7 @@ const uploadFile = async (route, file, token) => {
       }
 
       dispatchToast('Session timed out. Please login to continue.', 'error');
+      localStorage.removeItem('user');
       sessionStorage.removeItem('auth_user');
       sessionStorage.removeItem('sessionToken');
       sessionStorage.removeItem('refreshToken');
