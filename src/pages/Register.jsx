@@ -53,8 +53,7 @@ const Register = () => {
 
     if (response && response.success !== false) {
       if (response.data && response.data.tokens) {
-        sessionStorage.setItem('sessionToken', response.data.tokens.accessToken);
-        sessionStorage.setItem('refreshToken', response.data.tokens.refreshToken);
+
       }
       
       try { await syncGuestWishlist(); } catch(e) {}
