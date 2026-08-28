@@ -57,7 +57,7 @@ const MyOrders = () => {
     try {
       const token = sessionStorage.getItem('sessionToken');
       if (token && token !== 'demo_token') {
-        await postData(`website/orders/${orderId}/reorder`, {});
+        await postData(`website/orders/${orderId}/reorder`, {}, token);
       }
       showToast('Items added to cart for reorder', 'success');
       navigate('/cart');
@@ -250,8 +250,8 @@ const MyOrders = () => {
                 key={idx}
                 onClick={() => setCurrentPage(idx + 1)}
                 className={`w-10 h-10 flex items-center justify-center rounded-full font-bold transition-colors ${currentPage === idx + 1
-                    ? 'bg-[#0C3823] text-white shadow-md shadow-[#0C3823]/20'
-                    : 'bg-white text-slate-500 hover:bg-slate-50 border border-slate-200'
+                  ? 'bg-[#0C3823] text-white shadow-md shadow-[#0C3823]/20'
+                  : 'bg-white text-slate-500 hover:bg-slate-50 border border-slate-200'
                   }`}
               >
                 {idx + 1}
