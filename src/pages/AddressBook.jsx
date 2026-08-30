@@ -17,6 +17,7 @@ import { useAuth } from '../context/AuthContext';
 import { getData, putData, postData, deleteData } from '../services/webservices';
 import { useToast } from '../context/ToastContext';
 import { ROUTES } from '../utils/constants';
+import MapLocationPicker from '../components/common/MapLocationPicker';
 
 const AddressBook = () => {
   const { showToast } = useToast();
@@ -25,6 +26,7 @@ const AddressBook = () => {
   const [addresses, setAddresses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMapOpen, setIsMapOpen] = useState(false);
   const [editingAddressId, setEditingAddressId] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -38,7 +40,8 @@ const AddressBook = () => {
     postcode: '',
     country: 'United Kingdom',
     address_type: 'Home',
-    is_default: false
+    is_default: false,
+    location: null
   });
 
   const fetchAddresses = async () => {
@@ -89,7 +92,8 @@ const AddressBook = () => {
       postcode: '',
       country: 'United Kingdom',
       address_type: 'Home',
-      is_default: addresses.length === 0
+      is_default: addresses.length === 0,
+      location: null
     });
     setEditingAddressId(null);
     setIsModalOpen(true);
@@ -106,7 +110,8 @@ const AddressBook = () => {
       postcode: addr.postcode || '',
       country: addr.country || 'United Kingdom',
       address_type: addr.address_type || addr.type || 'Home',
-      is_default: addr.is_default || false
+      is_default: addr.is_default || false,
+      location: addr.location || null
     });
     setEditingAddressId(addr._id || addr.id);
     setIsModalOpen(true);
@@ -175,6 +180,20 @@ const AddressBook = () => {
     }));
     setAddresses(updatedList);
     showToast('Default address updated!', 'success');
+  };
+
+  const handleMapConfirm = ({ coordinates, address }) => {
+    setAddressForm(prev => ({
+      ...prev,
+      location: { type: 'Point', coordinates },
+      ...(address?.house_number && { house_number: address.house_number }),
+      ...(address?.street_address && { street_address: address.street_address }),
+      ...(address?.city && { city: address.city }),
+      ...(address?.county && { county: address.county }),
+      ...(address?.postcode && { postcode: address.postcode }),
+      ...(address?.country && { country: address.country }),
+    }));
+    setIsMapOpen(false);
   };
 
   return (
@@ -314,6 +333,14 @@ const AddressBook = () => {
             </div>
 
             <form onSubmit={handleSaveAddress} className="p-6 space-y-4">
+              <button
+                type="button"
+                onClick={() => setIsMapOpen(true)}
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-50 text-[#0C3823] font-bold text-xs hover:bg-emerald-100 transition-colors"
+              >
+                <FiMapPin size={16} /> Pick Location on Map
+              </button>
+
               <div className="grid grid-cols-2 gap-4">
                 <div className="col-span-2">
                   <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Full Name</label>
@@ -444,6 +471,15 @@ const AddressBook = () => {
             </form>
           </motion.div>
         </div>
+      )}
+
+      {/* Map Modal */}
+      {isMapOpen && (
+        <MapLocationPicker 
+          onClose={() => setIsMapOpen(false)}
+          onConfirm={handleMapConfirm}
+          initialLocation={addressForm.location}
+        />
       )}
 
     </div>

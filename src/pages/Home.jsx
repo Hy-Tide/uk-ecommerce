@@ -5,12 +5,12 @@ import PromoBanners from '../components/home/PromoBanners';
 import CategorySection from '../components/home/CategorySection';
 import FeaturedProducts from '../components/home/FeaturedProducts';
 import OfferBanner from '../components/home/OfferBanner';
-import RecommendedProducts from '../components/home/RecommendedProducts';
 import Brands from '../components/home/Brands';
 import NewArrivals from '../components/home/NewArrivals';
 import RecentlyViewed from '../components/home/RecentlyViewed';
 import Recipes from '../components/home/Recipes';
 import Testimonials from '../components/home/Testimonials';
+import WhyChooseUs from '../components/home/WhyChooseUs';
 import Newsletter from '../components/home/Newsletter';
 import { getData } from '../services/webservices';
 import HomeSkeleton from '../components/skeletons/HomeSkeleton';
@@ -45,9 +45,11 @@ const Home = () => {
       <PromoBanners data={safeHomeData.offers} isLoading={loading} />
 
       <CategorySection data={safeHomeData.categories} />
+      
+      {/* FeaturedProducts contains both 'Today best deals for you' and 'Limited products' */}
       <FeaturedProducts bestDealsData={safeHomeData.bestDeals} limitedProductsData={safeHomeData.limitedProducts} isLoading={loading} />
+      
       <OfferBanner data={safeHomeData.subscriptionBanner} isLoading={loading} />
-      <RecommendedProducts data={{}} />
       <Brands data={safeHomeData.brands} />
       <NewArrivals data={safeHomeData.newArrivals} />
 
@@ -55,6 +57,9 @@ const Home = () => {
 
       <Recipes data={safeHomeData.popularRecipes} />
       <Testimonials data={safeHomeData.testimonials} />
+      
+      <WhyChooseUs data={safeHomeData.whyChooseUs} />
+      
       <Newsletter />
     </div>
   );

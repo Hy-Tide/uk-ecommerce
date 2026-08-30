@@ -23,6 +23,7 @@ import { getData, putData, postData, deleteData } from '../services/webservices'
 import { useToast } from '../context/ToastContext';
 import Skeleton from '../components/common/Skeleton';
 import { ROUTES } from '../utils/constants';
+import MapLocationPicker from '../components/common/MapLocationPicker';
 
 const Profile = () => {
   const { showToast } = useToast();
@@ -42,19 +43,9 @@ const Profile = () => {
     phone_number: ''
   });
 
-  const getInitialAddresses = () => {
-    try {
-      const stored = localStorage.getItem('user_addresses');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed)) return parsed;
-      }
-    } catch (e) { }
-    return [];
-  };
-
-  const [addresses, setAddresses] = useState(getInitialAddresses);
+  const [addresses, setAddresses] = useState([]);
   const [isAddingAddress, setIsAddingAddress] = useState(false);
+  const [isMapOpen, setIsMapOpen] = useState(false);
   const [editingAddressId, setEditingAddressId] = useState(null);
   const [isSavingAddress, setIsSavingAddress] = useState(false);
   const [addressForm, setAddressForm] = useState({
@@ -64,7 +55,9 @@ const Profile = () => {
     county: '',
     postcode: '',
     country: 'United Kingdom',
-    is_default: true
+    address_type: 'Home',
+    is_default: false,
+    location: null
   });
 
   const fetchAddresses = async () => {
@@ -183,7 +176,9 @@ const Profile = () => {
       county: '',
       postcode: '',
       country: 'United Kingdom',
-      is_default: true
+      address_type: 'Home',
+      is_default: addresses.length === 0,
+      location: null
     });
   };
 
@@ -195,7 +190,9 @@ const Profile = () => {
       county: addr.county || '',
       postcode: addr.postcode || '',
       country: addr.country || 'United Kingdom',
-      is_default: addr.is_default || false
+      address_type: addr.address_type || addr.type || 'Home',
+      is_default: addr.is_default || false,
+      location: addr.location || null
     });
     setEditingAddressId(addr._id || addr.id);
     setIsAddingAddress(true);
@@ -211,9 +208,22 @@ const Profile = () => {
 
     const updatedList = addresses.filter(a => (a._id || a.id) !== id);
     setAddresses(updatedList);
-    showToast('Address deleted successfully!', 'success');
+    showToast('Default address updated!', 'success');
   };
 
+  const handleMapConfirm = ({ coordinates, address }) => {
+    setAddressForm(prev => ({
+      ...prev,
+      location: { type: 'Point', coordinates },
+      ...(address?.house_number && { house_number: address.house_number }),
+      ...(address?.street_address && { street_address: address.street_address }),
+      ...(address?.city && { city: address.city }),
+      ...(address?.county && { county: address.county }),
+      ...(address?.postcode && { postcode: address.postcode }),
+      ...(address?.country && { country: address.country }),
+    }));
+    setIsMapOpen(false);
+  };
 
   const displayUser = profile || user || {};
   const fullName = displayUser.first_name
@@ -492,7 +502,7 @@ const Profile = () => {
                 </div>
                 <button
                   onClick={() => {
-                    setAddressForm({ house_number: '', street_address: '', city: '', county: '', postcode: '', country: 'United Kingdom', is_default: true });
+                    setAddressForm({ house_number: '', street_address: '', city: '', county: '', postcode: '', country: 'United Kingdom', address_type: 'Home', is_default: addresses.length === 0, location: null });
                     setEditingAddressId(null);
                     setIsAddingAddress(true);
                   }}
@@ -523,7 +533,7 @@ const Profile = () => {
                     <p className="text-slate-400 text-xs max-w-xs mb-4">Add your home or office address to make checking out faster.</p>
                     <button
                       onClick={() => {
-                        setAddressForm({ house_number: '', street_address: '', city: '', county: '', postcode: '', country: 'United Kingdom', is_default: true });
+                        setAddressForm({ house_number: '', street_address: '', city: '', county: '', postcode: '', country: 'United Kingdom', address_type: 'Home', is_default: true, location: null });
                         setEditingAddressId(null);
                         setIsAddingAddress(true);
                       }}
@@ -679,6 +689,14 @@ const Profile = () => {
             </div>
 
             <form onSubmit={handleSaveAddress} className="p-6 space-y-4">
+              <button
+                type="button"
+                onClick={() => setIsMapOpen(true)}
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-50 text-[#0C3823] font-bold text-xs hover:bg-emerald-100 transition-colors"
+              >
+                <FiMapPin size={16} /> Pick Location on Map
+              </button>
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">House No.</label>
@@ -782,9 +800,17 @@ const Profile = () => {
         </div>
       )}
 
+      {/* Map Modal */}
+      {isMapOpen && (
+        <MapLocationPicker 
+          onClose={() => setIsMapOpen(false)}
+          onConfirm={handleMapConfirm}
+          initialLocation={addressForm.location}
+        />
+      )}
+
     </div>
   );
 };
 
 export default Profile;
-

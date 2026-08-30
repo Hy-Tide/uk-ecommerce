@@ -22,6 +22,7 @@ import { getData, postData, putData } from '../services/webservices';
 import { useToast } from '../context/ToastContext';
 import { CURRENCY_SYMBOL } from '../utils/constants';
 import PaymentWrapper from '../components/checkout/PaymentWrapper';
+import MapLocationPicker from '../components/common/MapLocationPicker';
 
 const Checkout = () => {
   const { showToast } = useToast();
@@ -44,8 +45,10 @@ const Checkout = () => {
     postcode: '',
     country: 'United Kingdom',
     address_type: 'Home',
-    is_default: true
+    is_default: true,
+    location: null
   });
+  const [isMapOpen, setIsMapOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [deliveryNotes, setDeliveryNotes] = useState('');
   const [deliverySlot, setDeliverySlot] = useState('Morning');
@@ -143,15 +146,15 @@ const Checkout = () => {
 
   const handleAddressInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setAddressForm(prev => ({ 
-      ...prev, 
-      [name]: type === 'checkbox' ? checked : value 
+    setAddressForm(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
     }));
   };
 
   const handleOpenAddModal = () => {
     setAddressForm({
-      name: '', phone: '', house_number: '', street_address: '', city: '', county: '', postcode: '', country: 'United Kingdom', address_type: 'Home', is_default: true
+      name: '', phone: '', house_number: '', street_address: '', city: '', county: '', postcode: '', country: 'United Kingdom', address_type: 'Home', is_default: true, location: null
     });
     setEditingAddressId(null);
     setIsAddingAddress(true);
@@ -169,7 +172,8 @@ const Checkout = () => {
       postcode: addr.postcode || '',
       country: addr.country || 'United Kingdom',
       address_type: addr.address_type || addr.type || 'Home',
-      is_default: addr.is_default || false
+      is_default: addr.is_default || false,
+      location: addr.location || null
     });
     setEditingAddressId(addr._id || addr.id);
     setIsAddingAddress(true);
@@ -181,7 +185,7 @@ const Checkout = () => {
       showToast('Please fill all required address fields', 'error');
       return;
     }
-    
+
     setIsSavingAddress(true);
     const token = sessionStorage.getItem('sessionToken');
     try {
@@ -191,9 +195,9 @@ const Checkout = () => {
       } else {
         response = await postData('website/users/addresses', addressForm, token);
       }
-      
+
       let updatedList = [...addresses];
-      
+
       if (editingAddressId) {
         updatedList = updatedList.map(a =>
           (a._id === editingAddressId || a.id === editingAddressId)
@@ -206,21 +210,21 @@ const Checkout = () => {
           id: `addr_${Date.now()}`,
           ...addressForm
         };
-        
+
         if (addressForm.is_default) {
           updatedList = updatedList.map(a => ({ ...a, is_default: false }));
         }
         updatedList.push(newAddress);
         setSelectedAddressId(newAddress._id || newAddress.id);
       }
-      
+
       setAddresses(updatedList);
       setIsAddingAddress(false);
       setEditingAddressId(null);
       showToast(editingAddressId ? 'Address updated successfully' : 'Address added successfully', 'success');
-      
+
       setAddressForm({
-        name: '', phone: '', house_number: '', street_address: '', city: '', county: '', postcode: '', country: 'United Kingdom', address_type: 'Home', is_default: true
+        name: '', phone: '', house_number: '', street_address: '', city: '', county: '', postcode: '', country: 'United Kingdom', address_type: 'Home', is_default: true, location: null
       });
     } catch (e) {
       showToast('Failed to save address', 'error');
@@ -229,12 +233,26 @@ const Checkout = () => {
     }
   };
 
+  const handleMapConfirm = ({ coordinates, address }) => {
+    setAddressForm(prev => ({
+      ...prev,
+      location: { type: 'Point', coordinates },
+      ...(address?.house_number && { house_number: address.house_number }),
+      ...(address?.street_address && { street_address: address.street_address }),
+      ...(address?.city && { city: address.city }),
+      ...(address?.county && { county: address.county }),
+      ...(address?.postcode && { postcode: address.postcode }),
+      ...(address?.country && { country: address.country }),
+    }));
+    setIsMapOpen(false);
+  };
+
   const handlePlaceOrder = async () => {
     if (!selectedAddressId) {
       showToast('Please select a delivery address', 'error');
       return;
     }
-    
+
     const selectedAddress = addresses.find(a => (a._id === selectedAddressId || a.id === selectedAddressId));
     if (!selectedAddress) {
       showToast('Invalid address selected', 'error');
@@ -244,7 +262,7 @@ const Checkout = () => {
     setIsLoading(true);
     try {
       const token = sessionStorage.getItem('sessionToken');
-      
+
       const finalShippingAddress = {
         firstName: selectedAddress.name?.split(' ')[0] || user?.first_name || 'Customer',
         lastName: selectedAddress.name?.split(' ').slice(1).join(' ') || user?.last_name || 'User',
@@ -301,7 +319,7 @@ const Checkout = () => {
   const deliveryCharge = 0;
   const tax = subtotal * 0.05;
   const grandTotal = subtotal - discount + deliveryCharge + tax;
-  
+
   const displayItems = validatedCart ? validatedCart.items : cartItems;
 
   return (
@@ -320,55 +338,7 @@ const Checkout = () => {
         </div>
       </div>
 
-      {/* Step Indicator Bar */}
-      <div className="bg-white border-b border-slate-100 py-6">
-        <div className="container max-w-3xl flex items-center justify-center">
 
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-[#124827] text-white flex items-center justify-center font-bold text-xs">
-              <FiCheck size={16} />
-            </div>
-            <span className="text-[#124827] font-bold text-xs">Cart</span>
-          </div>
-
-          <div className="flex-1 h-0.5 bg-[#124827] mx-3"></div>
-
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-[#124827] text-white flex items-center justify-center font-bold text-xs">
-              2
-            </div>
-            <span className="text-[#124827] font-bold text-xs">Address</span>
-          </div>
-
-          <div className="flex-1 h-0.5 bg-slate-200 mx-3"></div>
-
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-[#fafcfb] border-2 border-slate-200 text-slate-400 flex items-center justify-center font-bold text-xs">
-              3
-            </div>
-            <span className="text-slate-400 font-bold text-xs">Delivery</span>
-          </div>
-
-          <div className="flex-1 h-0.5 bg-slate-200 mx-3"></div>
-
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-[#fafcfb] border-2 border-slate-200 text-slate-400 flex items-center justify-center font-bold text-xs">
-              4
-            </div>
-            <span className="text-slate-400 font-bold text-xs">Payment</span>
-          </div>
-
-          <div className="flex-1 h-0.5 bg-slate-200 mx-3"></div>
-
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-[#fafcfb] border-2 border-slate-200 text-slate-400 flex items-center justify-center font-bold text-xs">
-              5
-            </div>
-            <span className="text-slate-400 font-bold text-xs">Review</span>
-          </div>
-
-        </div>
-      </div>
 
       <div className="container pt-8">
         <div className="flex flex-col lg:flex-row gap-8">
@@ -406,10 +376,10 @@ const Checkout = () => {
                       const isSelected = selectedAddressId === id;
                       const name = addr.name || (user ? `${user.first_name || ''} ${user.last_name || ''}` : '');
                       const phone = addr.phone || user?.phone || '';
-                      
+
                       return (
-                        <div 
-                          key={id} 
+                        <div
+                          key={id}
                           onClick={() => setSelectedAddressId(id)}
                           className={`relative border rounded-2xl p-5 cursor-pointer transition-all ${isSelected ? 'border-[#124827] bg-[#F4F9F5]' : 'border-slate-200 bg-white hover:border-slate-300'}`}
                         >
@@ -417,7 +387,7 @@ const Checkout = () => {
                             <div className={`mt-1 w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${isSelected ? 'border-[#124827] bg-[#124827]' : 'border-slate-300'}`}>
                               {isSelected && <div className="w-2 h-2 rounded-full bg-white"></div>}
                             </div>
-                            
+
                             <div className="flex-1">
                               <div className="flex items-center gap-3 mb-2">
                                 <span className="font-extrabold text-slate-900">{name}</span>
@@ -434,7 +404,7 @@ const Checkout = () => {
                                 Mobile: <span className="font-extrabold">{phone}</span>
                               </p>
                             </div>
-                            
+
                             <button
                               onClick={(e) => handleEditClick(e, addr)}
                               className="text-slate-400 hover:text-[#124827] p-2 transition-colors flex shrink-0 bg-white hover:bg-slate-50 rounded-lg border border-transparent hover:border-slate-200"
@@ -446,7 +416,7 @@ const Checkout = () => {
                         </div>
                       );
                     })}
-                    
+
                     <button
                       onClick={handleOpenAddModal}
                       className="mt-2 w-full py-4 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center gap-2 text-slate-500 font-extrabold text-sm hover:border-[#124827] hover:text-[#124827] hover:bg-[#F4F9F5] transition-all cursor-pointer"
@@ -455,7 +425,7 @@ const Checkout = () => {
                     </button>
                   </div>
                 )}
-                
+
                 <div className="mt-6 flex flex-col gap-1.5 pt-6 border-t border-slate-100">
                   <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Delivery Instructions</label>
                   <textarea
@@ -567,7 +537,7 @@ const Checkout = () => {
               <div className="p-6 flex flex-col gap-4">
                 {displayItems?.map((item, index) => {
                   const product = item.product || {};
-                  
+
                   // Map variation from product.variations if it exists in the validated cart format
                   let variation = item.variation || {};
                   if (item.variationId && Array.isArray(product.variations)) {
@@ -576,10 +546,10 @@ const Checkout = () => {
 
                   const brandName = typeof product.brand === 'string' ? '' : (product.brand?.name || '');
                   const weightStr = variation.displayWeight || (variation.weight ? `${variation.weight}${variation.weightUnit || ''}` : '');
-                  
+
                   // item.price is the exact price sent from validate checkout
                   const price = item.price || variation.salePrice || variation.regularPrice || product.price || 0;
-                  
+
                   let imageUrl = '/images/placeholder.png';
                   if (Array.isArray(product.images) && product.images.length > 0) {
                     imageUrl = typeof product.images[0] === 'string' ? product.images[0] : (product.images[0].url || imageUrl);
@@ -718,8 +688,16 @@ const Checkout = () => {
                 <FiX size={18} />
               </button>
             </div>
-            
+
             <form onSubmit={handleSaveAddress} className="p-6">
+              <button
+                type="button"
+                onClick={() => setIsMapOpen(true)}
+                className="w-full flex items-center justify-center gap-2 py-3 mb-4 rounded-xl bg-emerald-50 text-[#0C3823] font-bold text-xs hover:bg-emerald-100 transition-colors"
+              >
+                <FiMapPin size={16} /> Pick Location on Map
+              </button>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div className="flex flex-col gap-1.5">
                   <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Full Name <span className="text-[#eb5b27]">*</span></label>
@@ -775,6 +753,15 @@ const Checkout = () => {
             </form>
           </div>
         </div>
+      )}
+
+      {/* Map Modal */}
+      {isMapOpen && (
+        <MapLocationPicker 
+          onClose={() => setIsMapOpen(false)}
+          onConfirm={handleMapConfirm}
+          initialLocation={addressForm.location}
+        />
       )}
     </div>
   );

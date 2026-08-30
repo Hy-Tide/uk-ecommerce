@@ -40,7 +40,7 @@ const Header = () => {
           </Link>
 
           {/* Delivery Location Indicator (from mockup) */}
-          <div 
+          <div
             onClick={changePostcode}
             className="hidden xl:flex items-center gap-2.5 pl-4 border-l border-slate-200 cursor-pointer hover:opacity-80 transition-opacity"
             title="Change Delivery Postcode"
