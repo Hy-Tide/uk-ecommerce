@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FiSearch, FiFilter, FiMapPin, FiRefreshCw, FiEye, FiChevronRight, FiUser, FiPackage } from 'react-icons/fi';
 import { getData, postData } from '../services/webservices';
 import { useToast } from '../context/ToastContext';
+import { useCart } from '../context/CartContext';
 import { ROUTES } from '../utils/constants';
 import OrderSkeleton from '../components/skeletons/OrderSkeleton';
 
@@ -17,6 +18,7 @@ const getStatusColor = (status) => {
 
 const MyOrders = () => {
   const { showToast } = useToast();
+  const { fetchCart } = useCart();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [reorderingId, setReorderingId] = useState(null);
@@ -66,6 +68,7 @@ const MyOrders = () => {
                 } else {
                     showToast(`${addedItems.length} items added to your cart.`, 'success');
                 }
+                await fetchCart();
                 navigate('/cart');
             } else {
                 showToast('None of the items from this order are currently available.', 'error');

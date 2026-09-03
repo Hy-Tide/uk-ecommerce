@@ -6,10 +6,12 @@ import AccountPageHeader from '../components/account/AccountPageHeader';
 import { ROUTES } from '../utils/constants';
 import { getData, postData } from '../services/webservices';
 import { useToast } from '../context/ToastContext';
+import { useCart } from '../context/CartContext';
 import OrderDetailsSkeleton from '../components/skeletons/OrderDetailsSkeleton';
 
 const OrderDetails = () => {
   const { showToast } = useToast();
+  const { fetchCart } = useCart();
   const { id } = useParams();
   const navigate = useNavigate();
   const [order, setOrder] = useState(null);
@@ -96,6 +98,7 @@ const OrderDetails = () => {
       const res = await postData(`website/orders/${id}/reorder`, {}, sessionToken);
       if (res?.success) {
         showToast('Items added to cart for reorder', 'success');
+        await fetchCart();
         navigate('/cart');
       } else {
         showToast(res?.error || 'Failed to reorder', 'error');
