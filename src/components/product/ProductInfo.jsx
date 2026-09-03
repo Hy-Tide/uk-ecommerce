@@ -30,8 +30,8 @@ const ProductInfo = ({ product }) => {
     return sameProduct && sameVariation;
   });
 
-  const displayPrice = currentVariation?.salePrice || product.discount_price || product.price || 0;
-  const displayOldPrice = currentVariation?.regularPrice || product.base_price || product.oldPrice || null;
+  const displayPrice = currentVariation?.salePrice || currentVariation?.discount_price || currentVariation?.price || currentVariation?.regularPrice || product.discount_price || product.base_price || product.price || 0;
+  const displayOldPrice = currentVariation?.regularPrice || currentVariation?.oldPrice || currentVariation?.base_price || (currentVariation?.discount_price ? currentVariation?.price : null) || product.oldPrice || product.base_price || null;
   const showOldPrice = displayOldPrice && displayOldPrice > displayPrice;
   const displaySavings = showOldPrice ? `You Save €${(displayOldPrice - displayPrice).toFixed(2)}` : null;
 

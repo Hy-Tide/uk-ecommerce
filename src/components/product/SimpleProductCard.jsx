@@ -33,6 +33,10 @@ const SimpleProductCard = ({ product }) => {
     );
   };
 
+  const displayPrice = currentVariation?.salePrice || currentVariation?.discount_price || currentVariation?.price || currentVariation?.regularPrice || product.discount_price || product.base_price || product.price || 0;
+  const displayOldPrice = currentVariation?.regularPrice || currentVariation?.oldPrice || currentVariation?.base_price || (currentVariation?.discount_price ? currentVariation?.price : null) || product.oldPrice || product.base_price || null;
+  const showOldPrice = displayOldPrice && displayOldPrice > displayPrice;
+
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden flex flex-col h-full group hover:shadow-md hover:border-[#379c6b]/30 transition-all duration-300 p-3">
 
@@ -119,9 +123,9 @@ const SimpleProductCard = ({ product }) => {
         </div>
 
         <div className="flex items-center gap-1.5 mb-3">
-          <span className="text-[16px] font-black text-dark">€{(currentVariation?.salePrice || currentVariation?.regularPrice || product.discount_price || product.base_price || product.price || 0).toFixed(2)}</span>
-          {((currentVariation?.regularPrice > currentVariation?.salePrice) || product.oldPrice) && (
-            <span className="text-[11px] text-slate-400 line-through font-medium">€{(currentVariation?.regularPrice || product.oldPrice || 0).toFixed(2)}</span>
+          <span className="text-[16px] font-black text-dark">€{displayPrice.toFixed(2)}</span>
+          {showOldPrice && (
+            <span className="text-[11px] text-slate-400 line-through font-medium">€{displayOldPrice.toFixed(2)}</span>
           )}
         </div>
 

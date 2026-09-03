@@ -23,12 +23,6 @@ import { ROUTES } from '../utils/constants';
 import { useCart } from '../context/CartContext';
 import { getData } from '../services/webservices';
 
-const fallbackRelated = [
-  { id: 1, brand: 'AMUL', name: 'Pure Ghee Can', weight: '500 ml', price: 7.99, image: '/images/prod-amul-ghee.png' },
-  { id: 2, brand: 'MDH', name: 'Garam Masala', weight: '100 g Tin', price: 3.49, image: '/images/prod-garam-masala.png' },
-  { id: 3, brand: "HALDIRAM'S", name: 'Aloo Bhujia', weight: '400 g', price: 6.49, image: '/images/prod-aloo-bhujia.png' },
-  { id: 4, brand: 'TATA TEA', name: 'Masala Chai', weight: '250 g', price: 4.49, image: '/images/prod-chai.png' }
-];
 
 const Cart = () => {
   const { cartItems, cartTotal, cartDetails, updateQuantity, removeFromCart, applyCoupon, removeCoupon } = useCart();
@@ -270,40 +264,7 @@ const Cart = () => {
               </div>
             </div>
 
-            {/* You May Also Like */}
-            <div className="mt-8">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-extrabold text-[#124827]">You May Also Like</h3>
-                <Link to={ROUTES.SHOP} className="text-[#eb5b27] text-xs font-bold hover:underline flex items-center gap-1">
-                  View All Products <span>&gt;</span>
-                </Link>
-              </div>
-              
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                {fallbackRelated.slice(0, 4).map(item => (
-                  <div key={item.id} className="bg-white rounded-2xl border border-slate-100 p-3 flex flex-col hover:shadow-lg transition-all hover:border-[#124827]/30">
-                    <div className="relative h-28 mb-3 bg-[#fafcfb] rounded-xl flex items-center justify-center p-2">
-                      <img src={item.image} alt={item.name} className="max-h-full max-w-full object-contain" />
-                    </div>
-                    <div className="text-[#1c6b3b] text-[9px] font-black uppercase tracking-wider mb-1">
-                      {item.brand}
-                    </div>
-                    <h4 className="text-xs font-bold text-slate-900 leading-tight mb-1 line-clamp-2 min-h-[32px]">
-                      {item.name}
-                    </h4>
-                    <div className="text-[10px] text-slate-400 font-medium mb-2">
-                      {item.weight}
-                    </div>
-                    <div className="text-sm font-black text-[#124827] mb-3 mt-auto">
-                      €{item.price.toFixed(2)}
-                    </div>
-                    <Link to={ROUTES.SHOP} className="w-full bg-[#124827] hover:bg-[#1c6b3b] text-white font-bold text-xs py-2 rounded-xl transition-colors flex items-center justify-center">
-                      View Item
-                    </Link>
-                  </div>
-                ))}
-              </div>
-            </div>
+
 
           </div>
 
