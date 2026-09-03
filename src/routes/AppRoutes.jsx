@@ -67,6 +67,7 @@ const AppRoutes = () => {
 
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
+          <Route path={ROUTES.CATEGORIES} element={<Categories />} />
           <Route path={ROUTES.SHOP} element={<Shop />} />
           <Route path={ROUTES.SHOP_CATEGORY} element={<Shop />} />
           <Route path={ROUTES.PRODUCT_DETAILS} element={<ProductDetails />} />

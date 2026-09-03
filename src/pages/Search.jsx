@@ -84,7 +84,7 @@ const Search = () => {
         <div className="flex flex-col lg:flex-row gap-8 mb-16">
           
           {/* Sidebar */}
-          <div className="w-full lg:w-[280px] flex-shrink-0">
+          <div className="hidden w-full lg:w-[280px] flex-shrink-0">
             <ShopSidebar />
           </div>
 
@@ -110,7 +110,7 @@ const Search = () => {
                 <h3 className="text-xl font-bold text-dark mb-2">Searching...</h3>
               </div>
             ) : results.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
                 {results.map(product => (
                   <ShopProductCard key={product._id || product.id} product={product} />
                 ))}

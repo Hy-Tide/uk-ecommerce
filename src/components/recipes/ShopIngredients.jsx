@@ -77,14 +77,14 @@ const ShopIngredients = () => {
             </p>
           </div>
           <button className="text-[#2E8B57] font-[600] text-[16px] hover:text-[#FF8A00] transition-colors flex items-center gap-2 group">
-            Browse All Spices & Groceries 
+            Browse All Spices & Groceries
             <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {ingredientsData.map((product, index) => (
-            <motion.div 
+            <motion.div
               key={product.id}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}

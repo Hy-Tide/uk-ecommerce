@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FiHeart } from 'react-icons/fi';
+import { FiHeart, FiChevronDown } from 'react-icons/fi';
+import { FaStar } from 'react-icons/fa';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { ROUTES, getProductUrl, resolveProductImageUrl } from '../../utils/constants';
@@ -12,6 +13,12 @@ const SimpleProductCard = ({ product }) => {
 
   const inWishlist = isInWishlist(product.id || product._id);
   const imageUrl = resolveProductImageUrl(product);
+
+  const [selectedVarIdx, setSelectedVarIdx] = useState(0);
+
+  const currentVariation = product.variations && product.variations.length > selectedVarIdx 
+    ? product.variations[selectedVarIdx] 
+    : (product.variations && product.variations.length > 0 ? product.variations[0] : null);
 
   const renderBadge = () => {
     if (!product.badge) return null;
@@ -33,12 +40,18 @@ const SimpleProductCard = ({ product }) => {
       <div className="relative bg-[#f9f9f9] rounded-lg pt-[100%] overflow-hidden mb-3">
         {renderBadge()}
 
-        <button
-          onClick={() => toggleWishlist(product)}
-          className="absolute top-2 right-2 z-10 w-7 h-7 bg-white rounded-full flex items-center justify-center shadow-sm hover:text-orange-500 transition-colors text-slate-400"
-        >
-          <FiHeart className={inWishlist ? "text-orange-500 fill-orange-500" : ""} size={12} />
-        </button>
+        <div className="absolute top-2 right-2 z-10 flex flex-col items-end gap-1.5">
+          <div className="flex items-center gap-0.5 bg-amber-50 text-amber-600 font-bold text-[9px] px-1.5 py-1 rounded-md border border-amber-200/60 shadow-sm leading-none">
+            <FaStar size={8} />
+            <span className="pt-[1px]">{product.rating || '4.8'}</span>
+          </div>
+          <button
+            onClick={() => toggleWishlist(product)}
+            className="w-7 h-7 bg-white rounded-full flex items-center justify-center shadow-sm hover:text-orange-500 transition-colors text-slate-400"
+          >
+            <FiHeart className={inWishlist ? "text-orange-500 fill-orange-500" : ""} size={12} />
+          </button>
+        </div>
 
         <Link to={getProductUrl(product)} className="absolute inset-0 w-full h-full flex items-center justify-center p-2">
           {imageUrl && !imgError ? (
@@ -75,20 +88,53 @@ const SimpleProductCard = ({ product }) => {
           </h3>
         </Link>
 
-        {/* Simple text weight instead of select for related items to save space */}
-        <div className="text-xs text-slate-500 mb-2 font-medium">{product.weight}</div>
+        {/* Variant Selector */}
+        <div className="mt-auto flex flex-col">
+        <div className="flex flex-wrap gap-1 mb-2 mt-1" onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+          {product.variations && product.variations.length > 0 ? (
+            product.variations.map((v, i) => (
+              <button
+                key={i}
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setSelectedVarIdx(i); }}
+                className={`flex items-center gap-1 text-[9px] font-bold px-1.5 py-1 rounded-md border transition-all ${
+                  selectedVarIdx === i 
+                    ? 'border-[#279c66] text-[#279c66] bg-[#279c66]/5' 
+                    : 'border-slate-200 text-slate-500 hover:border-slate-300 bg-white'
+                }`}
+              >
+                <span>{v.displayWeight || `${v.weight}${v.weightUnit || 'kg'}`}</span>
+                {v.stock !== undefined && <span className="opacity-70 font-medium text-[8px]">({v.stock})</span>}
+              </button>
+            ))
+          ) : (
+            <button
+              className="flex items-center gap-1 text-[9px] font-bold px-1.5 py-1 rounded-md border border-[#279c66] text-[#279c66] bg-[#279c66]/5 transition-all"
+            >
+              <span>{product.weight || 'Standard'}</span>
+              {(product.currentStock !== undefined || product.availableQuantity !== undefined) && (
+                <span className="opacity-70 font-medium text-[8px]">({product.currentStock ?? product.availableQuantity})</span>
+              )}
+            </button>
+          )}
+        </div>
 
-        <div className="flex items-center gap-1.5 mb-3 mt-auto">
-          <span className="text-[16px] font-black text-dark">€{product.price.toFixed(2)}</span>
-          {product.oldPrice && (
-            <span className="text-[11px] text-slate-400 line-through font-medium">€{product.oldPrice.toFixed(2)}</span>
+        <div className="flex items-center gap-1.5 mb-3">
+          <span className="text-[16px] font-black text-dark">€{(currentVariation?.salePrice || currentVariation?.regularPrice || product.discount_price || product.base_price || product.price || 0).toFixed(2)}</span>
+          {((currentVariation?.regularPrice > currentVariation?.salePrice) || product.oldPrice) && (
+            <span className="text-[11px] text-slate-400 line-through font-medium">€{(currentVariation?.regularPrice || product.oldPrice || 0).toFixed(2)}</span>
           )}
         </div>
 
         {/* Action Buttons Row */}
         <div className="flex items-center gap-1.5">
           <button
-            onClick={() => addToCart(product)}
+            onClick={(e) => {
+              if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+              }
+              addToCart(product, currentVariation);
+            }}
             className="flex-grow bg-[#279c66] hover:bg-[#1f7e52] text-white text-xs font-bold py-2 rounded-lg transition-colors active:scale-95"
           >
             Add
@@ -96,6 +142,7 @@ const SimpleProductCard = ({ product }) => {
           <button className="w-8 h-8 rounded-lg flex items-center justify-center border border-slate-200 bg-white text-slate-400 hover:text-orange-500 hover:border-orange-500 transition-all flex-shrink-0">
             <FiHeart size={14} className={inWishlist ? "text-orange-500 fill-orange-500" : ""} />
           </button>
+        </div>
         </div>
 
       </div>

@@ -3,6 +3,7 @@ export const CURRENCY_CODE = 'EUR';
 
 export const ROUTES = {
   HOME: '/',
+  CATEGORIES: '/categories',
   SHOP: '/category',
   SHOP_CATEGORY: '/category/:category',
   PRODUCT_DETAILS: '/category/:categorySlug/:subCategorySlug/:productSlug',

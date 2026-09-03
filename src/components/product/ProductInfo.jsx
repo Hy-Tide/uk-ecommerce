@@ -109,9 +109,10 @@ const ProductInfo = ({ product }) => {
               <button
                 key={i}
                 onClick={() => setSelectedVarIdx(i)}
-                className={`font-bold text-xs px-5 py-2.5 rounded-xl transition-all border-2 ${selectedVarIdx === i ? 'border-[#124827] text-[#124827] bg-[#e8f5ed]' : 'border-slate-200 text-slate-600 hover:border-slate-300 bg-white'}`}
+                className={`font-bold text-xs px-5 py-2.5 rounded-xl transition-all border-2 flex items-center gap-1.5 ${selectedVarIdx === i ? 'border-[#124827] text-[#124827] bg-[#e8f5ed]' : 'border-slate-200 text-slate-600 hover:border-slate-300 bg-white'}`}
               >
-                {v.displayWeight || `${v.weight}${v.weightUnit}`}
+                <span>{v.displayWeight || `${v.weight}${v.weightUnit || 'kg'}`}</span>
+                {v.stock !== undefined && <span className="text-[10px] opacity-80">({v.stock} available)</span>}
               </button>
             ))
           ) : (

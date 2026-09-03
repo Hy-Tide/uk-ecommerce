@@ -31,7 +31,7 @@ const CategorySection = ({ data }) => {
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl md:text-3xl font-black text-[#0C3823] tracking-tight">Shop by categories</h2>
           <Link
-            to={ROUTES.SHOP}
+            to={ROUTES.CATEGORIES}
             className="text-[#FF6B00] hover:text-[#E05E00] font-bold text-xs md:text-sm inline-flex items-center gap-1.5 transition-colors"
           >
             All Categories <FiArrowRight size={16} />
@@ -70,7 +70,7 @@ const CategorySection = ({ data }) => {
 
           {/* Right Navigation Card */}
           <Link
-            to={ROUTES.SHOP}
+            to={ROUTES.CATEGORIES}
             className="bg-[#F1F3F5] rounded-3xl p-5 flex flex-col items-center justify-center text-center group hover:bg-[#E2E8F0] transition-colors h-[190px]"
           >
             <div className="w-12 h-12 rounded-full bg-[#0C3823] text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-md">

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FiHeart, FiPlus, FiChevronDown, FiCheck } from 'react-icons/fi';
-import { FaHeart } from 'react-icons/fa';
+import { FaHeart, FaStar } from 'react-icons/fa';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { getProductUrl, resolveProductImageUrl } from '../../utils/constants';
@@ -15,8 +15,12 @@ const ShopProductCard = ({ product }) => {
   const inWishlist = isInWishlist(product.id || product._id);
   const [selectedVarIdx, setSelectedVarIdx] = useState(0);
 
-  const handleAddToCart = () => {
-    addToCart(product);
+  const handleAddToCart = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    addToCart(product, currentVariation);
     setAdded(true);
     setTimeout(() => setAdded(false), 1500);
   };
@@ -46,12 +50,18 @@ const ShopProductCard = ({ product }) => {
           )}
         </div>
 
-        <button
-          onClick={() => toggleWishlist(product)}
-          className="absolute top-2.5 right-2.5 z-10 w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 hover:text-[#FF6B00] transition-colors"
-        >
-          {inWishlist ? <FaHeart className="text-[#FF6B00]" size={13} /> : <FiHeart size={13} />}
-        </button>
+        <div className="absolute top-2.5 right-2.5 z-10 flex flex-col items-end gap-1.5">
+          <div className="flex items-center gap-1 bg-amber-50 text-amber-600 font-bold text-[10px] px-2 py-1 rounded-lg border border-amber-200/60 shadow-sm leading-none">
+            <FaStar size={10} />
+            <span className="pt-[1px]">{product.rating || '4.8'}</span>
+          </div>
+          <button
+            onClick={() => toggleWishlist(product)}
+            className="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 hover:text-[#FF6B00] transition-colors shadow-xs"
+          >
+            {inWishlist ? <FaHeart className="text-[#FF6B00]" size={13} /> : <FiHeart size={13} />}
+          </button>
+        </div>
 
         <Link to={getProductUrl(product)} className="w-full h-full flex items-center justify-center p-1">
           {imageUrl && !imgError ? (
@@ -85,31 +95,43 @@ const ShopProductCard = ({ product }) => {
         </span>
 
         <Link to={getProductUrl(product)}>
-          <h3 className="font-bold text-[#0C3823] text-xs md:text-sm leading-snug mb-2 hover:text-[#FF6B00] transition-colors line-clamp-2 min-h-[36px]">
+          <h3 className="font-bold text-[#0C3823] text-xs md:text-sm leading-snug mb-2 hover:text-[#FF6B00] transition-colors line-clamp-2 min-h-[36px] md:min-h-[40px]">
             {product.title || product.name}
           </h3>
         </Link>
 
-        {/* Weight Selector */}
-        <div className="relative mb-3">
-          <select 
-            className="appearance-none w-full border border-slate-200 text-slate-700 text-xs font-semibold py-1.5 px-3 pr-8 rounded-xl outline-none bg-white cursor-pointer"
-            value={selectedVarIdx}
-            onChange={(e) => setSelectedVarIdx(Number(e.target.value))}
-          >
-            {product.variations && product.variations.length > 0 ? (
-              product.variations.map((v, i) => (
-                <option key={i} value={i}>{v.displayWeight || `${v.weight}${v.weightUnit}`}</option>
-              ))
-            ) : (
-              <option value={0}>{product.weight || 'Standard Pack'}</option>
-            )}
-          </select>
-          <FiChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+        <div className="mt-auto flex flex-col">
+          {/* Weight Selector */}
+        <div className="flex flex-wrap gap-1.5 mb-3" onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+          {product.variations && product.variations.length > 0 ? (
+            product.variations.map((v, i) => (
+              <button
+                key={i}
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setSelectedVarIdx(i); }}
+                className={`flex items-center gap-1 text-[10px] font-bold px-2 py-1.5 rounded-lg border transition-all ${
+                  selectedVarIdx === i 
+                    ? 'border-[#0C3823] text-[#0C3823] bg-[#0C3823]/5' 
+                    : 'border-slate-200 text-slate-500 hover:border-slate-300 bg-white'
+                }`}
+              >
+                <span>{v.displayWeight || `${v.weight}${v.weightUnit || 'kg'}`}</span>
+                {v.stock !== undefined && <span className="opacity-70 font-medium text-[9px]">({v.stock})</span>}
+              </button>
+            ))
+          ) : (
+            <button
+              className="flex items-center gap-1 text-[10px] font-bold px-2 py-1.5 rounded-lg border border-[#0C3823] text-[#0C3823] bg-[#0C3823]/5 transition-all"
+            >
+              <span>{product.weight || 'Standard Pack'}</span>
+              {(product.currentStock !== undefined || product.availableQuantity !== undefined) && (
+                <span className="opacity-70 font-medium text-[9px]">({product.currentStock ?? product.availableQuantity})</span>
+              )}
+            </button>
+          )}
         </div>
 
-        {/* Price & Cart Row */}
-        <div className="mt-auto flex items-center justify-between pt-1">
+          {/* Price & Cart Row */}
+          <div className="flex items-center justify-between pt-1">
           <div className="flex items-baseline gap-1.5">
             <span className="text-lg font-extrabold text-[#0C3823]">
               €{(currentVariation?.salePrice || product.discount_price || product.base_price || product.price || 0).toFixed(2)}
@@ -132,6 +154,7 @@ const ShopProductCard = ({ product }) => {
           >
             {added ? <FiCheck size={16} /> : <FiPlus size={18} />}
           </button>
+          </div>
         </div>
 
       </div>

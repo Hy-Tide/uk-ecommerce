@@ -190,7 +190,7 @@ const Support = () => {
               </a>
             </motion.div>
 
-            <motion.div
+            {/* <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.25 }}
@@ -202,7 +202,7 @@ const Support = () => {
               <h3 className="font-extrabold text-slate-900 text-base mb-1">Live Chat Agent</h3>
               <p className="text-slate-500 text-xs mb-3 font-medium">Speak with a live customer care team member</p>
               <span className="text-blue-600 font-bold text-xs hover:underline">Start Live Chat</span>
-            </motion.div>
+            </motion.div> */}
 
           </div>
 

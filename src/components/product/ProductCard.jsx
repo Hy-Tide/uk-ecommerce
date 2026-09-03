@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FiPlus, FiCheck, FiMinus } from 'react-icons/fi';
+import { FiPlus, FiCheck, FiMinus, FiChevronDown } from 'react-icons/fi';
 import { FaStar } from 'react-icons/fa';
 import { useCart } from '../../context/CartContext';
 import { getProductUrl, resolveProductImageUrl } from '../../utils/constants';
@@ -11,9 +11,12 @@ const ProductCard = ({ product, showStockProgress = false, removeImagePadding = 
   const [isAdding, setIsAdding] = useState(false);
   const [imgError, setImgError] = useState(false);
 
+  const [selectedVarIdx, setSelectedVarIdx] = useState(0);
   const productId = product._id || product.id || product.productId;
-  const selectedVariation = product.variations && product.variations.length > 0 ? product.variations[0] : null;
-  const variationId = selectedVariation ? (selectedVariation._id || selectedVariation.id || selectedVariation.variationId) : null;
+  const currentVariation = product.variations && product.variations.length > selectedVarIdx 
+    ? product.variations[selectedVarIdx] 
+    : (product.variations && product.variations.length > 0 ? product.variations[0] : null);
+  const variationId = currentVariation ? (currentVariation._id || currentVariation.id || currentVariation.variationId) : null;
 
   const cartItem = cartItems?.find(item => {
     const itemProductId = item.productId || (item.product && (item.product._id || item.product.id)) || item.id;
@@ -34,7 +37,7 @@ const ProductCard = ({ product, showStockProgress = false, removeImagePadding = 
     if (isAdding || added) return;
     
     setIsAdding(true);
-    const success = await addToCart(product);
+    const success = await addToCart(product, currentVariation);
     setIsAdding(false);
     
     if (success) {
@@ -68,7 +71,11 @@ const ProductCard = ({ product, showStockProgress = false, removeImagePadding = 
         </div>
 
         {/* Badges Right */}
-        <div className="absolute top-2.5 right-2.5 z-10 flex flex-col gap-1">
+        <div className="absolute top-2.5 right-2.5 z-10 flex flex-col items-end gap-1">
+          <div className="flex items-center gap-1 bg-amber-50 text-amber-600 font-bold text-[10px] px-2 py-1 rounded-lg border border-amber-200/60 shadow-sm leading-none">
+            <FaStar size={10} />
+            <span className="pt-[1px]">{product.rating || '4.8'}</span>
+          </div>
           {product.badge?.type === 'new' && (
             <span className="bg-[#00D68F] text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-xs">
               ORGANIC
@@ -110,30 +117,51 @@ const ProductCard = ({ product, showStockProgress = false, removeImagePadding = 
       <div className={`flex flex-col flex-grow ${removeImagePadding ? 'px-4' : ''}`}>
         {/* Title */}
         <Link to={getProductUrl(product)}>
-          <h3 className="font-bold text-[#0C3823] text-xs md:text-sm leading-snug mb-1 line-clamp-2 hover:text-[#FF6B00] transition-colors">
+          <h3 className="font-bold text-[#0C3823] text-xs md:text-sm leading-snug mb-1 line-clamp-2 hover:text-[#FF6B00] transition-colors min-h-[36px] md:min-h-[40px]">
             {product.name || product.title}
           </h3>
         </Link>
 
-        {/* Weight & Rating */}
-        <div className="flex items-center justify-between text-[11px] text-slate-400 font-medium mb-3">
-          <span>{product.variations?.[0]?.displayWeight || `${product.variations?.[0]?.weight}${product.variations?.[0]?.weightUnit}` || product.weight || '1000gm'}</span>
-          <div className="flex items-center gap-1 text-amber-500 font-bold">
-            <FaStar size={11} />
-            <span>(4.8/5)</span>
-          </div>
+        <div className="mt-auto flex flex-col">
+          {/* Variant Selector */}
+        <div className="flex flex-wrap gap-1.5 mb-3 mt-1" onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+          {product.variations && product.variations.length > 0 ? (
+            product.variations.map((v, i) => (
+              <button
+                key={i}
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setSelectedVarIdx(i); }}
+                className={`flex items-center gap-1 text-[10px] font-bold px-2 py-1.5 rounded-lg border transition-all ${
+                  selectedVarIdx === i 
+                    ? 'border-[#0C3823] text-[#0C3823] bg-[#0C3823]/5' 
+                    : 'border-slate-200 text-slate-500 hover:border-slate-300 bg-white'
+                }`}
+              >
+                <span>{v.displayWeight || `${v.weight}${v.weightUnit || 'kg'}`}</span>
+                {v.stock !== undefined && <span className="opacity-70 font-medium text-[9px]">({v.stock})</span>}
+              </button>
+            ))
+          ) : (
+            <button
+              className="flex items-center gap-1 text-[10px] font-bold px-2 py-1.5 rounded-lg border border-[#0C3823] text-[#0C3823] bg-[#0C3823]/5 transition-all"
+            >
+              <span>{product.weight || 'Standard Pack'}</span>
+              {(product.currentStock !== undefined || product.availableQuantity !== undefined) && (
+                <span className="opacity-70 font-medium text-[9px]">({product.currentStock ?? product.availableQuantity})</span>
+              )}
+            </button>
+          )}
         </div>
 
-        {/* Price & Add Button Row */}
-        <div className="mt-auto flex flex-col gap-2 pt-1">
+          {/* Price & Add Button Row */}
+          <div className="flex flex-col gap-2 pt-1">
           <div className="flex items-center justify-between">
             <div className="flex items-baseline gap-1.5">
               <span className="text-lg md:text-xl font-extrabold text-[#0C3823]">
-                €{(product.variations?.[0]?.salePrice || product.discount_price || product.base_price || product.price || 0).toFixed(2)}
+                €{(currentVariation?.salePrice || currentVariation?.regularPrice || product.discount_price || product.base_price || product.price || 0).toFixed(2)}
               </span>
-              {(product.variations?.[0]?.regularPrice > product.variations?.[0]?.salePrice || product.oldPrice) && (
+              {(currentVariation?.regularPrice > currentVariation?.salePrice || product.oldPrice) && (
                 <span className="text-xs text-slate-400 line-through font-medium">
-                  €{(product.variations?.[0]?.regularPrice || product.oldPrice || 0).toFixed(2)}
+                  €{(currentVariation?.regularPrice || product.oldPrice || 0).toFixed(2)}
                 </span>
               )}
             </div>
@@ -178,6 +206,7 @@ const ProductCard = ({ product, showStockProgress = false, removeImagePadding = 
           </div>
           
         </div>
+      </div>
 
         {/* Limited Stock Progress Bar (Image 5 style) */}
         {showStockProgress && (

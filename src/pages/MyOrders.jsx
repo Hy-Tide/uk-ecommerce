@@ -57,12 +57,27 @@ const MyOrders = () => {
     try {
       const token = sessionStorage.getItem('sessionToken');
       if (token && token !== 'demo_token') {
-        await postData(`website/orders/${orderId}/reorder`, {}, token);
+        const res = await postData(`website/orders/${orderId}/buy-again`, {}, token);
+        if (res?.success) {
+            const { addedItems, unavailableItems } = res.data || {};
+            if (addedItems && addedItems.length > 0) {
+                if (unavailableItems && unavailableItems.length > 0) {
+                    showToast(`${addedItems.length} items added to your cart. ${unavailableItems.length} items are currently unavailable.`, 'info');
+                } else {
+                    showToast(`${addedItems.length} items added to your cart.`, 'success');
+                }
+                navigate('/cart');
+            } else {
+                showToast('None of the items from this order are currently available.', 'error');
+            }
+        } else {
+            showToast('Unable to reorder this order. Please try again.', 'error');
+        }
+      } else {
+        showToast('Please login to reorder.', 'error');
       }
-      showToast('Items added to cart for reorder', 'success');
-      navigate('/cart');
     } catch (err) {
-      showToast('Error during reorder', 'error');
+      showToast('Unable to reorder this order. Please try again.', 'error');
     } finally {
       setReorderingId(null);
     }
@@ -218,13 +233,15 @@ const MyOrders = () => {
                         >
                           <FiEye size={13} /> Details
                         </Link>
-                        <button
-                          onClick={() => handleReorder(orderId)}
-                          disabled={reorderingId === orderId}
-                          className="flex-1 bg-[#FAFBF9] border border-slate-200 hover:border-[#0C3823] text-slate-700 hover:text-[#0C3823] font-bold text-xs py-2.5 rounded-xl flex items-center justify-center gap-1.5 transition-colors disabled:opacity-50"
-                        >
-                          <FiRefreshCw size={13} className={reorderingId === orderId ? 'animate-spin' : ''} /> {reorderingId === orderId ? 'Reordering...' : 'Buy Again'}
-                        </button>
+                        {['delivered', 'completed', 'order success'].includes(status.toLowerCase()) && (
+                          <button
+                            onClick={() => handleReorder(orderId)}
+                            disabled={reorderingId === orderId}
+                            className="flex-1 bg-[#FAFBF9] border border-slate-200 hover:border-[#0C3823] text-slate-700 hover:text-[#0C3823] font-bold text-xs py-2.5 rounded-xl flex items-center justify-center gap-1.5 transition-colors disabled:opacity-50"
+                          >
+                            <FiRefreshCw size={13} className={reorderingId === orderId ? 'animate-spin' : ''} /> {reorderingId === orderId ? 'Reordering...' : 'Buy Again'}
+                          </button>
+                        )}
                       </div>
                     </div>
 

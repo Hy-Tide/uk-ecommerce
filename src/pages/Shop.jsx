@@ -136,7 +136,7 @@ const Shop = () => {
         <div className="flex flex-col lg:flex-row gap-8 mb-16">
 
           {/* Sidebar */}
-          <div className="w-full lg:w-[280px] flex-shrink-0">
+          <div className="hidden w-full lg:w-[280px] flex-shrink-0">
             <ShopSidebar />
           </div>
 
@@ -171,15 +171,15 @@ const Shop = () => {
 
             {/* Grid */}
             {isProductsLoading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
-                {Array.from({ length: 9 }).map((_, i) => (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
+                {Array.from({ length: 12 }).map((_, i) => (
                   <ProductCardSkeleton key={i} />
                 ))}
               </div>
             ) : products.length === 0 ? (
               <div className="flex justify-center py-20 text-slate-500 font-bold">No products found.</div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
                 {products.map(product => (
                   <ShopProductCard key={product._id || product.id} product={product} />
                 ))}
