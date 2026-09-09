@@ -20,7 +20,7 @@ const ContactFAQ = () => {
     },
     {
       question: "How do refunds work?",
-      answer: "Once your return is received and inspected at our warehouse, we will initiate a refund to your original payment method. The credit will typically appear within 3-5 business days depending on your bank."
+      answer: "Once your return is received and inspected at our facility, we will initiate a refund to your original payment method. The credit will typically appear within 3-5 business days depending on your bank."
     },
     {
       question: "Do you deliver across the UK?",
@@ -28,7 +28,7 @@ const ContactFAQ = () => {
     },
     {
       question: "Can I modify my order?",
-      answer: "You can modify or cancel your order within 1 hour of placing it. Once the order starts processing in our warehouse, we can no longer make changes."
+      answer: "You can modify or cancel your order within 1 hour of placing it. Once the order starts processing at our facility, we can no longer make changes."
     }
   ];
 

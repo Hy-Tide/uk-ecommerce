@@ -9,7 +9,7 @@ const ContactWhyChooseUs = () => {
     { icon: <FiShield />, title: 'Secure Payments', desc: '100% secure checkout with SSL encryption and multiple gateways.' },
     { icon: <FiHeart />, title: 'Fresh Groceries', desc: 'Handpicked fresh produce packed with care to maintain quality.' },
     { icon: <FiSmile />, title: 'Customer Satisfaction', desc: 'Dedicated support team ensuring you have a seamless experience.' },
-    { icon: <FiMapPin />, title: '24/7 Order Tracking', desc: 'Live updates on your order journey from our warehouse to your door.' },
+    { icon: <FiMapPin />, title: '24/7 Order Tracking', desc: 'Live updates on your order journey from our facility to your door.' },
   ];
 
   return (

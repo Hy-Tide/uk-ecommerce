@@ -76,7 +76,7 @@ const FeaturedProducts = ({ bestDealsData, limitedProductsData, isLoading }) => 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {limitedProducts.map((product, index) => (
               <div key={product._id || product.id || product.productId || index} data-aos="fade-up" data-aos-delay={index * 100}>
-                <ProductCard product={product} showStockProgress={true} />
+                <ProductCard product={product} showStockProgress={true} removeImagePadding={true} />
               </div>
             ))}
           </div>

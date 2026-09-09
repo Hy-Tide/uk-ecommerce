@@ -41,7 +41,7 @@ const BusinessHours = () => {
         <div className="mb-12 text-center">
           <h2 className="text-3xl md:text-4xl font-black text-slate-800 mb-4">Business & Support Hours</h2>
           <p className="text-slate-500 text-lg max-w-2xl mx-auto">
-            Our customer support team and warehouse operate on the following schedule. Online ordering is available 24/7.
+            Our customer support team operates on the following schedule. Online ordering is available 24/7.
           </p>
         </div>
 

@@ -117,7 +117,7 @@ const BrandDetails = () => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {products.map(product => (
-                <ShopProductCard key={product._id || product.id} product={product} />
+                <ShopProductCard key={product._id || product.id} product={product} removeImagePadding={true} />
               ))}
             </div>
           )}

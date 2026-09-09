@@ -3,13 +3,9 @@ import { useParams, Navigate } from 'react-router-dom';
 import BlogDetailsHero from '../components/blog/BlogDetailsHero';
 import BlogBreadcrumb from '../components/blog/BlogBreadcrumb';
 import BlogContent from '../components/blog/BlogContent';
-import BlogReadingProgress from '../components/blog/BlogReadingProgress';
 import BlogSidebar from '../components/blog/BlogSidebar';
 import RecipeWidget from '../components/blog/RecipeWidget';
-import BlogAuthorSection from '../components/blog/BlogAuthorSection';
 import BlogRelatedPosts from '../components/blog/BlogRelatedPosts';
-import BlogComments from '../components/blog/BlogComments';
-import BlogShareBar from '../components/blog/BlogShareBar';
 import BlogNav from '../components/blog/BlogNav';
 import BlogNewsletter from '../components/blog/BlogNewsletter';
 import BlogDetailsSkeleton from '../components/skeletons/BlogDetailsSkeleton';
@@ -21,7 +17,7 @@ const BlogDetails = () => {
   const { slug } = useParams();
   const [article, setArticle] = useState(null);
   const [loading, setLoading] = useState(true);
-  
+
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchBlogDetails();
@@ -70,29 +66,25 @@ const BlogDetails = () => {
   const author = blogAuthors.find(a => a.id === article.authorId) || article.author;
   const previousPost = null;
   const nextPost = null;
-  
+
   const isRecipe = article.tags && article.tags.includes('Recipes');
 
   return (
     <div className="bg-white min-h-screen relative pb-16 lg:pb-0">
-      <BlogReadingProgress />
-      <BlogShareBar />
-      
+
       <BlogDetailsHero article={article} author={author} />
       <BlogBreadcrumb category={article.category} title={article.title} />
 
       <div className="container px-4 py-16">
         <div className="flex flex-col lg:flex-row gap-8 xl:gap-16 max-w-7xl mx-auto lg:pl-20 relative">
-          
+
           {/* Main Content Area */}
           <main className="w-full lg:flex-1 min-w-0">
             <BlogContent>
               {isRecipe && <RecipeWidget ingredients={recipeIngredientsDummy} />}
             </BlogContent>
-            
-            <BlogAuthorSection author={author} />
+
             <BlogNav previousPost={previousPost} nextPost={nextPost} />
-            <BlogComments comments={blogCommentsDummy} />
             <BlogRelatedPosts articles={[]} />
           </main>
 
@@ -102,7 +94,7 @@ const BlogDetails = () => {
         </div>
       </div>
 
-      <BlogNewsletter />
+      {/* <BlogNewsletter /> */}
     </div>
   );
 };

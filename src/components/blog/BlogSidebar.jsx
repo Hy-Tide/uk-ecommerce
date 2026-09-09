@@ -5,30 +5,6 @@ const BlogSidebar = ({ author }) => {
   return (
     <aside className="w-full lg:w-96 flex-shrink-0 space-y-8 lg:sticky lg:top-24">
       
-      {/* Table of Contents */}
-      <div className="bg-white rounded-[24px] p-6 border border-slate-100 shadow-sm">
-        <h3 className="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2">
-          <FiList className="text-[#2E8B57]" /> Table of Contents
-        </h3>
-        <ul className="space-y-3 text-sm font-medium text-slate-600">
-          <li><a href="#" className="hover:text-[#2E8B57] transition-colors">The Foundation of Flavor</a></li>
-          <li><a href="#" className="hover:text-[#2E8B57] transition-colors">Must-Have Whole Spices</a></li>
-          <li><a href="#" className="hover:text-[#2E8B57] transition-colors">Ground Powders You Can't Skip</a></li>
-          <li><a href="#" className="hover:text-[#2E8B57] transition-colors pl-4">Turmeric Powder (Haldi)</a></li>
-          <li><a href="#" className="hover:text-[#2E8B57] transition-colors pl-4">Kashmiri Red Chilli</a></li>
-          <li><a href="#" className="hover:text-[#2E8B57] transition-colors">Conclusion</a></li>
-        </ul>
-      </div>
-
-      {/* Author Mini Card */}
-      <div className="bg-[#FAFAF8] rounded-[24px] p-6 border border-slate-100 shadow-sm text-center">
-        <img src={author?.avatar} alt={author?.name} className="w-20 h-20 rounded-full object-cover mx-auto mb-4 shadow-md" />
-        <h3 className="font-bold text-slate-800 text-lg mb-1">{author?.name}</h3>
-        <p className="text-[#2E8B57] text-xs font-bold uppercase tracking-wider mb-4">{author?.role}</p>
-        <button className="w-full bg-white border border-slate-200 hover:border-[#2E8B57] text-slate-700 hover:text-[#2E8B57] font-bold py-2 rounded-xl transition-all">
-          Follow Author
-        </button>
-      </div>
 
       {/* Popular Tags */}
       <div className="bg-white rounded-[24px] p-6 border border-slate-100 shadow-sm">

@@ -70,7 +70,7 @@ const OrderFailure = () => {
           <div className="mt-8 pt-6 border-t border-slate-100 w-full flex items-center justify-center gap-2 text-xs font-bold text-slate-500">
             <span>Need assistance?</span>
             <Link to={ROUTES.CONTACT} className="text-[#0C3823] hover:text-[#FF6B00] underline underline-offset-2 inline-flex items-center gap-1">
-              Contact Store Support <FiArrowRight size={12} />
+              Contact Support <FiArrowRight size={12} />
             </Link>
           </div>
 

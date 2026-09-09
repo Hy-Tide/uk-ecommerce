@@ -1,9 +1,12 @@
 import React from 'react';
 
 const Skeleton = ({ className = '', variant = 'shimmer', ...props }) => {
-  const baseClass = variant === 'shimmer' 
-    ? 'skeleton-shimmer rounded-xl' 
-    : 'animate-pulse bg-slate-200/80 rounded-xl';
+  const baseClass =
+    variant === 'dark'
+      ? 'skeleton-shimmer-dark rounded-xl'
+      : variant === 'shimmer'
+      ? 'skeleton-shimmer rounded-xl'
+      : 'animate-pulse bg-slate-200/80 rounded-xl';
 
   return (
     <div

@@ -59,7 +59,7 @@ const Explore = () => {
       id: 'contact',
       title: 'Customer Care & Support',
       subtitle: 'GET IN TOUCH',
-      description: 'Need help with your order or product inquiries? Our store support team is here to assist.',
+      description: 'Need help with your order or product inquiries? Our support team is here to assist.',
       buttonText: 'Contact Support',
       url: ROUTES.CONTACT || '/contact',
       bg: 'bg-[#F9E054]',
@@ -106,7 +106,7 @@ const Explore = () => {
 
               {/* Description */}
               <p className="text-lg md:text-xl text-white/85 leading-relaxed mb-10 max-w-2xl font-medium">
-                Navigate directly to our latest promotions, authentic recipe collections, food articles, and store support services.
+                Navigate directly to our latest promotions, authentic recipe collections, food articles, and customer support services.
               </p>
 
               {/* Action Buttons */}

@@ -3,43 +3,58 @@ import Skeleton from '../common/Skeleton';
 
 const BlogSkeleton = () => {
   return (
-    <div className="bg-slate-50 min-h-screen py-8">
-      {/* Blog Hero Skeleton */}
-      <div className="container max-w-7xl mx-auto mb-12">
-        <div className="bg-white rounded-[32px] p-8 md:p-12 border border-slate-100 shadow-sm flex flex-col md:flex-row gap-8 items-center">
-          <div className="w-full md:w-1/2 flex flex-col gap-4">
-            <Skeleton className="h-4 w-28 rounded-full" />
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-10 w-4/5" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-2/3 mb-4" />
-            <div className="flex items-center gap-3">
-              <Skeleton className="w-10 h-10 rounded-full" />
-              <div className="flex flex-col gap-1">
-                <Skeleton className="h-4 w-24" />
-                <Skeleton className="h-3 w-16" />
-              </div>
-            </div>
+    <div className="bg-white min-h-screen">
+
+      {/* Hero Skeleton — dark green bg matching BlogHero #1D3B2A */}
+      <div className="relative w-full min-h-[520px] md:min-h-[620px] bg-[#1D3B2A] flex items-center p-6 md:p-12">
+        <div className="container max-w-6xl mx-auto flex flex-col gap-5 w-full">
+          {/* Badge pill */}
+          <div className="h-7 w-52 rounded-full bg-white/20 animate-pulse" />
+          {/* Title lines */}
+          <div className="h-14 w-full max-w-2xl rounded-xl bg-white/20 animate-pulse" />
+          <div className="h-14 w-3/4 max-w-xl rounded-xl bg-white/20 animate-pulse" />
+          {/* Description lines */}
+          <div className="h-4 w-full max-w-xl rounded-xl bg-white/15 animate-pulse" />
+          <div className="h-4 w-4/5 max-w-lg rounded-xl bg-white/15 animate-pulse" />
+          {/* Category chip pills */}
+          <div className="flex gap-3 mt-2">
+            <div className="h-9 w-36 rounded-full bg-white/15 animate-pulse" />
+            <div className="h-9 w-32 rounded-full bg-white/15 animate-pulse" />
+            <div className="h-9 w-40 rounded-full bg-white/15 animate-pulse" />
           </div>
-          <div className="w-full md:w-1/2">
-            <Skeleton className="w-full aspect-[16/10] rounded-[24px]" />
+          {/* CTA buttons */}
+          <div className="flex gap-4 mt-2">
+            <div className="h-12 w-40 rounded-full bg-white/20 animate-pulse" />
+            <div className="h-12 w-40 rounded-full bg-white/15 animate-pulse" />
+          </div>
+          {/* Trust badges */}
+          <div className="flex gap-4 mt-4 pt-6 border-t border-white/10">
+            <div className="h-12 w-28 rounded-xl bg-white/15 animate-pulse" />
+            <div className="h-12 w-32 rounded-xl bg-white/15 animate-pulse" />
+            <div className="h-12 w-28 rounded-xl bg-white/15 animate-pulse" />
           </div>
         </div>
       </div>
 
-      {/* Category Pills Skeleton */}
-      <div className="container max-w-7xl mx-auto mb-10 flex gap-3 overflow-hidden">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <Skeleton key={i} className="h-10 w-28 rounded-full flex-shrink-0" />
-        ))}
-      </div>
 
       {/* Blog Cards Grid Skeleton */}
-      <div className="container max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="container max-w-7xl mx-auto py-16 px-4">
+        {/* Section header */}
+        <div className="flex justify-between items-center mb-8">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-6 w-24" />
+        </div>
+        {/* Category filter pills */}
+        <div className="flex gap-3 mb-10 overflow-hidden">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm flex flex-col">
-              <Skeleton className="w-full h-48 rounded-2xl mb-4" />
+            <Skeleton key={i} className="h-10 w-28 rounded-full flex-shrink-0" />
+          ))}
+        </div>
+        {/* Cards grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="bg-slate-50 rounded-3xl p-5 border border-slate-100 flex flex-col">
+              <Skeleton className="w-full aspect-[16/10] rounded-2xl mb-4" />
               <div className="flex items-center gap-2 mb-3">
                 <Skeleton className="h-4 w-20 rounded-full" />
                 <Skeleton className="h-4 w-16" />
@@ -59,6 +74,7 @@ const BlogSkeleton = () => {
           ))}
         </div>
       </div>
+
     </div>
   );
 };

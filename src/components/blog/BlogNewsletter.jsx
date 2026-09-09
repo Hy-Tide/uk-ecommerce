@@ -1,46 +1,84 @@
-import React from 'react';
-import { FiMail } from 'react-icons/fi';
+import React, { useState } from 'react';
+import { FiMail, FiArrowRight, FiCheck } from 'react-icons/fi';
 
 const BlogNewsletter = () => {
+  const [email, setEmail] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!email) return;
+    setSubmitted(true);
+    setEmail('');
+    setTimeout(() => setSubmitted(false), 4000);
+  };
+
   return (
-    <section className="py-20 bg-[#1D3B2A] relative overflow-hidden">
-      {/* Background decorations */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-[#2E8B57] rounded-full blur-[120px] opacity-40"></div>
-      <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#FF8A00] rounded-full blur-[100px] opacity-20"></div>
+    <section className="py-16 bg-[#FBF6EE] border-t border-[#ede8e0]">
+      <div className="container px-4">
+        <div className="bg-[#0C3823] rounded-[28px] overflow-hidden relative">
 
-      <div className="container px-4 relative z-10 text-center max-w-3xl mx-auto">
-        
-        <div className="w-16 h-16 mx-auto bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center text-[#FF8A00] text-3xl mb-8 shadow-xl border border-white/10">
-          <FiMail />
+          {/* Background decorations */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(238,108,31,0.2)_0%,_transparent_55%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_rgba(46,139,87,0.2)_0%,_transparent_55%)]" />
+          <div className="absolute -bottom-14 -right-14 w-56 h-56 rounded-full bg-white/[0.04] border border-white/[0.06]" />
+
+          <div className="relative z-10 px-8 py-12 md:px-16 flex flex-col md:flex-row items-center gap-10">
+
+            {/* Left */}
+            <div className="flex-1 text-center md:text-left">
+              <div className="inline-flex items-center gap-2 bg-[#FF8A00]/20 border border-[#FF8A00]/30 rounded-full px-4 py-1.5 mb-5">
+                <FiMail className="text-[#FF8A00] text-sm" />
+                <span className="text-[#FF8A00] font-bold text-xs uppercase tracking-widest">Weekly Newsletter</span>
+              </div>
+              <h2 className="text-2xl md:text-3xl font-black text-white leading-tight mb-3">
+                Get weekly recipes & tips<br className="hidden md:block" /> <span className="text-[#FF8A00]">from Nani</span>
+              </h2>
+              <p className="text-white/60 text-sm font-medium max-w-sm mx-auto md:mx-0">
+                Authentic recipes, grocery guides, and seasonal offers — delivered to your inbox every Thursday.
+              </p>
+            </div>
+
+            {/* Right: Form */}
+            <div className="w-full md:w-auto md:min-w-[380px] flex-shrink-0">
+              {submitted ? (
+                <div className="flex items-center gap-3 bg-[#2E8B57]/20 border border-[#2E8B57]/30 rounded-2xl px-6 py-5 text-white">
+                  <div className="w-10 h-10 rounded-full bg-[#2E8B57] flex items-center justify-center flex-shrink-0">
+                    <FiCheck size={20} />
+                  </div>
+                  <div>
+                    <p className="font-bold">You're subscribed!</p>
+                    <p className="text-white/60 text-sm">Your first newsletter arrives Thursday.</p>
+                  </div>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
+                  <div className="relative flex-1">
+                    <FiMail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Your email address"
+                      required
+                      className="w-full bg-white border border-slate-200 rounded-xl pl-11 pr-4 py-3.5 outline-none focus:border-[#FF8A00] focus:ring-2 focus:ring-[#FF8A00]/15 transition-all font-medium text-slate-700 text-sm"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="flex-shrink-0 flex items-center justify-center gap-2 bg-[#FF8A00] hover:bg-[#e67a00] text-white font-bold px-6 py-3.5 rounded-xl shadow-md shadow-[#FF8A00]/25 hover:-translate-y-0.5 transition-all text-sm"
+                  >
+                    Subscribe <FiArrowRight size={16} />
+                  </button>
+                </form>
+              )}
+              <p className="text-white/35 text-xs mt-3 text-center sm:text-left">
+                No spam. Unsubscribe anytime. We respect your privacy.
+              </p>
+            </div>
+
+          </div>
         </div>
-
-        <h2 className="text-3xl md:text-5xl font-black text-white mb-6 leading-tight">
-          Never Miss a New Recipe or Grocery Guide
-        </h2>
-        
-        <p className="text-lg text-white/80 font-medium mb-10 max-w-xl mx-auto">
-          Subscribe to receive weekly recipes, grocery tips, seasonal offers, and exclusive cooking inspiration delivered straight to your inbox.
-        </p>
-
-        <form className="flex flex-col sm:flex-row items-center gap-4 max-w-lg mx-auto bg-white/5 p-2 rounded-2xl backdrop-blur-sm border border-white/10">
-          <input 
-            type="email" 
-            placeholder="Enter your email address..." 
-            required
-            className="w-full bg-transparent border-none outline-none text-white px-4 py-3 placeholder:text-white/40 font-medium"
-          />
-          <button 
-            type="submit"
-            className="w-full sm:w-auto flex-shrink-0 bg-[#FF8A00] hover:bg-[#e67a00] text-white font-bold px-8 py-3.5 rounded-xl shadow-[0_8px_20px_rgba(255,138,0,0.3)] hover:-translate-y-1 transition-all"
-          >
-            Subscribe
-          </button>
-        </form>
-
-        <p className="text-white/40 text-sm mt-6 font-medium">
-          We care about your data in our <a href="#" className="text-white hover:underline">privacy policy</a>.
-        </p>
-
       </div>
     </section>
   );

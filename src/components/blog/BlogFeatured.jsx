@@ -7,21 +7,21 @@ const BlogFeatured = ({ article, author }) => {
   if (!article) return null;
 
   return (
-    <section className="py-16 bg-white relative z-20 -mt-10">
+    <section className="py-16 bg-[#FBF6EE] relative z-20 -mt-10">
       <div className="container px-4">
-        
-        <motion.div 
+
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="bg-[#FAFAF8] rounded-[32px] overflow-hidden shadow-lg shadow-black/5 border border-slate-100 flex flex-col lg:flex-row group"
+          className="bg-white rounded-[32px] overflow-hidden shadow-lg shadow-black/5 border border-slate-100 flex flex-col lg:flex-row group"
         >
           {/* Left: Large Image */}
           <div className="w-full lg:w-[55%] relative h-[300px] lg:h-auto overflow-hidden">
-            <img 
-              src={article.image} 
-              alt={article.title} 
+            <img
+              src={article.image}
+              alt={article.title}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
             />
             <div className="absolute top-6 left-6 bg-white/90 backdrop-blur-md text-[#2E8B57] font-bold px-4 py-1.5 rounded-full text-sm shadow-sm flex items-center gap-2">
@@ -30,46 +30,51 @@ const BlogFeatured = ({ article, author }) => {
             </div>
           </div>
 
-          {/* Right: Content */}
-          <div className="w-full lg:w-[45%] p-8 lg:p-14 flex flex-col justify-center">
-            
-            <div className="flex items-center gap-4 text-sm font-bold uppercase tracking-wider text-[#FF8A00] mb-4">
-              <span>{article.category}</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
-              <span className="text-slate-500 normal-case tracking-normal font-medium">{article.publishedDate}</span>
-            </div>
+          {/* Right: Content — with orange left accent bar */}
+          <div className="w-full lg:w-[45%] flex">
+            {/* Orange accent bar */}
+            <div className="hidden lg:block w-1 bg-gradient-to-b from-[#FF8A00] to-[#e67a00] flex-shrink-0 rounded-r-full my-8"></div>
 
-            <h2 className="text-3xl lg:text-4xl font-black text-slate-800 leading-tight mb-6 group-hover:text-[#2E8B57] transition-colors">
-              <Link to={`/blog/${article.slug}`}>{article.title}</Link>
-            </h2>
+            <div className="flex-1 p-8 lg:p-12 flex flex-col justify-center">
 
-            <p className="text-slate-500 text-lg leading-relaxed mb-8 font-medium">
-              {article.excerpt}
-            </p>
-
-            <div className="flex items-center gap-4 mb-8 pb-8 border-b border-slate-200">
-              <img src={author?.avatar} alt={author?.name} className="w-12 h-12 rounded-full object-cover shadow-sm" />
-              <div>
-                <h4 className="font-bold text-slate-800">{author?.name}</h4>
-                <p className="text-sm text-slate-500">{author?.role}</p>
+              <div className="flex items-center gap-4 text-sm font-bold uppercase tracking-wider text-[#FF8A00] mb-4">
+                <span>{article.category}</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+                <span className="text-slate-500 normal-case tracking-normal font-medium">{article.publishedDate}</span>
               </div>
-            </div>
 
-            <div className="flex items-center justify-between mt-auto">
-              <div className="flex items-center gap-5 text-slate-500 text-sm font-medium">
-                <div className="flex items-center gap-1.5"><FiClock className="text-slate-400" /> {article.readTime}</div>
-                <div className="flex items-center gap-1.5"><FiEye className="text-slate-400" /> {article.views}</div>
-                <div className="flex items-center gap-1.5"><FiHeart className="text-[#2E8B57]" /> {article.likes}</div>
+              <h2 className="text-3xl lg:text-4xl font-black text-slate-800 leading-tight mb-5 group-hover:text-[#2E8B57] transition-colors">
+                <Link to={`/blog/${article.slug}`}>{article.title}</Link>
+              </h2>
+
+              <p className="text-slate-500 text-base leading-relaxed mb-8 font-medium">
+                {article.excerpt}
+              </p>
+
+              <div className="flex items-center gap-4 mb-8 pb-8 border-b border-slate-100">
+                <img src={author?.avatar} alt={author?.name} className="w-11 h-11 rounded-full object-cover shadow-sm ring-2 ring-[#FF8A00]/20" />
+                <div>
+                  <h4 className="font-bold text-slate-800 text-sm">{author?.name}</h4>
+                  <p className="text-xs text-slate-500">{author?.role}</p>
+                </div>
               </div>
-              
-              <Link 
-                to={`/blog/${article.slug}`}
-                className="flex items-center gap-2 text-white bg-[#2E8B57] hover:bg-[#236b43] px-6 py-3 rounded-xl font-bold shadow-md shadow-[#2E8B57]/20 transition-all hover:-translate-y-1"
-              >
-                Read Article <FiArrowRight />
-              </Link>
-            </div>
 
+              <div className="flex items-center justify-between mt-auto">
+                <div className="flex items-center gap-5 text-slate-400 text-sm font-medium">
+                  <div className="flex items-center gap-1.5"><FiClock size={14} /> {article.readTime}</div>
+                  <div className="flex items-center gap-1.5"><FiEye size={14} /> {article.views}</div>
+                  <div className="flex items-center gap-1.5 text-rose-400"><FiHeart size={14} /> {article.likes}</div>
+                </div>
+
+                <Link
+                  to={`/blog/${article.slug}`}
+                  className="flex items-center gap-2 text-white bg-[#FF8A00] hover:bg-[#e67a00] px-6 py-3 rounded-xl font-bold shadow-md shadow-[#FF8A00]/25 transition-all hover:-translate-y-1 text-sm"
+                >
+                  Read Article <FiArrowRight size={16} />
+                </Link>
+              </div>
+
+            </div>
           </div>
         </motion.div>
 

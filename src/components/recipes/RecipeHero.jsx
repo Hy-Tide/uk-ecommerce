@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { FiBookOpen, FiArrowRight, FiShield, FiStar, FiZap } from 'react-icons/fi';
 import floatingSpicesHero from '../../assets/floating-spices-hero.png';
 import { getData } from '../../services/webservices';
+import { API_URL } from '../../services/url';
 import Skeleton from '../common/Skeleton';
 
 const RecipeHero = () => {
@@ -42,7 +43,14 @@ const RecipeHero = () => {
   }
 
   const displayTitle = banner?.title || "Explore Authentic Indian Recipes";
-  const displayImage = banner?.image_url || floatingSpicesHero;
+  let displayImage = banner?.image_url || banner?.bannerImage || floatingSpicesHero;
+  
+  // Auto-map production URLs to local if running in dev mode
+  if (displayImage && displayImage.includes('api.grandmasbasket.co.uk') && API_URL.includes('localhost')) {
+    const baseUrl = API_URL.split('/api/')[0];
+    displayImage = displayImage.replace('http://api.grandmasbasket.co.uk', baseUrl);
+  }
+
   const displayDesc = banner?.description || "Discover our collection of traditional and modern Indian recipes crafted by expert chefs.";
 
   const titleWords = displayTitle.split(' ');

@@ -97,6 +97,7 @@ export const extractRealBlogCategories = (rawBlogs = [], apiCategories = []) => 
 const Blog = () => {
   const [blogs, setBlogs] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [banner, setBanner] = useState(null);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
@@ -110,21 +111,29 @@ const Blog = () => {
   const fetchBlogs = async (pageToFetch = 1, append = false) => {
     if (pageToFetch === 1) setLoading(true);
     else setIsLoadingMore(true);
-    
+
     try {
       const limit = 6;
+      const minDelay = pageToFetch === 1 ? new Promise(r => setTimeout(r, 700)) : Promise.resolve();
       const blogsPromise = getData(`website/blogs?page=${pageToFetch}&limit=${limit}`);
       const categoriesPromise = pageToFetch === 1 ? getData('website/categories') : Promise.resolve(null);
-      
-      const [blogsRes, categoriesRes] = await Promise.all([blogsPromise, categoriesPromise]);
+      const bannerPromise = pageToFetch === 1 ? getData('website/banners/blogs') : Promise.resolve(null);
+
+      const [blogsRes, categoriesRes, bannerRes] = await Promise.all([
+        blogsPromise, categoriesPromise, bannerPromise, minDelay
+      ]);
 
       const rawBlogs = (blogsRes?.success && blogsRes?.data?.blogs) ? blogsRes.data.blogs : [];
       const mapped = rawBlogs.map((b, i) => mapApiBlogToUi(b, i));
-      
+
       setBlogs(prev => append ? [...prev, ...mapped] : mapped);
-      
+
       if (pageToFetch === 1 && categoriesRes?.success && categoriesRes?.data?.categories) {
         setCategories(extractRealBlogCategories(rawBlogs, categoriesRes.data.categories));
+      }
+
+      if (pageToFetch === 1 && bannerRes?.success && bannerRes?.data?.banners?.length > 0) {
+        setBanner(bannerRes.data.banners[0]);
       }
 
       if (blogsRes?.data?.pagination) {
@@ -137,16 +146,17 @@ const Blog = () => {
     } finally {
       setLoading(false);
       setIsLoadingMore(false);
+
     }
   };
 
   const featuredArticle = blogs.find(a => a.isFeatured) || blogs[0];
-  const featuredAuthor = featuredArticle 
-    ? blogAuthors.find(a => a.id === featuredArticle.authorId) || { 
-        name: featuredArticle.authorName || 'Admin', 
-        avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(featuredArticle.authorName || 'Admin')}&background=random`,
-        role: 'Author'
-      }
+  const featuredAuthor = featuredArticle
+    ? blogAuthors.find(a => a.id === featuredArticle.authorId) || {
+      name: featuredArticle.authorName || 'Admin',
+      avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(featuredArticle.authorName || 'Admin')}&background=random`,
+      role: 'Author'
+    }
     : null;
 
   // Sort by views for trending, or fallback to first 3
@@ -164,15 +174,30 @@ const Blog = () => {
   }
 
   return (
-    <div className="bg-slate-50 min-h-screen">
-      <BlogHero />
+    <div className="bg-[#FBF6EE] min-h-screen">
+      <BlogHero banner={banner} />
       <BlogSearchFilter categories={categories} />
       {featuredArticle && <BlogFeatured article={featuredArticle} author={featuredAuthor} />}
       <BlogCategories categories={categories} />
       {trendingArticles.length > 0 && <BlogTrending articles={trendingArticles} />}
-      <BlogList 
-        articles={blogs} 
-        authors={blogAuthors} 
+
+      {/* Popular Tags Strip */}
+      <section className="py-10 bg-white border-y border-slate-100">
+        <div className="container px-4">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="text-slate-500 font-bold text-sm flex-shrink-0 mr-2">Popular Topics:</span>
+            {['Turmeric', 'Biryani', 'Breakfast', 'Festival', 'Weight Loss', 'Pickles', 'South Indian', 'Quick Meals', 'Diwali', 'Ayurveda'].map(tag => (
+              <button key={tag} className="px-4 py-2 bg-[#FBF6EE] hover:bg-[#FF8A00] hover:text-white border border-[#ede8e0] hover:border-[#FF8A00] text-slate-600 text-sm font-semibold rounded-full transition-all duration-200 hover:-translate-y-0.5">
+                #{tag}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <BlogList
+        articles={blogs}
+        authors={blogAuthors}
         onLoadMore={handleLoadMore}
         hasMore={hasMore}
         isLoadingMore={isLoadingMore}

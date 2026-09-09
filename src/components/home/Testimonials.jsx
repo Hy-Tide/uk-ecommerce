@@ -22,7 +22,7 @@ const dummyReviews = [
   },
   {
     id: 2,
-    content: "Grandma's Basket has completely transformed my grocery shopping. The store is well-organized, produce is fresh, and next-day UK express delivery makes it my ultimate go-to store!",
+    content: "Grandma's Basket has completely transformed my grocery shopping. The website is well-organized, produce is fresh, and next-day UK express delivery makes it my ultimate go-to shop!",
     name: 'Sohidur Rahman',
     role: "Grandma's Basket Customer",
     avatar: 'https://i.pravatar.cc/150?u=sohidur',

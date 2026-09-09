@@ -38,10 +38,10 @@ const SimpleProductCard = ({ product }) => {
   const showOldPrice = displayOldPrice && displayOldPrice > displayPrice;
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden flex flex-col h-full group hover:shadow-md hover:border-[#379c6b]/30 transition-all duration-300 p-3">
+    <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden flex flex-col h-full group hover:shadow-md hover:border-[#379c6b]/30 transition-all duration-300 pb-3">
 
       {/* Top Image Area */}
-      <div className="relative bg-[#f9f9f9] rounded-lg pt-[100%] overflow-hidden mb-3">
+      <div className="relative bg-[#f9f9f9] pt-[100%] overflow-hidden mb-3">
         {renderBadge()}
 
         <div className="absolute top-2 right-2 z-10 flex flex-col items-end gap-1.5">
@@ -57,7 +57,7 @@ const SimpleProductCard = ({ product }) => {
           </button>
         </div>
 
-        <Link to={getProductUrl(product)} className="absolute inset-0 w-full h-full flex items-center justify-center p-2">
+        <Link to={getProductUrl(product)} className="absolute inset-0 w-full h-full flex items-center justify-center">
           {imageUrl && !imgError ? (
             <img
               src={imageUrl}
@@ -81,7 +81,7 @@ const SimpleProductCard = ({ product }) => {
       </div>
 
       {/* Content Area */}
-      <div className="flex flex-col flex-grow">
+      <div className="flex flex-col flex-grow px-3">
         <span className="text-slate-400 text-[9px] font-bold uppercase tracking-wider mb-1 block">
           {typeof product.brand === 'object' ? product.brand?.name : product.brand}
         </span>

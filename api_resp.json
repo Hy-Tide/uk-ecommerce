@@ -1,0 +1,20 @@
+{
+  "statusCode": 200,
+  "data": {
+    "banners": [
+      {
+        "_id": "6a84a24a52700b1b81c5ad43",
+        "title": "Fresh Homemade Summer Salads",
+        "image_url": "http://api.grandmasbasket.co.uk/uploads/1d0a9ee6de6c0c8599519294d498c70b.jpg",
+        "pageType": "recipes",
+        "description": "Learn how to make delicious low-calorie seasonal fruit and vegetable salads.",
+        "is_active": true,
+        "createdAt": "2026-08-18T18:19:54.473Z",
+        "updatedAt": "2026-08-18T18:22:37.567Z",
+        "__v": 0
+      }
+    ]
+  },
+  "message": "recipes banners retrieved successfully",
+  "success": true
+}

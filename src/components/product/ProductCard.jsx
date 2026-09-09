@@ -5,7 +5,7 @@ import { FaStar } from 'react-icons/fa';
 import { useCart } from '../../context/CartContext';
 import { getProductUrl, resolveProductImageUrl } from '../../utils/constants';
 
-const ProductCard = ({ product, showStockProgress = false, removeImagePadding = false }) => {
+const ProductCard = ({ product, showStockProgress = false, removeImagePadding = true }) => {
   const { addToCart, cartItems, updateQuantity } = useCart();
   const [added, setAdded] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
@@ -46,8 +46,22 @@ const ProductCard = ({ product, showStockProgress = false, removeImagePadding = 
     }
   };
 
-  // Sample stock info if not present
-  const availableStock = product.stockLeft || '37kg';
+  // Generate consistent pseudo-random stock data based on productId if not present
+  const getStockData = () => {
+    const idString = String(productId || 'default');
+    let hash = 0;
+    for (let i = 0; i < idString.length; i++) {
+      hash = idString.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const absHash = Math.abs(hash);
+    
+    const qty = product.stockLeft || product.currentStock || product.availableQuantity || `${(absHash % 40) + 12}kg`;
+    const segments = (absHash % 12) + 3; // 3 to 14 segments active
+    
+    return { qty, segments };
+  };
+
+  const stockData = getStockData();
   const imageUrl = resolveProductImageUrl(product);
 
   const displayPrice = currentVariation?.salePrice || currentVariation?.discount_price || currentVariation?.price || currentVariation?.regularPrice || product.discount_price || product.base_price || product.price || 0;
@@ -221,12 +235,12 @@ const ProductCard = ({ product, showStockProgress = false, removeImagePadding = 
               {[...Array(15)].map((_, idx) => (
                 <div
                   key={idx}
-                  className={`h-2 flex-1 rounded-xs ${idx < 6 ? 'bg-[#00E676]' : 'bg-slate-300/60'}`}
+                  className={`h-2 flex-1 rounded-xs ${idx < stockData.segments ? 'bg-[#00E676]' : 'bg-slate-300/60'}`}
                 ></div>
               ))}
             </div>
             <span className="text-slate-500 font-medium">
-              Available only: <strong className="text-[#FF6B00] font-bold">{availableStock}</strong>
+              Available only: <strong className="text-[#FF6B00] font-bold">{stockData.qty}</strong>
             </span>
           </div>
         )}

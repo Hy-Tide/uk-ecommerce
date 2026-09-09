@@ -1,64 +1,55 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FiClock, FiStar, FiBookmark, FiShare2, FiShoppingCart } from 'react-icons/fi';
+import { FiClock, FiBookmark, FiShare2, FiShoppingCart } from 'react-icons/fi';
 import { FaLeaf } from 'react-icons/fa';
-
-const trendingRecipes = [
-  {
-    id: 1,
-    title: 'Authentic Butter Chicken',
-    desc: 'Rich, creamy tomato gravy with tender marinated chicken pieces.',
-    chef: 'Chef Sanjeev',
-    time: '45 mins',
-    difficulty: 'Medium',
-    calories: '450 kcal',
-    rating: 4.9,
-    reviews: 1240,
-    isVeg: false,
-    img: 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&q=80&w=800'
-  },
-  {
-    id: 2,
-    title: 'Paneer Tikka Masala',
-    desc: 'Grilled cottage cheese cubes in a spiced onion-tomato gravy.',
-    chef: 'Madhur Jaffrey',
-    time: '40 mins',
-    difficulty: 'Easy',
-    calories: '380 kcal',
-    rating: 4.8,
-    reviews: 890,
-    isVeg: true,
-    img: 'https://images.unsplash.com/photo-1552590635-27c2c2128abf?auto=format&fit=crop&q=80&w=800'
-  },
-  {
-    id: 3,
-    title: 'Hyderabadi Dum Biryani',
-    desc: 'Aromatic basmati rice cooked with tender meat and secret spices.',
-    chef: 'Chef Ranveer',
-    time: '1h 20m',
-    difficulty: 'Hard',
-    calories: '550 kcal',
-    rating: 4.9,
-    reviews: 2100,
-    isVeg: false,
-    img: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&q=80&w=800'
-  },
-  {
-    id: 4,
-    title: 'Palak Paneer',
-    desc: 'Healthy and delicious spinach gravy with fresh paneer cubes.',
-    chef: 'Chef Vikas',
-    time: '30 mins',
-    difficulty: 'Easy',
-    calories: '320 kcal',
-    rating: 4.7,
-    reviews: 650,
-    isVeg: true,
-    img: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&q=80&w=800'
-  }
-];
+import { getData } from '../../services/webservices';
+import Skeleton from '../common/Skeleton';
 
 const TrendingRecipes = () => {
+  const [recipes, setRecipes] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const res = await getData('website/recipes?trending=true&limit=4');
+        if (res?.success && res?.data?.recipes?.length > 0) {
+          setRecipes(res.data.recipes);
+        }
+      } catch {
+        // fail silently
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetch();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="w-full py-20 px-4 md:px-[80px] bg-white">
+        <div className="max-w-[1280px] mx-auto">
+          <Skeleton className="h-10 w-64 mb-4" />
+          <Skeleton className="h-5 w-96 mb-10" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="rounded-[24px] overflow-hidden border border-gray-100">
+                <Skeleton className="h-[240px] w-full" />
+                <div className="p-6 space-y-3">
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-5 w-full" />
+                  <Skeleton className="h-4 w-2/3" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (recipes.length === 0) return null;
+
   return (
     <section className="w-full py-20 px-4 md:px-[80px] bg-white">
       <div className="max-w-[1280px] mx-auto">
@@ -74,9 +65,9 @@ const TrendingRecipes = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {trendingRecipes.map((recipe, index) => (
+          {recipes.map((recipe, index) => (
             <motion.div
-              key={recipe.id}
+              key={recipe._id || recipe.id || index}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -86,24 +77,22 @@ const TrendingRecipes = () => {
               {/* Recipe Image & Badges */}
               <div className="relative h-[240px] w-full overflow-hidden">
                 <img
-                  src={recipe.img}
-                  alt={recipe.title}
+                  src={recipe.image || recipe.featuredImage || recipe.image_url}
+                  alt={recipe.title || recipe.name}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
-
-                {/* Top badges */}
                 <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
                   {recipe.isVeg && (
                     <div className="bg-green-100/90 backdrop-blur-sm text-green-700 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-sm">
                       <FaLeaf /> Vegetarian
                     </div>
                   )}
-                  {!recipe.isVeg && (
-                    <div className="bg-red-100/90 backdrop-blur-sm text-red-700 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-sm">
+                  {recipe.isVeg === false && (
+                    <div className="bg-red-100/90 backdrop-blur-sm text-red-700 px-3 py-1 rounded-full text-xs font-bold shadow-sm">
                       Non-Veg
                     </div>
                   )}
-                  <button className="w-[36px] h-[36px] rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-gray-600 hover:text-[#FF8A00] hover:bg-white transition-colors shadow-sm">
+                  <button className="w-[36px] h-[36px] rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-gray-600 hover:text-[#FF8A00] hover:bg-white transition-colors shadow-sm ml-auto">
                     <FiBookmark className="text-[18px]" />
                   </button>
                 </div>
@@ -111,35 +100,49 @@ const TrendingRecipes = () => {
 
               {/* Recipe Content */}
               <div className="p-6 flex flex-col flex-grow">
-                {/* Meta info */}
                 <div className="flex flex-wrap items-center gap-2 text-[13px] text-gray-500 font-medium mb-3">
-                  <div className="flex items-center gap-1 whitespace-nowrap"><FiClock className="text-[#2E8B57]" /> {recipe.time}</div>
-                  <div className="w-[4px] h-[4px] rounded-full bg-gray-300"></div>
-                  <div className="text-[#FF8A00] whitespace-nowrap">{recipe.difficulty}</div>
-                  <div className="w-[4px] h-[4px] rounded-full bg-gray-300"></div>
-                  <div className="whitespace-nowrap">{recipe.calories}</div>
+                  {recipe.cookTime && (
+                    <div className="flex items-center gap-1 whitespace-nowrap"><FiClock className="text-[#2E8B57]" /> {recipe.cookTime}</div>
+                  )}
+                  {recipe.difficulty && (
+                    <>
+                      <div className="w-[4px] h-[4px] rounded-full bg-gray-300"></div>
+                      <div className="text-[#FF8A00] whitespace-nowrap">{recipe.difficulty}</div>
+                    </>
+                  )}
+                  {recipe.calories && (
+                    <>
+                      <div className="w-[4px] h-[4px] rounded-full bg-gray-300"></div>
+                      <div className="whitespace-nowrap">{recipe.calories}</div>
+                    </>
+                  )}
+                  {recipe.products && recipe.products.length > 0 && (
+                    <>
+                      <div className="w-[4px] h-[4px] rounded-full bg-gray-300"></div>
+                      <div className="whitespace-nowrap">{recipe.products.length} Products</div>
+                    </>
+                  )}
                 </div>
 
-                {/* Title & Desc */}
                 <h3 className="text-[#294535] text-[20px] font-[700] mb-2 leading-tight group-hover:text-[#2E8B57] transition-colors">
-                  {recipe.title}
+                  {recipe.title || recipe.name}
                 </h3>
                 <p className="text-gray-500 text-[14px] line-clamp-2 mb-4">
-                  {recipe.desc}
+                  {recipe.description || recipe.excerpt || "A delicious recipe to try at home."}
                 </p>
 
-                {/* Chef */}
-                <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-full bg-[#f4f3ec] flex items-center justify-center text-[10px] font-bold text-[#294535]">
-                      {recipe.chef.charAt(0)}
+                {recipe.chef && (
+                  <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-full bg-[#f4f3ec] flex items-center justify-center text-[10px] font-bold text-[#294535]">
+                        {recipe.chef.charAt(0)}
+                      </div>
+                      <span className="text-[13px] font-bold text-[#294535]">{recipe.chef}</span>
                     </div>
-                    <span className="text-[13px] font-bold text-[#294535]">{recipe.chef}</span>
                   </div>
-                </div>
+                )}
 
-                {/* Actions */}
-                <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
+                <div className="flex items-center gap-3 pt-4 border-t border-gray-100 mt-auto">
                   <button className="flex-1 bg-[#FAFAF8] hover:bg-[#2E8B57] text-[#2E8B57] hover:text-white py-3 rounded-[12px] font-[600] text-[14px] transition-colors flex items-center justify-center gap-2">
                     <FiShoppingCart className="text-[16px]" /> Shop Ingredients
                   </button>

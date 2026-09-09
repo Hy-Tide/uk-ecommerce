@@ -18,9 +18,6 @@ const BlogAuthorSection = ({ author }) => {
             <h3 className="text-2xl font-black text-slate-800">{author.name}</h3>
             <p className="text-slate-500 font-medium">{author.role}</p>
           </div>
-          <button className="w-full md:w-auto bg-white border-2 border-slate-200 hover:border-[#2E8B57] text-slate-700 hover:text-[#2E8B57] font-bold px-6 py-2 rounded-xl transition-all">
-            Follow
-          </button>
         </div>
         
         <p className="text-slate-600 leading-relaxed mb-6">

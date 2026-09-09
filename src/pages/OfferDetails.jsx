@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiArrowLeft, FiTag } from 'react-icons/fi';
 import { getData } from '../services/webservices';
-import ShopProductCard from '../components/shop/ShopProductCard';
+import ProductCard from '../components/product/ProductCard';
 
 const OfferDetails = () => {
   const { id } = useParams();
@@ -50,16 +50,16 @@ const OfferDetails = () => {
   }
 
   return (
-    <div className="bg-[#fcfbf9] min-h-screen pb-20 pt-24">
+    <div className="bg-[#fcfbf9] min-h-screen pb-20">
       {/* Banner */}
       <div className="relative h-[40vh] min-h-[300px] w-full bg-slate-900 overflow-hidden">
-        <img 
-          src={offer.bannerImage || 'https://images.unsplash.com/photo-1604719312566-8912e9227c6a'} 
-          alt={offer.title} 
+        <img
+          src={offer.bannerImage || 'https://images.unsplash.com/photo-1604719312566-8912e9227c6a'}
+          alt={offer.title}
           className="absolute inset-0 w-full h-full object-cover opacity-60"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-        
+
         <div className="container px-4 lg:px-8 mx-auto h-full flex flex-col justify-end pb-12 relative z-10">
           <Link to="/offers" className="inline-flex items-center gap-2 text-white/80 hover:text-white font-medium mb-6 w-fit transition-colors">
             <FiArrowLeft /> Back to all offers
@@ -81,7 +81,7 @@ const OfferDetails = () => {
       <div className="container px-4 lg:px-8 mx-auto mt-12">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
-            <FiTag className="text-[#2E8B57]" /> Eligible Products ({products.length})
+            <FiTag className="text-[#2E8B57]" /> Offer Products ({products.length})
           </h2>
         </div>
 
@@ -90,7 +90,7 @@ const OfferDetails = () => {
             <p className="text-slate-500 font-medium">No products currently available for this offer.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {products.map((product, index) => (
               <motion.div
                 key={product._id || product.id}
@@ -98,7 +98,7 @@ const OfferDetails = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: index * 0.05 }}
               >
-                <ShopProductCard product={product} />
+                <ProductCard product={product} removeImagePadding={true} />
               </motion.div>
             ))}
           </div>

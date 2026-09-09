@@ -19,11 +19,11 @@ const Offers = () => {
           getData('website/offers'),
           getData('website/banners/offers')
         ]);
-        
+
         if (offersRes?.success && offersRes?.data?.offers) {
           setOffers(offersRes.data.offers);
         }
-        
+
         if (bannerRes?.success && bannerRes?.data?.banners?.length > 0) {
           setBanner(bannerRes.data.banners[0]);
         }
@@ -45,7 +45,7 @@ const Offers = () => {
       {/* Header Banner */}
       <div className="relative w-full min-h-[400px] md:min-h-[500px] flex flex-col justify-center overflow-hidden bg-[#1D3B2A]">
         <div className="absolute inset-0 w-full h-full">
-          <img 
+          <img
             src={banner?.image_url || 'https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&q=80&w=2000'}
             alt={banner?.title || 'Offers'}
             className="w-full h-full object-cover"
@@ -91,7 +91,7 @@ const Offers = () => {
             {offers.map((offer, index) => {
               const startDate = new Date(offer.startDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
               const endDate = new Date(offer.endDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-              
+
               return (
                 <motion.div
                   key={offer._id || offer.id}
@@ -101,9 +101,9 @@ const Offers = () => {
                   className="bg-white rounded-[24px] overflow-hidden border border-slate-100 shadow-sm hover:shadow-lg transition-all group flex flex-col h-full"
                 >
                   <div className="h-56 overflow-hidden relative bg-slate-100">
-                    <img 
-                      src={offer.bannerImage || 'https://images.unsplash.com/photo-1604719312566-8912e9227c6a'} 
-                      alt={offer.title} 
+                    <img
+                      src={offer.bannerImage || 'https://images.unsplash.com/photo-1604719312566-8912e9227c6a'}
+                      alt={offer.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     {offer.discountValue > 0 ? (
@@ -122,8 +122,8 @@ const Offers = () => {
                     </div>
                     <h3 className="text-2xl font-bold text-slate-800 mb-3">{offer.title}</h3>
                     <p className="text-slate-600 mb-6 flex-1">{offer.description}</p>
-                    
-                    <Link 
+
+                    <Link
                       to={`/offers/${offer._id || offer.id}`}
                       className="inline-flex items-center justify-center gap-2 w-full bg-[#FF8A00] hover:bg-[#e67a00] text-white font-bold py-3.5 rounded-full shadow-[0_4px_15px_rgba(255,138,0,0.3)] hover:shadow-[0_6px_20px_rgba(255,138,0,0.5)] transition-all duration-300"
                     >

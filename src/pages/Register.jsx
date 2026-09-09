@@ -125,7 +125,7 @@ const Register = () => {
         <div className="max-w-md w-full mx-auto" data-aos="fade-up">
 
           <Link to="/" className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-[#124827] mb-6 transition-colors">
-            <FiArrowLeft size={14} /> Back to Store
+            <FiArrowLeft size={14} /> Back to Shop
           </Link>
 
           <div className="mb-6">

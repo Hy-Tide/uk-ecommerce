@@ -18,16 +18,16 @@ const ContactCards = () => {
       id: 'email',
       icon: <FiMail size={24} />,
       title: 'Email Support',
-      detail: 'support@ukgroceries.com',
+      detail: 'hello@grandmasbasket.co.uk',
       subtext: 'Reply within 24 hours',
       actionText: 'Send Email',
-      actionLink: 'mailto:support@ukgroceries.com',
+      actionLink: 'mailto:hello@grandmasbasket.co.uk',
       color: 'bg-emerald-50 text-[#2E8B57]',
     },
     {
-      id: 'warehouse',
+      id: 'office',
       icon: <FiMapPin size={24} />,
-      title: 'Warehouse Address',
+      title: 'Office Address',
       detail: "Grandma's Basket",
       subtext: 'London, United Kingdom',
       actionText: 'Show on Map',
@@ -62,9 +62,9 @@ const ContactCards = () => {
             <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 ${card.color} group-hover:scale-110 transition-transform duration-300`}>
               {card.icon}
             </div>
-            
+
             <h3 className="text-xl font-bold text-slate-800 mb-2">{card.title}</h3>
-            
+
             <div className="flex-grow">
               <p className="text-[#2E8B57] font-bold text-lg mb-1 leading-tight">{card.detail}</p>
               <p className="text-slate-500 text-sm font-medium">{card.subtext}</p>
