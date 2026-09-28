@@ -33,6 +33,9 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleClick = (e) => {
+      // Ignore events from elements that have been unmounted (e.g., the swapped menu icon)
+      if (!document.contains(e.target)) return;
+
       const isLink = e.target.closest('a');
       const isNavClick = navRef.current && navRef.current.contains(e.target);
       const isToggleBtn = e.target.closest('.mobile-menu-btn');

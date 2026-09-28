@@ -39,14 +39,14 @@ const CategorySection = ({ data }) => {
         </div>
 
         {/* Category Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
+        <div className="flex overflow-x-auto snap-x snap-mandatory scroll-pl-4 sm:grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] -mx-4 px-4 sm:mx-0 sm:px-0 pb-4 sm:pb-0">
           {displayCategories.map((cat, index) => (
             <Link
               key={cat.id}
               to={`${ROUTES.SHOP}?category=${cat.slug}`}
               data-aos="fade-up"
               data-aos-delay={index * 50}
-              className={`relative ${cat.bg} rounded-3xl p-5 flex flex-col justify-between overflow-hidden group shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 h-[190px] text-white`}
+              className={`flex-shrink-0 w-[45%] sm:w-auto snap-start sm:snap-align-none relative ${cat.bg} rounded-3xl p-5 flex flex-col justify-between overflow-hidden group shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 h-[190px] text-white`}
             >
               {/* Overlay fluid curve */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/10 pointer-events-none"></div>
@@ -69,14 +69,14 @@ const CategorySection = ({ data }) => {
           ))}
 
           {/* Right Navigation Card */}
-          <Link
+          {/* <Link
             to={ROUTES.CATEGORIES}
-            className="bg-[#F1F3F5] rounded-3xl p-5 flex flex-col items-center justify-center text-center group hover:bg-[#E2E8F0] transition-colors h-[190px]"
+            className="flex-shrink-0 w-[45%] sm:w-auto snap-start sm:snap-align-none bg-[#F1F3F5] rounded-3xl p-5 flex flex-col items-center justify-center text-center group hover:bg-[#E2E8F0] transition-colors h-[190px]"
           >
             <div className="w-12 h-12 rounded-full bg-[#0C3823] text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-md">
               <FiArrowRight size={20} />
             </div>
-          </Link>
+          </Link> */}
         </div>
 
       </div>

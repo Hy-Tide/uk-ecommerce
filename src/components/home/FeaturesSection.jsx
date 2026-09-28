@@ -16,17 +16,17 @@ const FeaturesSection = ({ data }) => {
   return (
     <section className="bg-white border-b border-slate-100">
       <div className="container py-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-6 gap-x-2 sm:gap-y-0 sm:gap-x-0 sm:divide-x divide-slate-100">
           {featuresData.map((feature, idx) => {
             const iconData = defaultIcons[idx % defaultIcons.length];
             return (
-              <div key={idx} className="flex items-center gap-4 py-4 sm:py-0 px-4 first:pl-0 last:pr-0 justify-center sm:justify-start lg:justify-center">
-                <div className={`w-14 h-14 rounded-2xl ${iconData.bg} flex items-center justify-center flex-shrink-0`}>
-                  {iconData.icon}
+              <div key={idx} className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 py-2 sm:py-0 px-2 sm:px-4 sm:first:pl-0 sm:last:pr-0 text-center sm:text-left justify-center sm:justify-start lg:justify-center">
+                <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl ${iconData.bg} flex items-center justify-center flex-shrink-0`}>
+                  {React.cloneElement(iconData.icon, { className: `${iconData.icon.props.className} text-xl sm:text-2xl` })}
                 </div>
                 <div>
-                  <h4 className="font-bold text-dark text-[15px] mb-0.5">{feature.title}</h4>
-                  <p className="text-slate-500 text-sm">{feature.description}</p>
+                  <h4 className="font-bold text-dark text-[13px] sm:text-[15px] mb-0.5 leading-tight sm:leading-normal">{feature.title}</h4>
+                  <p className="text-slate-500 text-[11px] sm:text-sm leading-tight sm:leading-normal">{feature.description}</p>
                 </div>
               </div>
             );

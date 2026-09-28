@@ -28,9 +28,9 @@ const NewArrivals = ({ data }) => {
       </div>
 
       {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="flex overflow-x-auto snap-x snap-mandatory scroll-pl-4 sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] -mx-4 px-4 sm:mx-0 sm:px-0 pb-4 sm:pb-0">
         {newArrivals.slice(0, 4).map((product, index) => (
-          <div key={product._id || product.id || product.productId || index} data-aos="fade-up" data-aos-delay={index * 100}>
+          <div key={product._id || product.id || product.productId || index} data-aos="fade-up" data-aos-delay={index * 100} className="flex-shrink-0 w-[80%] sm:w-auto snap-start sm:snap-align-none">
             <ProductCard product={{ ...product, badge: { type: 'new' } }} removeImagePadding={true} />
           </div>
         ))}

@@ -29,12 +29,12 @@ const Recipes = ({ data }) => {
         </div>
 
         {/* Recipes Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="flex overflow-x-auto snap-x snap-mandatory scroll-pl-4 sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] -mx-4 px-4 sm:mx-0 sm:px-0 pb-4 sm:pb-0">
           {recipesList.map((recipe, index) => (
             <Link
               key={recipe._id || index}
               to={ROUTES.RECIPES}
-              className="bg-white rounded-[20px] overflow-hidden shadow-[0_4px_20px_-5px_rgba(0,0,0,0.08)] border border-slate-100 group flex flex-col hover:-translate-y-1 transition-transform"
+              className="flex-shrink-0 w-[80%] sm:w-auto snap-start sm:snap-align-none bg-white rounded-[20px] overflow-hidden shadow-[0_4px_20px_-5px_rgba(0,0,0,0.08)] border border-slate-100 group flex flex-col hover:-translate-y-1 transition-transform"
             >
               {/* Image Area */}
               <div className="relative h-[220px] overflow-hidden bg-slate-100">

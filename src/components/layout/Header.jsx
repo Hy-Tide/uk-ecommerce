@@ -89,7 +89,7 @@ const Header = () => {
           </Link>
 
           {/* Cart */}
-          <Link to={ROUTES.CART} className="flex flex-col items-center justify-center text-[#0C3823] hover:text-[#FF6B00] transition-colors">
+          <Link to={ROUTES.CART} className="hidden md:flex flex-col items-center justify-center text-[#0C3823] hover:text-[#FF6B00] transition-colors">
             <div className="relative mb-0.5">
               <FiShoppingCart size={20} />
               {cartItems.length > 0 && (

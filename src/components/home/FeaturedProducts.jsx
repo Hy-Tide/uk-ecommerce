@@ -18,9 +18,11 @@ const FeaturedProducts = ({ bestDealsData, limitedProductsData, isLoading }) => 
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl md:text-3xl font-black text-[#0C3823] tracking-tight">Today best deals for you!</h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="flex overflow-x-auto snap-x snap-mandatory scroll-pl-4 sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] -mx-4 px-4 sm:mx-0 sm:px-0 pb-4 sm:pb-0">
             {Array.from({ length: 4 }).map((_, i) => (
-              <ProductCardSkeleton key={i} />
+              <div key={i} className="flex-shrink-0 w-[80%] sm:w-auto snap-start sm:snap-align-none">
+                <ProductCardSkeleton />
+              </div>
             ))}
           </div>
         </section>
@@ -47,9 +49,9 @@ const FeaturedProducts = ({ bestDealsData, limitedProductsData, isLoading }) => 
           </div>
 
           {/* 4-Column Product Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="flex overflow-x-auto snap-x snap-mandatory scroll-pl-4 sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] -mx-4 px-4 sm:mx-0 sm:px-0 pb-4 sm:pb-0">
             {topDeals.map((product, index) => (
-              <div key={product._id || product.productId || index} data-aos="fade-up" data-aos-delay={(index % 4) * 100}>
+              <div key={product._id || product.productId || index} data-aos="fade-up" data-aos-delay={(index % 4) * 100} className="flex-shrink-0 w-[80%] sm:w-auto snap-start sm:snap-align-none">
                 <ProductCard product={product} removeImagePadding={true} />
               </div>
             ))}
@@ -73,9 +75,9 @@ const FeaturedProducts = ({ bestDealsData, limitedProductsData, isLoading }) => 
           </div>
 
           {/* 4-Column Product Grid with Stock Bars */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="flex overflow-x-auto snap-x snap-mandatory scroll-pl-4 sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] -mx-4 px-4 sm:mx-0 sm:px-0 pb-4 sm:pb-0">
             {limitedProducts.map((product, index) => (
-              <div key={product._id || product.id || product.productId || index} data-aos="fade-up" data-aos-delay={index * 100}>
+              <div key={product._id || product.id || product.productId || index} data-aos="fade-up" data-aos-delay={index * 100} className="flex-shrink-0 w-[80%] sm:w-auto snap-start sm:snap-align-none">
                 <ProductCard product={product} showStockProgress={true} removeImagePadding={true} />
               </div>
             ))}

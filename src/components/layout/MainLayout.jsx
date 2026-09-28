@@ -4,6 +4,7 @@ import TopBar from './TopBar';
 import Header from './Header';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import FloatingCart from './FloatingCart';
 
 const MainLayout = () => {
   return (
@@ -11,9 +12,10 @@ const MainLayout = () => {
       <TopBar />
       <Header />
       <Navbar />
-      <main className="flex-grow">
+      <main className="flex-grow relative">
         <Outlet />
       </main>
+      <FloatingCart />
       <Footer />
     </div>
   );
